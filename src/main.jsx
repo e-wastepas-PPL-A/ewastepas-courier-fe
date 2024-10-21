@@ -4,6 +4,7 @@ import App from './App.jsx'
 import Home from './pages/HomePage.jsx'
 import Login from './pages/LoginPage.jsx'
 import Register from './pages/RegisterPage.jsx'
+import Forgot from './pages/ForgotPage.jsx'
 import './styles/index.css'
 
 const router = createBrowserRouter([
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
   {
     path: "/register",
     element: <Register />,
+  },
+  {
+    path: "/forgot",
+    element: <Forgot />,
   },
 ]);
 

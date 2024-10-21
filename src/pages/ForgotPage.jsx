@@ -3,13 +3,11 @@ import Logo from '../assets/logo.png'
 import Slide1 from '../assets/vertical-slide-1.png'
 import IcFacebook from '../assets/ic-facebook.svg'
 import IcInstagram from '../assets/ic-instagram.svg'
+import IcBack from '../assets/ic-back.svg'
 import InputEmail from '../components/Input/InputEmail'
-import InputPassword from '../components/Input/InputPassword'
-import InputCheck from '../components/Input/InputCheck'
 
 export default function PageName() {
     const [valueEmail, setValueEmail] = useState('')
-    const [valuePassword, setValuePassword] = useState('')
 
     useEffect(()=>{
         document.title = "E-Wastepas | Login"
@@ -24,19 +22,17 @@ export default function PageName() {
                 </div>
                 <div>
                     <div className="text-start mb-[24px]">
-                        <h1 className="text-[40px] font-[600]">Login</h1>
-                        <span className="text-[16px] font-[400] text-revamp-primary-300">Masuk untuk mengakses akun Past-Trash Anda</span>
+                        <a href="/login" className="text-[14px] font-[600] flex gap-2 items-center"><img src={IcBack} className="w-[8px]" alt="Logo" /> Kembali ke login</a>
+                    </div>
+                    <div className="text-start mb-[24px]">
+                        <h1 className="text-[40px] font-[600]">Lupa kata sandi?</h1>
+                        <span className="text-[16px] font-[400] text-revamp-primary-300">Jangan khawatir, ini bisa terjadi pada siapa saja. Masukkan email Anda di bawah ini untuk memulihkan kata sandi Anda.</span>
                     </div>
                     <div className="mb-[24px]">
                         <InputEmail label={'Email'} value={valueEmail} onChange={(e)=> setValueEmail(e.target.value)} />
-                        <InputPassword label={'Kata Sandi'} value={valuePassword} onChange={(e)=> setValuePassword(e.target.value)} />
-                        <div className="flex justify-between items-center">
-                            <InputCheck label={'Ingatkan Saya'} value={true} onChange={(e)=> setValuePassword(e.target.value)} />
-                            <a href="/forgot" className="text-revamp-red-700 font-[500]">Lupa kata sandi</a>
-                        </div>
                     </div>
                     <div className="mb-[24px]">
-                        <button className="bg-revamp-secondary-700 w-full py-[8px] text-white text-[14px] font-[600]">Login</button>
+                        <button className="bg-revamp-secondary-700 w-full py-[8px] text-white text-[14px] font-[600]">Kirim</button>
                         <div className="flex justify-center items-center mt-[10px]">
                             <span className="text-revamp-primary-700 font-[500] text-[14px]">Tidak memiliki akun? <a href="/register" className="text-revamp-red-700">Registrasi</a></span>
                         </div>
