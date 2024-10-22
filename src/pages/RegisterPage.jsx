@@ -34,7 +34,7 @@ export default function PageName() {
     };
 
     return (
-        <div className="h-[100dvh] container p-[100px] flex justify-center items-center">
+        <div className="h-[100dvh] px-[8px] md:p-[100px] flex justify-center items-center">
                 <div className="w-1/2 md:p-[10px] lg:p-[52px] hidden lg:block">
                     <img src={Slide2} className="max-h-[90vh]" alt="Slide" />
                 </div>
