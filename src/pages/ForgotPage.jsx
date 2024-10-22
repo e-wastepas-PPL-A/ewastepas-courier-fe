@@ -13,7 +13,10 @@ export default function PageName() {
     }, [])
 
     return (
-        <div className="h-[100dvh] container p-[100px] flex justify-center items-center">
+        <div className="h-[100dvh] px-[8px] md:p-[100px] flex justify-center items-center">
+            <div className="w-1/2 md:p-[10px] lg:p-[52px] hidden lg:block">
+                <img src={Slide1} className="max-h-[90vh]" />
+            </div>
             <div className="text-center w-full lg:w-1/2 px-[8px]">
                 <div className="flex justify-center">
                     <img src={Logo} className="w-[340px]" alt="Logo" />
@@ -32,14 +35,11 @@ export default function PageName() {
                     <div className="mb-[24px]">
                         <button className="bg-revamp-secondary-500 w-full py-[8px] text-white text-[14px] font-[600]">Kirim</button>
                         <div className="flex justify-center items-center mt-[10px]">
-                            <span className="text-revamp-neutral-10 font-[500] text-[14px]">Tidak memiliki akun? <a href="/register" className="text-revamp-red-700">Registrasi</a></span>
+                            <span className="text-revamp-neutral-10 font-[500] text-[14px]">Tidak memiliki akun? <a href="/register" className="text-revamp-error-300">Registrasi</a></span>
                         </div>
                     </div>
                     <FooterBar />
                 </div>
-            </div>
-            <div className="w-1/2 md:p-[10px] lg:p-[52px] hidden lg:block">
-                <img src={Slide1} className="max-h-[90vh]" />
             </div>
         </div>
     );
