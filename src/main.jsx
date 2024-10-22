@@ -1,13 +1,6 @@
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import App from './App.jsx'
-<<<<<<< Updated upstream
-import Home from './pages/HomePage.jsx'
-import Login from './pages/LoginPage.jsx'
-import Register from './pages/RegisterPage.jsx'
-import Forgot from './pages/ForgotPage.jsx'
-import './styles/index.css'
-=======
+import App from "./App.jsx";
 import HomePage from "./pages/HomePage.jsx";
 import Login from "./pages/LoginPage.jsx";
 import Register from "./pages/RegisterPage.jsx";
@@ -17,7 +10,6 @@ import CategoryPage from "./pages/CategoryPage.jsx";
 import PickupPage from "./pages/PickupPage.jsx";
 import LocationPage from "./pages/LocationPage.jsx";
 import HistoryPage from "./pages/HistoryPage.jsx";
->>>>>>> Stashed changes
 
 const router = createBrowserRouter([
   {
