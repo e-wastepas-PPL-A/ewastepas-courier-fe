@@ -1,17 +1,50 @@
-/* eslint-disable react/prop-types */
-import { Search, Monitor, Smartphone, CookingPot, Cpu } from "lucide-react";
-// Import Swiper React components
-import { Swiper, SwiperSlide } from "swiper/react";
-
-// Import Swiper styles
-import "swiper/css";
+import {
+  Search,
+  Monitor,
+  Smartphone,
+  CookingPot,
+  Cpu,
+  Stethoscope,
+  Guitar,
+} from "lucide-react";
 import Graphic1 from "../assets/graphic-1.png";
+import CategoryCard from "../components/CategoryCard/CategoryCard";
+import Navbar from "../components/Navbar/Navbar";
+import ElectronicDevices from "../components/ElectronicDevice/ElectronicDevice";
 
-const EWasteCategories = () => {
+const categoryLists = [
+  {
+    icon: <Monitor />,
+    title: "Elektronik Besar",
+  },
+  {
+    icon: <Smartphone />,
+    title: "Elektronik Kecil",
+  },
+  {
+    icon: <CookingPot />,
+    title: "Elektronik Dapur",
+  },
+  {
+    icon: <Cpu />,
+    title: "Telekomunikasi & IT",
+  },
+  {
+    icon: <Stethoscope />,
+    title: "Elektronik Medis",
+  },
+  {
+    icon: <Guitar />,
+    title: "Elektronik Hiburan",
+  },
+];
+
+export default function CategoryPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-100 to-primary-50">
+      <Navbar />
       {/* Hero Section */}
-      <div className="relative px-24 py-16 md:py-16">
+      <div className="relative px-24 py-16 md:py-8">
         {/* Content */}
         <div className="flex flex-row w-fit max-w-4xl mx-auto relative px-8 py-6 bg-revamp-secondary-600 rounded-xl text-white">
           <div className="flex flex-col">
@@ -42,68 +75,28 @@ const EWasteCategories = () => {
 
       {/* Categories Section */}
       <div className="max-w-4xl mx-auto">
-        <h3 className="text-2xl font-bold text-revamp-secondary-600 mb-8 text-center">
+        <h3 className="text-2xl font-bold text-revamp-secondary-600 mb-4 text-center">
           Kategori
         </h3>
+        <hr className="border border-revamp-neutral-7/20 my-4" />
 
-        <div className="relative">
-          <Swiper spaceBetween={30} slidesPerView={3}>
-            <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
-              <SwiperSlide>
-                <CategoryCard
-                  icon={<Monitor />}
-                  title="Elektronik Besar"
-                  className="bg-revamp-secondary-500"
-                />
-              </SwiperSlide>
-              <SwiperSlide>
-                <CategoryCard
-                  icon={<Smartphone />}
-                  title="Elektronik Kecil"
-                  className="bg-revamp-secondary-500"
-                />
-              </SwiperSlide>
-              <SwiperSlide>
-                <CategoryCard
-                  icon={<CookingPot />}
-                  title="Elektronik Dapur"
-                  className="bg-revamp-secondary-500"
-                />
-              </SwiperSlide>
-              <SwiperSlide>
-                <CategoryCard
-                  icon={<Cpu />}
-                  title="Telekomunikasi & IT"
-                  className="bg-revamp-secondary-500"
-                />
-              </SwiperSlide>
-              <SwiperSlide>
-                <CategoryCard
-                  icon={<Cpu />}
-                  title="Elektronik Medis"
-                  className="bg-revamp-secondary-500"
-                />
-              </SwiperSlide>
-            </div>
-
-            <div className="absolute right-0 top-0 bottom-4 w-16 bg-gradient-to-l from-primary-50 pointer-events-none" />
-          </Swiper>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {categoryLists.map((category, index) => (
+            <CategoryCard
+              key={index}
+              icon={category.icon}
+              title={category.title}
+              className={"bg-revamp-secondary-500 w-full"}
+            />
+          ))}
         </div>
+        {/* Sampah Elektronik Section */}
+        <h3 className="text-2xl font-bold text-revamp-secondary-600 mt-16 mb-4 text-center">
+          Sampah Elektronik
+        </h3>
+        <hr className="border border-revamp-neutral-7/20 my-4" />
+        <ElectronicDevices />
       </div>
     </div>
   );
-};
-
-const CategoryCard = ({ icon, title, className }) => {
-  return (
-    <div
-      className={`flex items-center gap-3 min-w-[200px] p-4 rounded-lg shadow-lg hover:shadow-md hover:bg-revamp-secondary-600 transition-all text-white cursor-pointer ${className}`}>
-      <div className="p-2 rounded-lg bg-primary-50 ">{icon}</div>
-      <span className="text-sm font-medium ">{title}</span>
-    </div>
-  );
-};
-
-export default function CategoryPage() {
-  return <EWasteCategories />;
 }
