@@ -108,7 +108,7 @@ export default function DashboardPage() {
     <>
       {/* Navbar */}
       <Navbar />
-      <div className="container-sm px-4">
+      <div className="container-sm max-w-[1000px] mx-auto px-4">
         {/* Outer Card */}
         <div className="flex flex-row mx-auto my-8 gap-4 justify-center">
           <StatisticCard title="Total Delivered" value="100" />
