@@ -1,4 +1,10 @@
-import { ClipboardList, CircuitBoard, MapPin, Clock } from "lucide-react";
+import {
+  ClipboardList,
+  CircuitBoard,
+  MapPin,
+  Clock,
+  LayoutDashboard,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import Logo from "../../assets/logo.png";
@@ -7,6 +13,11 @@ const Sidebar = () => {
   const location = useLocation();
 
   const sidebarMenu = [
+    {
+      icon: <LayoutDashboard size={20} />,
+      name: "Dashboard",
+      route: "/",
+    },
     {
       icon: <CircuitBoard size={20} />,
       name: "Kategori Sampah",
@@ -46,7 +57,7 @@ const Sidebar = () => {
                 to={item.route}
                 className={`flex items-center justify-between p-3 mb-2 rounded-lg cursor-pointer transition-all duration-200 ${
                   location.pathname === item.route
-                    ? "bg-revamp-secondary-700/10 text-revamp-secondary-600"
+                    ? "bg-revamp-secondary-700/10 text-revamp-secondary-600 shadow-sm"
                     : "hover:bg-white/10"
                 }`}>
                 <div className="flex items-center gap-3">
