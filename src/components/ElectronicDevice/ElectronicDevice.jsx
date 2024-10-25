@@ -1,5 +1,5 @@
 import { useState } from "react";
-import CardComponent from "../CardImage/Card";
+import CardComponent from "../ProductCard/Card";
 import Television from "../../assets/ewaste-devices/television.png";
 import Kulkas from "../../assets/ewaste-devices/kulkas.png";
 import MesinCuci from "../../assets/ewaste-devices/mesincuci.png";
@@ -90,8 +90,8 @@ const ElectronicDevices = () => {
                 onClick={() => setActiveFilter(category)}
                 className={`${
                   activeFilter === category
-                    ? "bg-revamp-secondary-500 text-white"
-                    : "text-[#6D6D6D] hover:bg-[#F6F6F6]"
+                    ? "bg-revamp-neutral-4 text-[#6D6D6D]"
+                    : "text-[#797979] hover:bg-[#F6F6F6]"
                 } w-full text-left px-3 py-2 rounded text-sm transition-colors duration-200`}>
                 {category}
               </button>

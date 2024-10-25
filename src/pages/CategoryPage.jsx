@@ -46,7 +46,7 @@ export default function CategoryPage() {
       {/* Hero Section */}
       <div className="relative px-24 py-16 md:py-8">
         {/* Content */}
-        <div className="flex flex-row w-fit max-w-4xl mx-auto relative px-8 py-6 bg-revamp-secondary-600 rounded-xl text-white">
+        <div className="flex flex-row w-fit max-w-4xl mx-auto relative px-8 py-6 bg-revamp-secondary-400 rounded-xl text-white">
           <div className="flex flex-col">
             <h2 className="text-4xl md:text-3xl font-bold text-primary-700 mb-4">
               Temukan Ragam <br />
@@ -86,7 +86,7 @@ export default function CategoryPage() {
               key={index}
               icon={category.icon}
               title={category.title}
-              className={"bg-revamp-secondary-500 w-full"}
+              className={"bg-revamp-secondary-400 w-full"}
             />
           ))}
         </div>
