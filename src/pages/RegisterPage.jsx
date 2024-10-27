@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import Logo from '../assets/logo.png';
 import Slide2 from '../assets/vertical-slide-2.png';
-import InputText from '../components/Input/InputText';
 import InputEmail from '../components/Input/InputEmail';
 import InputPassword from '../components/Input/InputPassword';
 import InputCheck from '../components/Input/InputCheck';
@@ -9,7 +8,6 @@ import FooterBar from '../components/Register/FooterBar';
 import { registration } from "../services";
 
 export default function PageName() {
-    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -33,7 +31,6 @@ export default function PageName() {
         }
 
         const payload = {
-            name,
             email,
             password,
             confirm_password: confirmPassword
@@ -46,7 +43,7 @@ export default function PageName() {
             if (response.status === 201) {
                 setSuccess("Registration successful! Please check your email to verify your account.");
                 setError(null);
-                window.location('/verification');
+                window.location.href = "/verification?email=" + email;
             } else {
                 setError("Registration failed. Please try again.");
                 setSuccess(null);
@@ -61,7 +58,7 @@ export default function PageName() {
     };
 
     // Determine if the button should be disabled
-    const isButtonDisabled = !name || !email || !password || !confirmPassword || !agreeToTerms || isLoading;
+    const isButtonDisabled =  !email || !password || !confirmPassword || !agreeToTerms || isLoading;
 
     return (
         <div className="h-[100dvh] px-[8px] md:p-[100px] flex justify-center items-center">
@@ -77,10 +74,9 @@ export default function PageName() {
                         <h1 className="text-[40px] font-[600]">Registrasi</h1>
                         <span className="text-[16px] font-[400] text-revamp-neutral-7">Mari siapkan semuanya agar Anda dapat mengakses akun Anda</span>
                     </div>
-                    {error && <div className="text-red-500">{error}</div>}
-                    {success && <div className="text-green-500">{success}</div>}
+                    {error && <div className="text-white bg-revamp-error-300 py-[8px] mb-[18px] rounded-[6px]">{error}</div>}
+                    {success && <div className="text-white bg-revamp-success-300 py-[8px] mb-[18px] rounded-[6px]">{success}</div>}
                     <div className="mb-[24px]">
-                        <InputText label={'Nama'} value={name} onChange={(e) => setName(e.target.value)} />
                         <InputEmail label={'Email'} value={email} onChange={(e) => setEmail(e.target.value)} />
                         <InputPassword label={'Kata Sandi'} value={password} onChange={(e) => setPassword(e.target.value)} />
                         <InputPassword label={'Konfirmasi Kata Sandi'} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
