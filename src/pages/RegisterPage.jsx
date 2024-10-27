@@ -5,23 +5,24 @@ import InputText from '../components/Input/InputText';
 import InputEmail from '../components/Input/InputEmail';
 import InputPassword from '../components/Input/InputPassword';
 import InputCheck from '../components/Input/InputCheck';
-import FooterBar from '../components/Register/FooterBar'
+import FooterBar from '../components/Register/FooterBar';
+import { registration } from "../services";
 
 export default function PageName() {
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
+    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
-    const [phoneNumber, setPhoneNumber] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [agreeToTerms, setAgreeToTerms] = useState(false);
+    const [error, setError] = useState(null);
+    const [success, setSuccess] = useState(null);
+    const [isLoading, setIsLoading] = useState(false); // State to manage loading
 
     useEffect(() => {
         document.title = "E-Wastepas | Register";
     }, []);
 
-    const handleRegister = () => {
-        // handle registration logic here
+    const handleRegister = async () => {
         if (password !== confirmPassword) {
             alert("Passwords do not match");
             return;
@@ -30,63 +31,82 @@ export default function PageName() {
             alert("You must agree to the terms and conditions");
             return;
         }
-        // Proceed with registration
+
+        const payload = {
+            name,
+            email,
+            password,
+            confirm_password: confirmPassword
+        };
+
+        setIsLoading(true); // Set loading state to true
+
+        try {
+            const response = await registration(payload);
+            if (response.status === 201) {
+                setSuccess("Registration successful! Please check your email to verify your account.");
+                setError(null);
+                window.location('/verification');
+            } else {
+                setError("Registration failed. Please try again.");
+                setSuccess(null);
+            }
+        // eslint-disable-next-line no-unused-vars
+        } catch (error) {
+            setError("An error occurred during registration. Please try again.");
+            setSuccess(null);
+        } finally {
+            setIsLoading(false); // Set loading state back to false
+        }
     };
+
+    // Determine if the button should be disabled
+    const isButtonDisabled = !name || !email || !password || !confirmPassword || !agreeToTerms || isLoading;
 
     return (
         <div className="h-[100dvh] px-[8px] md:p-[100px] flex justify-center items-center">
-                <div className="w-1/2 md:p-[10px] lg:p-[52px] hidden lg:block">
-                    <img src={Slide2} className="max-h-[90vh]" alt="Slide" />
-                </div>
-                <div className="text-center w-full lg:w-1/2">
+            <div className="w-1/2 md:p-[10px] lg:p-[52px] hidden lg:block">
+                <img src={Slide2} className="max-h-[90vh]" alt="Slide" />
+            </div>
+            <div className="text-center w-full lg:w-1/2">
                 <div className="flex justify-center">
-                     <img src={Logo} className="w-[340px]" alt="Logo" />
+                    <img src={Logo} className="w-[340px]" alt="Logo" />
                 </div>
-                    <div>
-                        <div className="text-start mb-[24px]">
-                            <h1 className="text-[40px] font-[600]">Registrasi</h1>
-                            <span className="text-[16px] font-[400] text-revamp-neutral-7">Mari siapkan semuanya agar Anda dapat mengakses akun Anda</span>
-                        </div>
-                        <div className="mb-[24px]">
-                            <div className="flex justify-between gap-2">
-                                <div className="w-1/2">
-                                    <InputText label={'Nama Depan'} value={firstName} onChange={(e) => setFirstName(e.target.value)} />
-                                </div>
-                                <div className="w-1/2">
-                                    <InputText label={'Nama Belakang'} value={lastName} onChange={(e) => setLastName(e.target.value)} />
-                                </div>
-                            </div>
-                            <div className="flex justify-between gap-2">
-                                <div className="w-1/2">
-                                    <InputEmail label={'Email'} value={email} onChange={(e) => setEmail(e.target.value)} />
-                                </div>
-                                <div className="w-1/2">
-                                    <InputText label={'Nomor Telepon'} value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
-                                </div>
-                            </div>
-                            <InputPassword label={'Kata Sandi'} value={password} onChange={(e) => setPassword(e.target.value)} />
-                            <InputPassword label={'Konfirmasi Kata Sandi'} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
-                            <div className="flex justify-between items-start">
-                                <InputCheck 
-                                    label={<span>Saya menyetujui semua <a href="#" className="text-revamp-red-700 font-[500]">Syarat</a> dan <a href="#" className="text-revamp-red-700 font-[500]">Kebijakan Privasi</a></span>} 
-                                    value={agreeToTerms} 
-                                    onChange={(e) => setAgreeToTerms(e.target.checked)} 
-                                />
-                            </div>
-                        </div>
-                        <div className="mb-[24px]">
-                            <button 
-                                className="bg-revamp-secondary-500 w-full py-[8px] text-white text-[14px] font-[600]" 
-                                onClick={handleRegister}>
-                                Buat Akun
-                            </button>
-                            <div className="flex justify-center items-center mt-[10px]">
-                                <span className="text-revamp-neutral-10 font-[500] text-[14px]">Anda sudah memiliki akun? <a href="/login" className="text-revamp-error-300">Login</a></span>
-                            </div>
-                        </div>
-                        <FooterBar />
+                <div>
+                    <div className="text-start mb-[24px]">
+                        <h1 className="text-[40px] font-[600]">Registrasi</h1>
+                        <span className="text-[16px] font-[400] text-revamp-neutral-7">Mari siapkan semuanya agar Anda dapat mengakses akun Anda</span>
                     </div>
+                    {error && <div className="text-red-500">{error}</div>}
+                    {success && <div className="text-green-500">{success}</div>}
+                    <div className="mb-[24px]">
+                        <InputText label={'Nama'} value={name} onChange={(e) => setName(e.target.value)} />
+                        <InputEmail label={'Email'} value={email} onChange={(e) => setEmail(e.target.value)} />
+                        <InputPassword label={'Kata Sandi'} value={password} onChange={(e) => setPassword(e.target.value)} />
+                        <InputPassword label={'Konfirmasi Kata Sandi'} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+                        <div className="flex justify-between items-start">
+                            <InputCheck 
+                                label={<span>Saya menyetujui semua <a href="#" className="text-revamp-red-700 font-[500]">Syarat</a> dan <a href="#" className="text-revamp-red-700 font-[500]">Kebijakan Privasi</a></span>} 
+                                value={agreeToTerms} 
+                                onChange={(e) => setAgreeToTerms(e.target.checked)} 
+                            />
+                        </div>
+                    </div>
+                    <div className="mb-[24px]">
+                        <button 
+                            className={`${isButtonDisabled ? 'bg-revampV2-neutral-400' : 'bg-revamp-secondary-500'} w-full py-[8px] text-white text-[14px] font-[600]`}
+                            onClick={handleRegister}
+                            disabled={isButtonDisabled} // Use the calculated disabled state
+                        >
+                            {isLoading ? 'Loading...' : 'Buat Akun'} {/* Display loading text */}
+                        </button>
+                        <div className="flex justify-center items-center mt-[10px]">
+                            <span className="text-revamp-neutral-10 font-[500] text-[14px]">Anda sudah memiliki akun? <a href="/login" className="text-revamp-error-300">Login</a></span>
+                        </div>
+                    </div>
+                    <FooterBar />
                 </div>
             </div>
+        </div>
     );
 }

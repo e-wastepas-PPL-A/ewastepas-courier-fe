@@ -1,7 +1,13 @@
+/* eslint-disable no-undef */
 import axios from "axios";
 
-// eslint-disable-next-line no-undef
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+const BASE_URL = "http://localhost:3000/api";
+
+export async function login(payload) {
+  return await axios.post(`${BASE_URL}/auth/login`, payload).catch((error) => {
+    return error;
+  });
+}
 
 export async function registration(payload) {
   return await axios.post(`${BASE_URL}/auth/registration`, payload).catch((error) => {
@@ -10,6 +16,12 @@ export async function registration(payload) {
 }
 
 export async function verifyOtp(payload) {
+  return await axios.post(`${BASE_URL}/auth/verify-otp`, payload).catch((error) => {
+    return error;
+  });
+}
+
+export async function changePassword(payload) {
   return await axios.post(`${BASE_URL}/auth/verify-otp`, payload).catch((error) => {
     return error;
   });

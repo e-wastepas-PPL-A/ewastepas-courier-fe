@@ -5,6 +5,7 @@ import HomePage from "./pages/HomePage.jsx";
 import Login from "./pages/LoginPage.jsx";
 import Register from "./pages/RegisterPage.jsx";
 import Forgot from "./pages/ForgotPage.jsx";
+import Verification from "./pages/VerificationPage.jsx";
 import "./styles/index.css";
 import DashboardPage from "./pages/DashboardPage.jsx";
 import CategoryPage from "./pages/CategoryPage.jsx";
@@ -54,6 +55,10 @@ const router = createBrowserRouter([
   {
     path: "/forgot",
     element: <Forgot />,
+  },
+  {
+    path: "/verification",
+    element: <Verification />,
   },
 ]);
 
