@@ -14,9 +14,3 @@ export async function verifyOtp(payload) {
     return error;
   });
 }
-
-export async function change(payload) {
-  return await axios.post(`${BASE_URL}/auth/verify-otp`, payload).catch((error) => {
-    return error;
-  });
-}
