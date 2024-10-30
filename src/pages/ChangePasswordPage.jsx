@@ -42,7 +42,6 @@ export default function PageName() {
             } else {
                 setError(response.response.data.error);
                 setSuccess(null);
-                console.log()
             }
 
         } catch {

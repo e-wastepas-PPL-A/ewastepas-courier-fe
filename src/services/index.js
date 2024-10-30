@@ -31,7 +31,6 @@ export async function sendOtp(payload) {
 
 export async function changePassword(payload, token) {
   try {
-    console.log(token)
     const response = await axios.patch(`${BASE_URL}/auth/forgot-password`, payload, {
       headers: {
         Authorization: `Bearer ${token}`
