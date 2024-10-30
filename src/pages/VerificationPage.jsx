@@ -5,9 +5,11 @@ import Slide1 from '../assets/vertical-slide-1.png';
 import IcBack from '../assets/ic-back.svg';
 import InputText from '../components/Input/InputText';
 import FooterBar from '../components/Register/FooterBar';
-import { verifyOtp } from "../services";
+import { verifyOtp, sendOtp } from "../services";
+import { useLocation } from "react-router-dom";
 
 export default function PageName() {
+    const location = useLocation();
     const [otp, setOtp] = useState('');
     const [email, setEmail] = useState('');
     const [error, setError] = useState(null); // State to manage errors
@@ -22,7 +24,8 @@ export default function PageName() {
     const handleSendOtp = async () => {
         const payload = {
             otp,
-            email
+            email,
+            type: location.pathname.split('/')[1] === 'register' ? 'registration' : 'forgot_password'
         };
 
         try {
@@ -31,7 +34,27 @@ export default function PageName() {
                 setSuccess("OTP verified successfully!");
                 setError(null); // Clear any previous error
                 // Optionally, redirect the user to another page
-                window.location.href = "/login";
+                window.location.href = location.pathname.split('/')[1] === 'register' ? "/login" : "/forgot/change-password?token=" + response.data.token;
+            } else {
+                setError("OTP verification failed. Please try again.");
+                setSuccess(null); // Clear any previous success message
+            }
+        } catch (error) {
+            setError("An error occurred during OTP verification. Please try again.");
+            setSuccess(null); // Clear any previous success message
+        }
+    };
+
+    const handleResendOtp = async () => {
+        const payload = {
+            email
+        };
+
+        try {
+            const response = await sendOtp(payload);
+            if (response.status === 200) { // Assuming 200 is the success status code
+                setSuccess("OTP send successfully!");
+                setError(null); // Clear any previous error
             } else {
                 setError("OTP verification failed. Please try again.");
                 setSuccess(null); // Clear any previous success message
@@ -61,8 +84,8 @@ export default function PageName() {
                         <h1 className="text-[40px] font-[600]">Verifikasi OTP</h1>
                         <span className="text-[16px] font-[400] text-revamp-neutral-7">Kode otentikasi telah dikirim ke email Anda.</span>
                     </div>
-                    {error && <div className="text-red-500">{error}</div>}
-                    {success && <div className="text-green-500">{success}</div>}
+                    {error && <div className="text-white bg-revamp-error-300 py-[8px] mb-[18px] rounded-[6px]">{error}</div>}
+                    {success && <div className="text-white bg-revamp-success-300 py-[8px] mb-[18px] rounded-[6px]">{success}</div>}
                     <div className="mb-[24px]">
                         <InputText label={'Masukan Kode'} value={otp} onChange={(e) => setOtp(e.target.value)} />
                     </div>
@@ -76,7 +99,7 @@ export default function PageName() {
                         </button>
                         <div className="flex justify-center items-center mt-[10px]">
                             <span className="text-revamp-neutral-10 font-[500] text-[14px]">
-                                Tidak mendapatkan kode? <a href="/register" className="text-revamp-error-300">Kirim Ulang</a>
+                                Tidak mendapatkan kode? <a onClick={handleResendOtp} className="text-revamp-error-300 cursor-pointer hover:underline">Kirim Ulang</a>
                             </span>
                         </div>
                     </div>

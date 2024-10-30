@@ -1,23 +1,22 @@
 import { useEffect, useState } from "react";
 import Logo from '../assets/logo.png';
 import Slide2 from '../assets/vertical-slide-2.png';
-import InputEmail from '../components/Input/InputEmail';
 import InputPassword from '../components/Input/InputPassword';
-import InputCheck from '../components/Input/InputCheck';
 import FooterBar from '../components/Register/FooterBar';
-import { registration, sendOtp } from "../services";
+import { changePassword } from "../services";
 
 export default function PageName() {
-    const [email, setEmail] = useState('');
+    const [token, setToken] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [agreeToTerms, setAgreeToTerms] = useState(false);
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(null);
     const [isLoading, setIsLoading] = useState(false); // State to manage loading
 
     useEffect(() => {
         document.title = "E-Wastepas | Register";
+        const urlParams = new URLSearchParams(window.location.search);
+        setToken(urlParams.get('token'));
     }, []);
 
     const handleRegister = async () => {
@@ -25,31 +24,25 @@ export default function PageName() {
             alert("Passwords do not match");
             return;
         }
-        if (!agreeToTerms) {
-            alert("You must agree to the terms and conditions");
-            return;
-        }
+
 
         const payload = {
-            email,
-            password,
-            confirm_password: confirmPassword
+            new_password: password,
+            confirm_new_password: confirmPassword
         };
 
         setIsLoading(true); // Set loading state to true
 
         try {
-            const response = await registration(payload);
-            if (response.status === 201) {
-                setSuccess("Registration successful! Please check your email to verify your account.");
+            const response = await changePassword(payload, token);
+            if (response.status === 200) {
+                setSuccess("Change password successful!");
+                window.location.href = "/login";
                 setError(null);
-                window.location.href = "/register/verification?email=" + email;
-            } else if(response.response.data.error === "Your account has not been verified") {
-                sendOtp({email: email})
-                window.location.href = "/register/verification?email=" + email;
             } else {
                 setError(response.response.data.error);
                 setSuccess(null);
+                console.log()
             }
 
         } catch {
@@ -60,7 +53,7 @@ export default function PageName() {
     };
 
     // Determine if the button should be disabled
-    const isButtonDisabled =  !email || !password || !confirmPassword || !agreeToTerms || isLoading;
+    const isButtonDisabled = !password || !confirmPassword || isLoading;
     return (
         <div className="h-[100dvh] px-[8px] md:p-[100px] flex justify-center items-center">
             <div className="w-1/2 md:p-[10px] lg:p-[52px] hidden lg:block">
@@ -72,22 +65,14 @@ export default function PageName() {
                 </div>
                 <div>
                     <div className="text-start mb-[24px]">
-                        <h1 className="text-[40px] font-[600]">Registrasi</h1>
-                        <span className="text-[16px] font-[400] text-revamp-neutral-7">Mari siapkan semuanya agar Anda dapat mengakses akun Anda</span>
+                        <h1 className="text-[40px] font-[600]">Ubah Kata Sandi</h1>
+                        <span className="text-[16px] font-[400] text-revamp-neutral-7">Kata sandi Anda yang sebelumnya telah direset. Silakan tetapkan kata sandi baru untuk akun Anda</span>
                     </div>
                     {error && <div className="text-white bg-revamp-error-300 py-[8px] mb-[18px] rounded-[6px]">{error}</div>}
                     {success && <div className="text-white bg-revamp-success-300 py-[8px] mb-[18px] rounded-[6px]">{success}</div>}
                     <div className="mb-[24px]">
-                        <InputEmail label={'Email'} value={email} onChange={(e) => setEmail(e.target.value)} />
                         <InputPassword label={'Kata Sandi'} value={password} onChange={(e) => setPassword(e.target.value)} />
                         <InputPassword label={'Konfirmasi Kata Sandi'} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
-                        <div className="flex justify-between items-start">
-                            <InputCheck 
-                                label={<span>Saya menyetujui semua <a href="#" className="text-revamp-red-700 font-[500]">Syarat</a> dan <a href="#" className="text-revamp-red-700 font-[500]">Kebijakan Privasi</a></span>} 
-                                value={agreeToTerms} 
-                                onChange={(e) => setAgreeToTerms(e.target.checked)} 
-                            />
-                        </div>
                     </div>
                     <div className="mb-[24px]">
                         <button 
@@ -95,7 +80,7 @@ export default function PageName() {
                             onClick={handleRegister}
                             disabled={isButtonDisabled} // Use the calculated disabled state
                         >
-                            {isLoading ? 'Loading...' : 'Buat Akun'} {/* Display loading text */}
+                            {isLoading ? 'Loading...' : 'Tetapkan Kata Sandi'} {/* Display loading text */}
                         </button>
                         <div className="flex justify-center items-center mt-[10px]">
                             <span className="text-revamp-neutral-10 font-[500] text-[14px]">Anda sudah memiliki akun? <a href="/login" className="text-revamp-error-300">Login</a></span>

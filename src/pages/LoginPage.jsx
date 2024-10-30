@@ -37,7 +37,7 @@ export default function PageName() {
                 // Optionally, redirect the user to the dashboard or homepage
                 window.location.href = "/";
             } else {
-                setError("Login failed. Please check your credentials and try again.");
+                setError(response.response.data.error);
                 setSuccess(null); // Clear any previous success message
             }
         } catch (error) {

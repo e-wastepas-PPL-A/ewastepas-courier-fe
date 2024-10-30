@@ -23,17 +23,30 @@ export async function verifyOtp(payload) {
   });
 }
 
-export async function changePassword(payload) {
-  return await axios.post(`${BASE_URL}/auth/verify-otp`, payload).catch((error) => {
+export async function sendOtp(payload) {
+  return await axios.post(`${BASE_URL}/auth/send-otp`, payload).catch((error) => {
     return error;
   });
+}
+
+export async function changePassword(payload, token) {
+  try {
+    console.log(token)
+    const response = await axios.patch(`${BASE_URL}/auth/forgot-password`, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    return response;
+  } catch (error) {
+    console.error("Error in changePassword:", error.response ? error.response.data : error.message);
+    return error.response || error;
+  }
 }
 
 export async function getUsers() {
     // Retrieve the PHPSESSID cookie
     const token = Cookies.get('PHPSESSID');
-  
-    console.log(token);
   
     // Add the Authorization header with the token
     return await axios
