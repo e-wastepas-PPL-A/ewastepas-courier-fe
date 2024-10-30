@@ -4,12 +4,27 @@ import {
   MapPin,
   Clock,
   LayoutDashboard,
+  Menu,
+  X,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useLocation } from "react-router-dom";
 import Logo from "../../assets/logo.png";
+import { useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { getUsers } from "../../services";
 
 const Sidebar = () => {
+  const [user, setUser] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const response = await getUsers();
+      setUser(response.data.user);
+    };
+    fetchUsers();
+  }, []);
+
   const location = useLocation();
 
   const sidebarMenu = [
@@ -40,47 +55,79 @@ const Sidebar = () => {
     },
   ];
 
-  return (
-    <div className="sticky top-0 left-0 w-64 h-screen  text-revamp-neutral-8 flex flex-col border-r border-revamp-neutral-10/20">
-      <div className="flex-1 overflow-y-auto">
-        <div className="p-4 flex flex-col">
-          <div className="mx-auto my-4">
-            <Link to={"/"} className="text-xl font-bold text-white">
-              <img src={Logo} className="w-[150px]" alt="Ewhale" />
-            </Link>
-          </div>
+  const toggleSidebar = () => {
+    setIsOpen(!isOpen);
+  };
 
-          <nav>
-            {sidebarMenu.map((item, index) => (
-              <Link
-                key={index}
-                to={item.route}
-                className={`flex items-center justify-between p-3 mb-2 rounded-lg cursor-pointer transition-all duration-200 ${
-                  location.pathname === item.route
-                    ? "bg-revamp-secondary-700/10 text-revamp-secondary-600 shadow-sm"
-                    : "hover:bg-white/10"
-                }`}>
-                <div className="flex items-center gap-3">
-                  {item.icon}
-                  <span className="text-sm font-medium">{item.name}</span>
-                </div>
-              </Link>
-            ))}
-          </nav>
-        </div>
-      </div>
-      <div className="p-4 flex items-center gap-3">
-        <img
-          src="https://eu.ui-avatars.com/api/?name=John+Doe&size=250"
-          alt="Courier Profile"
-          className="w-10 h-10 rounded-full"
+  // Close sidebar on route change for mobile
+  useEffect(() => {
+    setIsOpen(false);
+  }, [location]);
+
+  return (
+    <>
+      {/* Mobile Menu Button */}
+      <button
+        onClick={toggleSidebar}
+        className="fixed top-4 left-4 z-50 p-2 rounded-lg bg-revamp-secondary-600 text-white lg:hidden">
+        {isOpen ? <X size={24} /> : <Menu size={24} />}
+      </button>
+
+      {/* Overlay */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-30 lg:hidden"
+          onClick={toggleSidebar}
         />
-        <div>
-          <p className="text-sm font-medium">John Doe</p>
-          <p className="text-xs text-revamp-neutral-8/70">johndoe@ewhale.com</p>
+      )}
+
+      {/* Sidebar */}
+      <div
+        className={`fixed lg:sticky sm:sticky top-0 left-0 w-64 h-screen text-revamp-neutral-8 flex flex-col border-r border-revamp-neutral-10/20 bg-white z-40 transform transition-transform duration-300 ease-in-out ${
+          isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+        }`}>
+        <div className="flex-1 overflow-y-auto">
+          <div className="p-4 flex flex-col">
+            <div className="mx-auto my-4">
+              <Link to="/" className="text-xl font-bold text-white">
+                <img src={Logo} className="w-[150px]" alt="Logo" />
+              </Link>
+            </div>
+
+            <nav>
+              {sidebarMenu.map((item, index) => (
+                <Link
+                  key={index}
+                  to={item.route}
+                  className={`flex items-center justify-between p-3 mb-2 rounded-lg cursor-pointer transition-all duration-200 ${
+                    location.pathname === item.route
+                      ? "bg-revamp-secondary-700/10 text-revamp-secondary-600 shadow-sm"
+                      : "hover:bg-white/10"
+                  }`}>
+                  <div className="flex items-center gap-3">
+                    {item.icon}
+                    <span className="text-sm font-medium">{item.name}</span>
+                  </div>
+                </Link>
+              ))}
+            </nav>
+          </div>
+        </div>
+        <div className="p-4 flex items-center gap-3">
+          <img
+            src="https://eu.ui-avatars.com/api/?name=John+Doe&size=250"
+            alt="Profile"
+            className="w-10 h-10 rounded-full"
+          />
+          <div>
+            <p className="text-sm font-medium">
+              {!user.Name ? "John Doe" : user.Name}
+            </p>
+            <p className="text-xs text-revamp-neutral-8/70">{user.Email}</p>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

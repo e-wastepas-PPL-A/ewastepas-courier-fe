@@ -79,7 +79,7 @@ const ElectronicDevices = () => {
 
   return (
     <div className="min-h-fit mb-8 max-w-4xl mx-auto">
-      <div className="flex flex-row max-w-6xl mx-auto">
+      <div className="flex flex-col sm:flex-row max-w-6xl mx-auto">
         {/* Filter Section */}
         <div className="flex flex-col gap-2 bg-white rounded-lg w-[300px] p-4">
           <h2 className="text-black-100 font-medium">Filter by:</h2>
