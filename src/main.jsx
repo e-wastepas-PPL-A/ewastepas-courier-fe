@@ -6,6 +6,7 @@ import HomePage from "./pages/HomePage.jsx";
 import Login from "./pages/LoginPage.jsx";
 import Register from "./pages/RegisterPage.jsx";
 import Forgot from "./pages/ForgotPage.jsx";
+import ChangePassword from "./pages/ChangePasswordPage.jsx";
 import Verification from "./pages/VerificationPage.jsx";
 import DashboardPage from "./pages/DashboardPage.jsx";
 import CategoryPage from "./pages/CategoryPage.jsx";
@@ -76,10 +77,26 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/verification",
+    path: "/register/verification",
     element: (
       <PublicRoute>
         <Verification />
+      </PublicRoute>
+    ),
+  },
+  {
+    path: "/forgot/verification",
+    element: (
+      <PublicRoute>
+        <Verification />
+      </PublicRoute>
+    ),
+  },
+  {
+    path: "/forgot/change-password",
+    element: (
+      <PublicRoute>
+        <ChangePassword />
       </PublicRoute>
     ),
   },
