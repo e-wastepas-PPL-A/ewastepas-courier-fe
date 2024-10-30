@@ -11,57 +11,7 @@ import {
 import Navbar from "../components/Navbar/Navbar";
 import StatisticCard from "../components/StatisticCard/StatisticCard";
 import { ChevronDown } from "lucide-react";
-
-const totalDelivery = [
-  {
-    month: "Jan",
-    total: 30,
-  },
-  {
-    month: "Feb",
-    total: 35,
-  },
-  {
-    month: "Mar",
-    total: 40,
-  },
-  {
-    month: "Apr",
-    total: 45,
-  },
-  {
-    month: "May",
-    total: 50,
-  },
-  {
-    month: "Jun",
-    total: 55,
-  },
-  {
-    month: "Jul",
-    total: 60,
-  },
-  {
-    month: "Aug",
-    total: 55,
-  },
-  {
-    month: "Sep",
-    total: 50,
-  },
-  {
-    month: "Oct",
-    total: 45,
-  },
-  {
-    month: "Nov",
-    total: 40,
-  },
-  {
-    month: "Dec",
-    total: 35,
-  },
-];
+import { totalDelivery } from "../services/dummy";
 
 const Chart = () => {
   return (
@@ -108,9 +58,9 @@ export default function DashboardPage() {
     <>
       {/* Navbar */}
       <Navbar />
-      <div className="container-sm max-w-[1000px] mx-auto px-4">
+      <div className="container-sm lg:max-w-[1000px] mx-auto px-4 sm:w-screen">
         {/* Outer Card */}
-        <div className="flex flex-row mx-auto my-8 gap-4 justify-center">
+        <div className="flex flex-col lg:flex-row mx-auto my-8 gap-4 justify-center items-center lg:w-full">
           <StatisticCard title="Total Delivered" value="100" />
           <StatisticCard title="On Delivery" value="25" />
           <StatisticCard title="Canceled Delivery" value="25" />
