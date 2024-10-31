@@ -12,6 +12,7 @@ import { login } from "../services";
 export default function PageName() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [isLoading, setIsLoading] = useState('');
     const [error, setError] = useState(null); // State for error handling
     const [success, setSuccess] = useState(null); // State for success messages
 
@@ -26,6 +27,7 @@ export default function PageName() {
         };
 
         try {
+            setIsLoading(true);
             const response = await login(payload);
             if (response.status === 200) {
                 setSuccess("Login successful!");
@@ -40,13 +42,15 @@ export default function PageName() {
                 setError(response.response.data.error);
                 setSuccess(null); // Clear any previous success message
             }
+            setIsLoading(false);
         } catch (error) {
             setError("An error occurred during login. Please try again.");
             setSuccess(null); // Clear any previous success message
+            setIsLoading(false);
         }
     };
 
-    const isButtonDisabled =  !email || !password;
+    const isButtonDisabled =  !email || !password || isLoading;
 
     return (
         <div className="h-[100dvh] px-[8px] md:p-[100px] flex justify-center items-center">
@@ -76,9 +80,9 @@ export default function PageName() {
                         <button 
                             className={`${isButtonDisabled ? 'bg-revampV2-neutral-400' : 'bg-revamp-secondary-500'} w-full py-[8px] text-white text-[14px] font-[600]`}
                             onClick={handleLogin}
-                            disabled={!email || !password}
+                            disabled={isButtonDisabled}
                         >
-                            Login
+                            {isLoading ? 'Loading...' : 'Login'}
                         </button>
                         <div className="flex justify-center items-center mt-[10px]">
                             <span className="text-revamp-neutral-10 font-[500] text-[14px]">Tidak memiliki akun? <a href="/register" className="text-revamp-error-300">Registrasi</a></span>
