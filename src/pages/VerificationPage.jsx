@@ -12,6 +12,7 @@ export default function PageName() {
     const location = useLocation();
     const [otp, setOtp] = useState('');
     const [email, setEmail] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null); // State to manage errors
     const [success, setSuccess] = useState(null); // State to manage success messages
 
@@ -22,6 +23,7 @@ export default function PageName() {
     }, []);
 
     const handleSendOtp = async () => {
+        setIsLoading(true);
         const payload = {
             otp,
             email,
@@ -39,9 +41,12 @@ export default function PageName() {
                 setError("OTP verification failed. Please try again.");
                 setSuccess(null); // Clear any previous success message
             }
+
+            setIsLoading(false);
         } catch (error) {
             setError("An error occurred during OTP verification. Please try again.");
             setSuccess(null); // Clear any previous success message
+            setIsLoading(false);
         }
     };
 
@@ -64,6 +69,8 @@ export default function PageName() {
             setSuccess(null); // Clear any previous success message
         }
     };
+
+    const isButtonDisabled =  !otp || isLoading;
 
     return (
         <div className="h-[100dvh] px-[8px] md:p-[100px] flex justify-center items-center">
@@ -91,11 +98,11 @@ export default function PageName() {
                     </div>
                     <div className="mb-[24px]">
                         <button 
-                            className="bg-revamp-secondary-500 w-full py-[8px] text-white text-[14px] font-[600]" 
+                            className={`${isButtonDisabled ? 'bg-revampV2-neutral-400' : 'bg-revamp-secondary-500'} w-full py-[8px] text-white text-[14px] font-[600]`}
                             onClick={handleSendOtp}
-                            disabled={!otp}
+                            disabled={isButtonDisabled}
                         >
-                            Kirim
+                            {isLoading ? 'Loading...' : 'Kirim' }
                         </button>
                         <div className="flex justify-center items-center mt-[10px]">
                             <span className="text-revamp-neutral-10 font-[500] text-[14px]">
