@@ -98,7 +98,7 @@ export default function PageName() {
                     </div>
                     <div className="mb-[24px]">
                         <button 
-                        className={`${isButtonDisabled ? 'bg-revampV2-neutral-400' : 'bg-revamp-secondary-500'} w-full py-[8px] text-white text-[14px] font-[600]`}
+                            className={`${isButtonDisabled ? 'bg-revampV2-neutral-400' : 'bg-revamp-secondary-500'} w-full py-[8px] text-white text-[14px] font-[600]`}
                             onClick={handleSendOtp}
                             disabled={isButtonDisabled}
                         >
