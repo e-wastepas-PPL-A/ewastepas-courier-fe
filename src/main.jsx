@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "./App.jsx";
 import HomePage from "./pages/HomePage.jsx";
 import Login from "./pages/LoginPage.jsx";
+import Oauth from "./pages/OauthPage.jsx";
 import Register from "./pages/RegisterPage.jsx";
 import Forgot from "./pages/ForgotPage.jsx";
 import ChangePassword from "./pages/ChangePasswordPage.jsx";
@@ -57,6 +58,14 @@ const router = createBrowserRouter([
     element: (
       <PublicRoute>
         <Login />
+      </PublicRoute>
+    ),
+  },
+  {
+    path: "/auth/google/callback",
+    element: (
+      <PublicRoute>
+        <Oauth />
       </PublicRoute>
     ),
   },

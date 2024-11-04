@@ -20,7 +20,7 @@ const Sidebar = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       const response = await getUsers();
-      setUser(response.data.user);
+      setUser(response.data.courier);
     };
     fetchUsers();
   }, []);
@@ -121,9 +121,9 @@ const Sidebar = () => {
           />
           <div>
             <p className="text-sm font-medium">
-              {!user.Name ? "John Doe" : user.Name}
+              {!user.name ? user.email : user.name}
             </p>
-            <p className="text-xs text-revamp-neutral-8/70">{user.Email}</p>
+            <p className="text-xs text-revamp-neutral-8/70">{user.email}</p>
           </div>
         </div>
       </div>

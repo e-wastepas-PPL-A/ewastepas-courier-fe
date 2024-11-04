@@ -22,3 +22,63 @@ input[type=password]::-ms-clear
 {
     display: none;
 }
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  text-align: center;
+  font-family: Arial, sans-serif;
+  color: #333;
+}
+
+.spinner {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+
+.spinner div {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  background: #3498db;
+  border-radius: 50%;
+  animation: spinner 1.2s linear infinite;
+}
+
+.spinner div:nth-child(1) {
+  top: 0;
+  left: 36px;
+  animation-delay: -0.45s;
+}
+
+.spinner div:nth-child(2) {
+  top: 36px;
+  left: 0;
+  animation-delay: -0.3s;
+}
+
+.spinner div:nth-child(3) {
+  top: 36px;
+  left: 72px;
+  animation-delay: -0.15s;
+}
+
+.spinner div:nth-child(4) {
+  top: 72px;
+  left: 36px;
+}
+
+@keyframes spinner {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}

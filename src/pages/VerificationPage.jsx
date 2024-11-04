@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
 import Logo from '../assets/logo.png';
 import Slide1 from '../assets/vertical-slide-1.png';
@@ -13,14 +12,34 @@ export default function PageName() {
     const [otp, setOtp] = useState('');
     const [email, setEmail] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState(null); // State to manage errors
-    const [success, setSuccess] = useState(null); // State to manage success messages
+    const [isLoadingOtp, setIsLoadingOtp] = useState(false);
+    const [error, setError] = useState(null);
+    const [success, setSuccess] = useState(null);
+    const [countdown, setCountdown] = useState(0);
 
     useEffect(() => {
         document.title = "E-Wastepas | Login";
         const urlParams = new URLSearchParams(window.location.search);
         setEmail(urlParams.get('email'));
+
+        const expiredOtp = sessionStorage.getItem("expiredOtp");
+        console.log(expiredOtp)
+        if (expiredOtp) {
+            const timeLeft = new Date(expiredOtp) - new Date();
+            if (timeLeft > 0) {
+                setCountdown(Math.floor(timeLeft / 1000));
+            }
+        }
     }, []);
+
+    useEffect(() => {
+        if (countdown > 0) {
+            const timer = setInterval(() => {
+                setCountdown(prev => prev - 1);
+            }, 1000);
+            return () => clearInterval(timer);
+        }
+    }, [countdown]);
 
     const handleSendOtp = async () => {
         setIsLoading(true);
@@ -32,45 +51,48 @@ export default function PageName() {
 
         try {
             const response = await verifyOtp(payload);
-            if (response.status === 200) { // Assuming 200 is the success status code
+            if (response.status === 200) {
                 setSuccess("OTP verified successfully!");
-                setError(null); // Clear any previous error
-                // Optionally, redirect the user to another page
+                setError(null);
                 window.location.href = location.pathname.split('/')[1] === 'register' ? "/login" : "/forgot/change-password?token=" + response.data.token;
             } else {
                 setError("OTP verification failed. Please try again.");
-                setSuccess(null); // Clear any previous success message
+                setSuccess(null);
             }
-
-            setIsLoading(false);
-        } catch (error) {
+        } catch {
             setError("An error occurred during OTP verification. Please try again.");
-            setSuccess(null); // Clear any previous success message
+            setSuccess(null);
+        } finally {
             setIsLoading(false);
         }
     };
 
     const handleResendOtp = async () => {
-        const payload = {
-            email
-        };
-
+        setIsLoadingOtp(true);
+        const payload = { email };
         try {
             const response = await sendOtp(payload);
-            if (response.status === 200) { // Assuming 200 is the success status code
-                setSuccess("OTP send successfully!");
-                setError(null); // Clear any previous error
+            if (response.status === 200) {
+                setSuccess("OTP sent successfully!");
+                setError(null);
+
+                // Set new expiredOtp session with 60 seconds (or any duration you want)
+                const newExpiredOtp = new Date(new Date().getTime() + 60 * 3000);
+                sessionStorage.setItem("expiredOtp", newExpiredOtp);
+                setCountdown(60); // Start a new 60 seconds countdown
             } else {
-                setError("OTP verification failed. Please try again.");
-                setSuccess(null); // Clear any previous success message
+                setError("OTP resend failed. Please try again.");
+                setSuccess(null);
             }
-        } catch (error) {
-            setError("An error occurred during OTP verification. Please try again.");
-            setSuccess(null); // Clear any previous success message
+        } catch {
+            setError("An error occurred while resending OTP. Please try again.");
+            setSuccess(null);
+        }finally{
+            setIsLoadingOtp(false)
         }
     };
 
-    const isButtonDisabled =  !otp || isLoading;
+    const isButtonDisabled = !otp || isLoading;
 
     return (
         <div className="h-[100dvh] px-[8px] md:p-[100px] flex justify-center items-center">
@@ -102,11 +124,18 @@ export default function PageName() {
                             onClick={handleSendOtp}
                             disabled={isButtonDisabled}
                         >
-                            {isLoading ? 'Loading...' : 'Kirim' }
+                            {isLoading ? 'Loading...' : 'Kirim'}
                         </button>
                         <div className="flex justify-center items-center mt-[10px]">
                             <span className="text-revamp-neutral-10 font-[500] text-[14px]">
-                                Tidak mendapatkan kode? <a onClick={handleResendOtp} className="text-revamp-error-300 cursor-pointer hover:underline">Kirim Ulang</a>
+                                Tidak mendapatkan kode? {' '}
+                                {isLoadingOtp ? (
+                                      <span className="text-revamp-error-300 cursor-pointer ">Loading...</span>
+                                ):countdown > 0 ? (
+                                    <span className="text-revamp-error-300 cursor-not-allowed"> Kirim Ulang ({countdown}s)</span>
+                                ) : (
+                                    <a onClick={handleResendOtp} className="text-revamp-error-300 cursor-pointer hover:underline">Kirim Ulang</a>
+                                )}
                             </span>
                         </div>
                     </div>

@@ -1,4 +1,5 @@
 import IcGoogle from '../../assets/ic-google.svg'
+import { oauthHandler } from "../../services";
 
 const FooterBar = () => {
     return (
@@ -10,7 +11,8 @@ const FooterBar = () => {
         </div>
         <div className="flex justify-center">
             <div className="rounded-full shadow-lg w-fit p-[8px] flex justify-center cursor-pointer">
-                <img src={IcGoogle} />
+                <img src={IcGoogle} onClick={oauthHandler} />
+                 <div id="my-signin2"></div>
             </div>
         </div>
         </div>

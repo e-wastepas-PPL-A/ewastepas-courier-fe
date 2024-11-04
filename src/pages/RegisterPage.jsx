@@ -40,16 +40,25 @@ export default function PageName() {
 
         try {
             const response = await registration(payload);
-            if (response.status === 201) {
+            if (response.status === 201 || response.status === 200) {
                 setSuccess("Registration successful! Please check your email to verify your account.");
                 setError(null);
+
+                const newExpiredOtp = new Date(new Date().getTime() + 60 * 3000);
+                sessionStorage.setItem("expiredOtp", newExpiredOtp);
+
                 window.location.href = "/register/verification?email=" + email;
             } else if(response.response.data.error === "Your account has not been verified") {
-                sendOtp({email: email})
+                await sendOtp({ email: email });
+                
+                // Set session expiration for OTP
+                sessionStorage.removeItem("expiredOtp"); 
+
                 window.location.href = "/register/verification?email=" + email;
             } else {
                 setError(response.response.data.error);
                 setSuccess(null);
+                sessionStorage.removeItem("expiredOtp"); 
             }
 
         } catch {
@@ -61,6 +70,7 @@ export default function PageName() {
 
     // Determine if the button should be disabled
     const isButtonDisabled =  !email || !password || !confirmPassword || !agreeToTerms || isLoading;
+
     return (
         <div className="h-[100dvh] px-[8px] md:p-[100px] flex justify-center items-center">
             <div className="w-1/2 md:p-[10px] lg:p-[52px] hidden lg:block">
