@@ -3,7 +3,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 
-const BASE_URL = "http://localhost:3000/api";
+const BASE_URL = 'http://localhost:3000/api';
 
 export async function login(payload) {
   return await axios.post(`${BASE_URL}/auth/login`, payload).catch((error) => {
@@ -41,6 +41,21 @@ export async function changePassword(payload, token) {
     console.error("Error in changePassword:", error.response ? error.response.data : error.message);
     return error.response || error;
   }
+}
+
+export async function oauthHandler() {
+  try {
+    window.location = `${BASE_URL}/auth/google`
+  } catch (error) {
+    console.error("Error in changePassword:", error.response ? error.response.data : error.message);
+    return error.response || error;
+  }
+}
+
+export async function callbackHandler(code) {
+  return await axios.get(`${BASE_URL}/auth/google/callback?code=${code}`).catch((error) => {
+    return error;
+  });
 }
 
 export async function getUsers() {
