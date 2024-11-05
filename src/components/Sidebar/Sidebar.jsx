@@ -11,19 +11,9 @@ import { Link } from "react-router-dom";
 import Logo from "../../assets/logo.png";
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getUsers } from "../../services";
 
 const Sidebar = () => {
-  const [user, setUser] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
-
-  useEffect(() => {
-    const fetchUsers = async () => {
-      const response = await getUsers();
-      setUser(response.data.courier);
-    };
-    fetchUsers();
-  }, []);
 
   const location = useLocation();
 
@@ -111,19 +101,6 @@ const Sidebar = () => {
                 </Link>
               ))}
             </nav>
-          </div>
-        </div>
-        <div className="p-4 flex items-center gap-3">
-          <img
-            src="https://eu.ui-avatars.com/api/?name=John+Doe&size=250"
-            alt="Profile"
-            className="w-10 h-10 rounded-full"
-          />
-          <div>
-            <p className="text-sm font-medium">
-              {!user.name ? user.email : user.name}
-            </p>
-            <p className="text-xs text-revamp-neutral-8/70">{user.email}</p>
           </div>
         </div>
       </div>

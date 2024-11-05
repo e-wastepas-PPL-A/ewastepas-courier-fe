@@ -1,81 +1,44 @@
-import { useState } from "react";
-import CardComponent from "../ProductCard/Card";
-import Television from "../../assets/ewaste-devices/television.png";
-import Kulkas from "../../assets/ewaste-devices/kulkas.png";
-import MesinCuci from "../../assets/ewaste-devices/mesincuci.png";
-import Oven from "../../assets/ewaste-devices/oven.png";
-import ACImg from "../../assets/ewaste-devices/ac.png";
-import Setrika from "../../assets/ewaste-devices/setrika.png";
-import Blender from "../../assets/ewaste-devices/blender.png";
-import Smartphone from "../../assets/ewaste-devices/smartphone.png";
-import Router from "../../assets/ewaste-devices/router.png";
-import Keyboard from "../../assets/ewaste-devices/keyboard.png";
-import Laptop from "../../assets/ewaste-devices/laptop.png";
-import Radio from "../../assets/ewaste-devices/radio.png";
+import { useState, useEffect } from "react";
+import CardComponent from "../ProductCard/ProductCard";
+import { getWasteLists, getWasteType } from "../../services";
 
 const ElectronicDevices = () => {
-  const [activeFilter, setActiveFilter] = useState("All");
+  const [activeFilter, setActiveFilter] = useState(0);
+  const [wasteLists, setWasteLists] = useState([]);
+  const [pagination, setPagination] = useState({});
+  const [wasteType, setWasteType] = useState([]);
+  const [pageNumber, setPageNumber] = useState(1);
 
-  const categories = [
-    "All",
-    "Elektronik Besar",
-    "Elektronik Kecil",
-    "Elektronik Dapur",
-    "Telekomunikasi & IT",
-    "Elektronik Medis",
-    "Elektronik Hiburan",
-  ];
+  useEffect(() => {
+    document.title = "Ewhale Courier | Electronic Devices";
+    const fetchData = async () => {
+      try {
+        const [wasteListResponse, wasteTypeResponse] = await Promise.all([
+          getWasteLists(pageNumber),
+          getWasteType(),
+        ]);
 
-  const devices = [
-    {
-      name: "Televisi",
-      image: Television,
-    },
-    {
-      name: "Kulkas",
-      image: Kulkas,
-    },
-    {
-      name: "Mesin Cuci",
-      image: MesinCuci,
-    },
-    {
-      name: "Oven",
-      image: Oven,
-    },
-    {
-      name: "AC",
-      image: ACImg,
-    },
-    {
-      name: "Setrika",
-      image: Setrika,
-    },
-    {
-      name: "Blender",
-      image: Blender,
-    },
-    {
-      name: "Smartphone",
-      image: Smartphone,
-    },
-    {
-      name: "Router",
-      image: Router,
-    },
-    {
-      name: "Keyboard",
-      image: Keyboard,
-    },
-    {
-      name: "Laptop",
-      image: Laptop,
-    },
-    {
-      name: "Radio",
-      image: Radio,
-    },
-  ];
+        setWasteLists(wasteListResponse.data.data);
+        setWasteType(wasteTypeResponse.data.data);
+        setPagination(wasteListResponse.data.pagination);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        // setError(error);
+      }
+    };
+    console.log(pageNumber);
+
+    fetchData();
+  }, [pageNumber]);
+
+  const filterWaste = (category) => {
+    if (category == 0) return wasteLists;
+    return wasteLists.filter((w) => w.waste_type_id === parseInt(category));
+  };
+
+  const handlePagination = (page) => {
+    setPageNumber(page);
+  };
 
   return (
     <div className="min-h-fit mb-8 max-w-4xl mx-auto">
@@ -83,31 +46,64 @@ const ElectronicDevices = () => {
         {/* Filter Section */}
         <div className="flex flex-col gap-2 bg-white rounded-lg w-[300px] p-4">
           <h2 className="text-black-100 font-medium">Filter by:</h2>
-          <div className="space-y-2">
-            {categories.map((category) => (
+          <div className="space-y-2 w-[220px]">
+            <button
+              onClick={() => setActiveFilter(0)}
+              className={`${
+                activeFilter === 0 &&
+                "bg-revamp-secondary-400 text-revamp-neutral-2"
+              } w-full text-left px-3 py-2 rounded text-sm text-[#797979] transition-colors duration-200`}>
+              All
+            </button>
+            {wasteType.map((typeSelect, index) => (
               <button
-                key={category}
-                onClick={() => setActiveFilter(category)}
+                key={index}
+                onClick={() => setActiveFilter(typeSelect.waste_type_id)}
                 className={`${
-                  activeFilter === category
-                    ? "bg-revamp-neutral-4 text-[#6D6D6D]"
+                  activeFilter === typeSelect.waste_type_id
+                    ? "bg-revamp-secondary-400 text-revamp-neutral-2"
                     : "text-[#797979] hover:bg-[#F6F6F6]"
                 } w-full text-left px-3 py-2 rounded text-sm transition-colors duration-200`}>
-                {category}
+                {typeSelect.waste_type_name.split("_").join(" ")}
               </button>
             ))}
           </div>
         </div>
 
         {/* Card Section */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-          {devices.map((device, index) => (
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 max-w-">
+          {filterWaste(activeFilter).map((waste) => (
             <CardComponent
-              key={index}
-              name={device.name}
-              image={device.image}
+              key={waste.waste_id}
+              name={waste.waste_name}
+              image={waste.image}
             />
           ))}
+          {filterWaste(activeFilter).length === 0 && (
+            <div className="col-span-full text-center text-revamp-neutral-8">
+              Tidak ada sampah elektronik ditemukan
+            </div>
+          )}
+
+          {/* Pagination */}
+          <div className="col-span-full h-[40px] flex justify-center">
+            {[...Array(pagination.totalPages)].map((_, index) => {
+              const pageCount = index + 1;
+
+              return (
+                <button
+                  key={index}
+                  onClick={() => handlePagination(pageCount)}
+                  className={`${
+                    pageCount === pageNumber
+                      ? "bg-revamp-secondary-400 text-white"
+                      : "bg-white text-revamp-neutral-9"
+                  } px-4 py-2 rounded-md mr-2`}>
+                  {pageCount}
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>

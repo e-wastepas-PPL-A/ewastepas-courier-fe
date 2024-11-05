@@ -1,6 +1,7 @@
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import Sidebar from "../components/Sidebar/Sidebar";
+import Navbar from "../components/Navbar/Navbar";
 
 export default function HomePage() {
   useEffect(() => {
@@ -11,9 +12,11 @@ export default function HomePage() {
     <div className="flex w-full">
       <Sidebar />
       <div className="flex-1">
-        <Outlet />
+        <Suspense fallback={<div>Loading...</div>}>
+          <Navbar />
+          <Outlet />
+        </Suspense>
       </div>
     </div>
   );
 }
-  
