@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import CardComponent from "../ProductCard/Card";
+import CardComponent from "../ProductCard/ProductCard";
 import { getWasteLists, getWasteType } from "../../services";
 
 const ElectronicDevices = () => {
@@ -46,31 +46,32 @@ const ElectronicDevices = () => {
         {/* Filter Section */}
         <div className="flex flex-col gap-2 bg-white rounded-lg w-[300px] p-4">
           <h2 className="text-black-100 font-medium">Filter by:</h2>
-          <div className="space-y-2">
+          <div className="space-y-2 w-[220px]">
             <button
               onClick={() => setActiveFilter(0)}
               className={`${
-                activeFilter === 0 && "bg-revamp-neutral-4 text-[#6D6D6D]"
-              } w-full text-left px-3 py-2 rounded text-sm text-[#797979] hover:bg-[#F6F6F6] transition-colors duration-200`}>
+                activeFilter === 0 &&
+                "bg-revamp-secondary-400 text-revamp-neutral-2"
+              } w-full text-left px-3 py-2 rounded text-sm text-[#797979] transition-colors duration-200`}>
               All
             </button>
-            {wasteType.map((wasteT, index) => (
+            {wasteType.map((typeSelect, index) => (
               <button
                 key={index}
-                onClick={() => setActiveFilter(wasteT.waste_type_id)}
+                onClick={() => setActiveFilter(typeSelect.waste_type_id)}
                 className={`${
-                  activeFilter === wasteT.waste_type_id
-                    ? "bg-revamp-neutral-4 text-[#6D6D6D]"
+                  activeFilter === typeSelect.waste_type_id
+                    ? "bg-revamp-secondary-400 text-revamp-neutral-2"
                     : "text-[#797979] hover:bg-[#F6F6F6]"
                 } w-full text-left px-3 py-2 rounded text-sm transition-colors duration-200`}>
-                {wasteT.waste_type_name}
+                {typeSelect.waste_type_name.split("_").join(" ")}
               </button>
             ))}
           </div>
         </div>
 
         {/* Card Section */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 max-w-">
           {filterWaste(activeFilter).map((waste) => (
             <CardComponent
               key={waste.waste_id}
