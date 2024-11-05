@@ -8,7 +8,6 @@ import {
   Rectangle,
   CartesianGrid,
 } from "recharts";
-import Navbar from "../components/Navbar/Navbar";
 import StatisticCard from "../components/StatisticCard/StatisticCard";
 import { ChevronDown } from "lucide-react";
 import { totalDelivery } from "../services/dummy";
@@ -57,7 +56,6 @@ export default function DashboardPage() {
   return (
     <>
       {/* Navbar */}
-      <Navbar />
       <div className="container-sm lg:max-w-[1000px] mx-auto px-4 sm:w-screen">
         {/* Outer Card */}
         <div className="flex flex-col lg:flex-row mx-auto my-8 gap-4 justify-center items-center lg:w-full">
