@@ -7,7 +7,7 @@ import InputEmail from '../components/Input/InputEmail';
 import InputPassword from '../components/Input/InputPassword';
 import InputCheck from '../components/Input/InputCheck';
 import FooterBar from '../components/Register/FooterBar';
-import { login } from "../services";
+import { login, getUsers } from "../services";
 
 export default function PageName() {
     const [email, setEmail] = useState('');
@@ -32,12 +32,10 @@ export default function PageName() {
             if (response.status === 200) {
                 setSuccess("Login successful!");
                 setError(null);
-                console.log(response)
-                // Set the cookie with the token received in the response
-                Cookies.set('PHPSESSID', response.data.token, { expires: 0.25, secure: true }); // Cookie expires in 7 days
 
-                // Optionally, redirect the user to the dashboard or homepage
-                window.location.href = "/";
+                // Set the cookie with the token received in the response
+                Cookies.set('PHPSESSID', response.data.token, { expires: 0.25, secure: true }) // Cookie expires in 7 days
+
             } else {
                 setError(response.response.data.error);
                 setSuccess(null); // Clear any previous success message
@@ -47,6 +45,8 @@ export default function PageName() {
             setError("An error occurred during login. Please try again.");
             setSuccess(null); // Clear any previous success message
             setIsLoading(false);
+        }finally{
+            window.location = "/"
         }
     };
 
