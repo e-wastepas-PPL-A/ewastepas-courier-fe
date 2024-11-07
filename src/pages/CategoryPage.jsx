@@ -1,8 +1,16 @@
 import { Search } from "lucide-react";
 import Graphic1 from "../assets/graphic-1.png";
 import ElectronicDevices from "../components/ElectronicDevice/ElectronicDevice";
+import { useState } from "react";
 
 export default function CategoryPage() {
+  const [searchInput, setSearchInput] = useState("");
+
+  // const handleSearch = (search) => {
+  //   setSearchInput(search);
+  //   console.log("skaodksd");
+  // };
+
   return (
     <>
       <div className="container-sm min-h-screen lg:max-w-[1000px] mx-auto px-4 sm:w-screen">
@@ -24,12 +32,20 @@ export default function CategoryPage() {
 
               {/* Search Bar */}
               <div className="relative max-w-xl">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-revamp-neutral-10 w-5 h-5" />
-                <input
-                  type="text"
-                  placeholder="Search here..."
-                  className="w-full px-4 py-3 pl-12 rounded-lg  text-revamp-neutral-10 border-revamp-neutral-10 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20"
-                />
+                <form
+                  action=""
+                  className="relative"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                  }}>
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-revamp-neutral-10 w-5 h-5" />
+                  <input
+                    type="text"
+                    placeholder="Search here..."
+                    className="w-full px-4 py-3 pl-12 rounded-lg  text-revamp-neutral-10 border-revamp-neutral-10 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20"
+                    onChange={(e) => setSearchInput(e.target.value)}
+                  />
+                </form>
               </div>
             </div>
             <img src={Graphic1} className="mx-4 w-[300px] hidden sm:block" />
@@ -43,7 +59,7 @@ export default function CategoryPage() {
             Sampah Elektronik
           </h3>
           <hr className="border border-revamp-neutral-7/20 my-4" />
-          <ElectronicDevices />
+          <ElectronicDevices searchInput={searchInput} />
         </div>
       </div>
     </>

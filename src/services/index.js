@@ -86,3 +86,11 @@ export async function getWasteType() {
     return error;
   });
 };
+
+export async function searchWaste(search) {
+  return await axios
+    .get(`${BASE_URL}/waste/search?name=${search}`)
+    .catch((error) => {
+      return error;
+    });
+}
