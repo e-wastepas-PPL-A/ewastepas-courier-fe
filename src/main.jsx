@@ -11,12 +11,13 @@ import ChangePassword from "./pages/ChangePasswordPage.jsx";
 import Verification from "./pages/VerificationPage.jsx";
 import DashboardPage from "./pages/DashboardPage.jsx";
 import CategoryPage from "./pages/CategoryPage.jsx";
-import PickupPage from "./pages/PickupPage.jsx";
-import LocationPage from "./pages/LocationPage.jsx";
 import HistoryPage from "./pages/HistoryPage.jsx";
 import ProtectedRoute from "./ProtectedRoute.jsx"; // Import the ProtectedRoute component
 import PublicRoute from "./PublicRoute.jsx"; // Import the PublicRoute component
 import "./styles/index.css";
+import RequestPickupPage from "./pages/PickupPage/RequestPickup.jsx";
+import AcceptPickupPage from "./pages/PickupPage/AcceptPickup.jsx";
+import DropboxPage from "./pages/DropboxPage.jsx";
 
 const router = createBrowserRouter([
   {
@@ -37,11 +38,19 @@ const router = createBrowserRouter([
       },
       {
         path: "pickup",
-        element: <PickupPage />,
+        element: null,
       },
       {
-        path: "location",
-        element: <LocationPage />,
+        path: "pickup/request",
+        element: <RequestPickupPage />,
+      },
+      {
+        path: "pickup/ongoing",
+        element: <AcceptPickupPage />,
+      },
+      {
+        path: "dropbox",
+        element: <DropboxPage />,
       },
       {
         path: "history",

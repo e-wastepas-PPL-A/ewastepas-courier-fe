@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import CardComponent from "../ProductCard/ProductCard";
 import { getWasteLists, getWasteType } from "../../services";
 
-const ElectronicDevices = () => {
+const ElectronicDevices = (searchInput) => {
   const [activeFilter, setActiveFilter] = useState(0);
   const [wasteLists, setWasteLists] = useState([]);
   const [pagination, setPagination] = useState({});
@@ -26,14 +26,27 @@ const ElectronicDevices = () => {
         // setError(error);
       }
     };
-    console.log(pageNumber);
 
     fetchData();
-  }, [pageNumber]);
+
+    if (searchInput.searchInput) return setActiveFilter(0);
+  }, [pageNumber, searchInput.searchInput]);
 
   const filterWaste = (category) => {
-    if (category == 0) return wasteLists;
-    return wasteLists.filter((w) => w.waste_type_id === parseInt(category));
+    let filteredWaste = wasteLists;
+    let search = searchInput.searchInput;
+
+    if (category !== 0) {
+      filteredWaste = filteredWaste.filter(
+        (w) => w.waste_type_id === parseInt(category)
+      );
+    }
+    if (search) {
+      filteredWaste = filteredWaste.filter((w) =>
+        w.waste_name.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+    return filteredWaste;
   };
 
   const handlePagination = (page) => {
@@ -71,7 +84,7 @@ const ElectronicDevices = () => {
         </div>
 
         {/* Card Section */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 max-w-">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
           {filterWaste(activeFilter).map((waste) => (
             <CardComponent
               key={waste.waste_id}
@@ -87,22 +100,23 @@ const ElectronicDevices = () => {
 
           {/* Pagination */}
           <div className="col-span-full h-[40px] flex justify-center">
-            {[...Array(pagination.totalPages)].map((_, index) => {
-              const pageCount = index + 1;
+            {!searchInput.searchInput &&
+              [...Array(pagination.totalPages)].map((_, index) => {
+                const pageCount = index + 1;
 
-              return (
-                <button
-                  key={index}
-                  onClick={() => handlePagination(pageCount)}
-                  className={`${
-                    pageCount === pageNumber
-                      ? "bg-revamp-secondary-400 text-white"
-                      : "bg-white text-revamp-neutral-9"
-                  } px-4 py-2 rounded-md mr-2`}>
-                  {pageCount}
-                </button>
-              );
-            })}
+                return (
+                  <button
+                    key={index}
+                    onClick={() => handlePagination(pageCount)}
+                    className={`${
+                      pageCount === pageNumber
+                        ? "bg-revamp-secondary-400 text-white"
+                        : "bg-white text-revamp-neutral-9"
+                    } px-4 py-2 rounded-md mr-2`}>
+                    {pageCount}
+                  </button>
+                );
+              })}
           </div>
         </div>
       </div>
