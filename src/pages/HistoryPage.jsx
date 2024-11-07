@@ -1,4 +1,3 @@
-import Pill from "../components/Pills/Pill";
 import Table from "../components/Tables/DataTable";
 const columns = [
   {
@@ -34,7 +33,7 @@ const columns = [
   {
     name: "Status",
     selector: (row) => row.status,
-    cell: (row) => <Pill status="success" label={row.status} />,
+    cell: (row) => <span className="font-bold">{row.status}</span>,
     sortable: true,
   },
 ];
@@ -58,7 +57,7 @@ const data = [
     kategori: "Mainan Elektronik",
     totalSampah: 10,
     dropBox: "Lorem Ipsum",
-    status: <span className="font-bold">Gagal</span>,
+    status: "Gagal",
   },
 ];
 
