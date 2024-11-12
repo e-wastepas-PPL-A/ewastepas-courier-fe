@@ -48,7 +48,7 @@ const data = [
 
 export default function RequestPickupPage() {
   return (
-    <div className="container-sm mx-auto p-4">
+    <div className="container mx-auto p-4">
       <h1 className="text-2xl text-revamp-neutral-8 font-medium">
         Detail Permintaan Penjemputan Sampah
       </h1>
