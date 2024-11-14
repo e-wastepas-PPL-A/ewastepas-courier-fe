@@ -1,68 +1,33 @@
-import {
-  BarChart,
-  Bar,
-  ResponsiveContainer,
-  YAxis,
-  XAxis,
-  Tooltip,
-  Rectangle,
-  CartesianGrid,
-} from "recharts";
 import StatisticCard from "../components/StatisticCard/StatisticCard";
 import { ChevronDown } from "lucide-react";
 import { totalDelivery } from "../services/dummy";
-
-const Chart = () => {
-  return (
-    <ResponsiveContainer width="100%" height={400}>
-      <BarChart
-        data={totalDelivery}
-        margin={{
-          top: 5,
-          right: 30,
-          left: 20,
-          bottom: 20,
-        }}>
-        <CartesianGrid verticalCoordinatesGenerator={500} />
-        <YAxis
-          dataKey="total"
-          domain={[0, 80]}
-          ticks={[0, 10, 20, 30, 40, 50, 60, 70, 80]}
-          label={{
-            value: "Total Deliveries",
-            angle: -90,
-            position: "insideLeft",
-          }}
-        />
-        <XAxis
-          dataKey="month"
-          label={{
-            value: "Month",
-            position: "bottom",
-          }}
-        />
-        <Tooltip />
-        <Bar
-          dataKey="total"
-          fill="#337cab"
-          activeBar={<Rectangle stroke="#005389" />}
-        />
-      </BarChart>
-    </ResponsiveContainer>
-  );
-};
+import Chart from "../components/BarChart/BarChart";
+import { useEffect, useState } from "react";
+import { getTotalCourier } from "../services";
 
 export default function DashboardPage() {
+  const [todayTotals, setTodayTotals] = useState([]);
+  const [monthlyTotals, setMonthlyTotals] = useState([]);
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("users"));
+    const fetchCourierStatistic = async () => {
+      const response = await getTotalCourier(user.courier_id);
+      setTodayTotals(response.data.todayTotals);
+      setMonthlyTotals(response.data.monthlyTotals);
+    };
+    fetchCourierStatistic();
+  }, []);
+
   return (
     <>
       {/* Navbar */}
       <div className="container-sm lg:max-w-[1000px] mx-auto px-4 sm:w-screen">
         {/* Outer Card */}
         <div className="flex flex-col lg:flex-row mx-auto my-8 gap-4 justify-center items-center lg:w-full">
-          <StatisticCard title="Total Delivered" value="100" />
-          <StatisticCard title="On Delivery" value="25" />
-          <StatisticCard title="Canceled Delivery" value="25" />
-          <StatisticCard title="Total Point" value="100" />
+          {Object.keys(todayTotals).map((key, index) => (
+            <StatisticCard key={index} title={key} value={todayTotals[key]} />
+          ))}
         </div>
 
         {/* Barchart Section */}
@@ -78,7 +43,7 @@ export default function DashboardPage() {
               </button>
             </div>
           </div>
-          <Chart />
+          <Chart data={monthlyTotals} />
         </div>
       </div>
     </>

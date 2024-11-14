@@ -95,17 +95,17 @@ export async function getUsers() {
 
 export async function getWasteLists(pageNumber) {
   return await axios
-    .get(`${API_BASE_URL}/waste?page=${pageNumber}`)
+    .get(`${BASE_URL}/waste?page=${pageNumber}`)
     .catch((error) => {
       return error;
     });
 }
 
 export async function getWasteType() {
-  return await axios.get(`${API_BASE_URL}/waste/types`).catch((error) => {
+  return await axios.get(`${BASE_URL}/waste/types`).catch((error) => {
     return error;
   });
-};
+}
 
 export async function searchWaste(search) {
   return await axios
@@ -116,7 +116,27 @@ export async function searchWaste(search) {
 }
 
 export async function getDropbox() {
-  return await axios.get(`${API_BASE_URL}/dropbox`).catch((error) => {
+  return await axios.get(`${BASE_URL}/dropbox`).catch((error) => {
     return error;
   });
+}
+
+export async function getAllPickup() {
+  return await axios.get(`${BASE_URL}/pickup`).catch((error) => {
+    return error;
+  });
+}
+
+export async function getTotalCourier(id) {
+  return await axios.get(`${BASE_URL}/pickup/totals/${id}`).catch((error) => {
+    return error;
+  });
+}
+
+export async function getHistoryCourier(id) {
+  return await axios
+    .get(`${BASE_URL}/pickup-history/courier?courierId=${id}`)
+    .catch((error) => {
+      return error;
+    });
 }

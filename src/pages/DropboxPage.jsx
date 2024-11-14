@@ -2,38 +2,6 @@ import { useEffect, useState } from "react";
 import Table from "../components/Tables/DataTable";
 import { getDropbox } from "../services";
 
-const columns = [
-  {
-    name: "Nama Drop Box",
-    selector: (row) => row.name,
-    sortable: true,
-  },
-  {
-    name: "Alamat",
-    selector: (row) => row.address,
-    sortable: true,
-  },
-  {
-    name: "Kapasitas",
-    selector: (row) => row.capacity,
-    sortable: true,
-  },
-  {
-    name: "Status",
-    selector: (row) => row.status,
-    cell: (row) => (
-      <span className="px-2 py-1 font-bold rounded-md border">
-        {row.status}
-      </span>
-    ),
-    sortable: true,
-  },
-  {
-    name: "Action",
-    cell: () => <button className="text-xl">...</button>,
-  },
-];
-
 export default function HistoryPage() {
   const [dataDropbox, setDataDropbox] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -46,6 +14,40 @@ export default function HistoryPage() {
     };
     fetchData();
   }, []);
+
+  console.log(dataDropbox);
+
+  const columns = [
+    {
+      name: "Nama Drop Box",
+      selector: (row) => row.name,
+      sortable: true,
+    },
+    {
+      name: "Alamat",
+      selector: (row) => row.address,
+      sortable: true,
+    },
+    {
+      name: "Kapasitas",
+      selector: (row) => row.capacity,
+      sortable: true,
+    },
+    {
+      name: "Status",
+      selector: (row) => row.status,
+      cell: (row) => (
+        <span className="px-2 py-1 font-bold rounded-md border">
+          {row.status}
+        </span>
+      ),
+      sortable: true,
+    },
+    {
+      name: "Action",
+      cell: () => <button className="text-xl cursor-pointer">...</button>,
+    },
+  ];
 
   return (
     <>
