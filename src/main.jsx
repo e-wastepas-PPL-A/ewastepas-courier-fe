@@ -16,6 +16,7 @@ import ProtectedRoute from "./ProtectedRoute.jsx"; // Import the ProtectedRoute 
 import PublicRoute from "./PublicRoute.jsx"; // Import the PublicRoute component
 import "./styles/index.css";
 import RequestPickupPage from "./pages/PickupPage/RequestPickup.jsx";
+import AccountPAge from "./pages/ProfilePage/AccountPage.jsx";
 import AcceptPickupPage from "./pages/PickupPage/AcceptPickup.jsx";
 import DropboxPage from "./pages/DropboxPage.jsx";
 
@@ -43,6 +44,10 @@ const router = createBrowserRouter([
       {
         path: "pickup/request",
         element: <RequestPickupPage />,
+      },
+      {
+        path: "profile",
+        element: <AccountPAge />,
       },
       {
         path: "pickup/ongoing",
