@@ -2,19 +2,17 @@ import { LogOut } from "lucide-react";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getUsers } from "../../services";
 import NavbarSkeleton from "../Skeleton/NavbarSkeleton";
+import { useCourier } from "../../stores/courier";
 
 const Navbar = () => {
-  const [user, setUser] = useState([]);
+  const user = useCourier((state) => state.user);
   const [isLoading, setIsLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const response = await getUsers();
-      setUser(response.data.courier);
       setIsLoading(false);
     };
     fetchUsers();
@@ -96,7 +94,7 @@ const Navbar = () => {
                       onClick={handleLogout}
                       className="block rounded-lg px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 hover:text-gray-700"
                       role="menuitem">
-                      Logout
+                      Keluar
                     </a>
                   </div>
                 </div>

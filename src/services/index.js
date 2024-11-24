@@ -3,7 +3,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 
-const BASE_URL = 'http://localhost:3000/api';
+const BASE_URL = "http://localhost:3000/api";
 
 export async function login(payload) {
   return await axios.post(`${BASE_URL}/auth/login`, payload).catch((error) => {

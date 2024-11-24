@@ -7,7 +7,7 @@ import InputEmail from '../components/Input/InputEmail';
 import InputPassword from '../components/Input/InputPassword';
 import InputCheck from '../components/Input/InputCheck';
 import FooterBar from '../components/Register/FooterBar';
-import { login, getUsers } from "../services";
+import { login } from "../services";
 
 export default function PageName() {
     const [email, setEmail] = useState('');
@@ -30,12 +30,9 @@ export default function PageName() {
             setIsLoading(true);
             const response = await login(payload);
             if (response.status === 200) {
-                setSuccess("Login successful!");
-                setError(null);
-
                 // Set the cookie with the token received in the response
                 Cookies.set('PHPSESSID', response.data.token, { expires: 0.25, secure: true }) // Cookie expires in 7 days
-
+                window.location = "/"
             } else {
                 setError(response.response.data.error);
                 setSuccess(null); // Clear any previous success message
@@ -45,12 +42,8 @@ export default function PageName() {
             setError("An error occurred during login. Please try again.");
             setSuccess(null); // Clear any previous success message
             setIsLoading(false);
-        }finally{
-            window.location = "/"
         }
     };
-
-    const isButtonDisabled =  !email || !password || isLoading;
 
     return (
         <div className="h-[100dvh] px-[8px] md:p-[100px] flex justify-center items-center">
@@ -78,9 +71,9 @@ export default function PageName() {
                     </div>
                     <div className="mb-[24px]">
                         <button 
-                            className={`${isButtonDisabled ? 'bg-revampV2-neutral-400' : 'bg-revamp-secondary-500'} w-full py-[8px] text-white text-[14px] font-[600]`}
+                            className={`${isLoading ? 'bg-revampV2-neutral-400' : 'bg-revamp-secondary-500'} w-full py-[8px] text-white text-[14px] font-[600]`}
                             onClick={handleLogin}
-                            disabled={isButtonDisabled}
+                            disabled={isLoading}
                         >
                             {isLoading ? 'Loading...' : 'Login'}
                         </button>

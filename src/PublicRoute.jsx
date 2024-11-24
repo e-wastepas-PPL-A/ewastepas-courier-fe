@@ -3,9 +3,10 @@
 // PublicRoute.jsx
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
-import { getUsers } from "./services"; // Import the getUsers function from your services
+import { useCourier } from "./stores/courier";
 
 const PublicRoute = ({ children }) => {
+  const getUsers = useCourier((state) => state.getUsers);
   const [isAuthenticated, setIsAuthenticated] = useState(null);
 
   useEffect(() => {
