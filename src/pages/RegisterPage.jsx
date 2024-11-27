@@ -158,7 +158,6 @@ export default function RegisterPage() {
                             value={email}
                             onChange={(e) => {
                                 setEmail(e.target.value);
-                                validateEmail(e.target.value);
                             }}
                             errorMessage={errorMessage.email}
                         />

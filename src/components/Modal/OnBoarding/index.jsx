@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
 import InputEmail from '../../../components/Input/InputEmail';
 import InputText from '../../../components/Input/InputText';
 import InputPhone from '../../../components/Input/InputPhone';
@@ -8,6 +9,7 @@ import { EMAIL_REGEX, PHONE_REGEX } from '../../../constants/regex';
 import { registration, sendOtp } from "../../../services";
 import Avatar from 'react-avatar';
 import { useCourier } from "../../../stores/courier";
+import { useNavigate } from "react-router-dom";
 
 export default function OnBoarding() {
     const user = useCourier((state) => state.user);
@@ -25,6 +27,7 @@ export default function OnBoarding() {
         name: "",
         phone: "",
     });
+    const navigate = useNavigate();
 
     const stepHandler = () => {
         if (canProceed && step < 4) {
@@ -33,6 +36,14 @@ export default function OnBoarding() {
             handleRegister()
         }
       }
+
+      const handleLogout = () => {
+        // Destroy the PHPSESSID cookie
+        Cookies.remove("PHPSESSID");
+    
+        // Redirect to login page
+        navigate("/login");
+      };
 
     useEffect(() => {
         if (step === 1) {
@@ -196,6 +207,7 @@ export default function OnBoarding() {
     const StepThree = () => (
         <div className={`${step === 3 ? "block" : "hidden"}`}>
             <InputFile
+                id="upload-ktp"
                 label="Upload KTP"
                 value={ktp}
                 onChange={(e) => {
@@ -209,6 +221,7 @@ export default function OnBoarding() {
     const StepFour = () => (
         <div className={`${step === 4 ? "block" : "hidden"}`}>
              <InputFile
+                id="upload-kk"
                 label="Upload KK"
                 value={kk}
                 onChange={(e) => {
@@ -257,7 +270,7 @@ export default function OnBoarding() {
                             {isLoading ? 'Loading...' : step === 1 ? 'Mulai' : step < 4 ? "Lanjut" : "Kirim"}
                         </button>
                         <div className="flex justify-center items-center mt-[10px]">
-                            <span className="text-revamp-neutral-10 font-[500] text-[14px]">Anda mau ganti akun? <a href="/login" className="text-revamp-error-300">Logout</a></span>
+                            <span className="text-revamp-neutral-10 font-[500] text-[14px]">Anda mau ganti akun? <a href="#" onClick={handleLogout} className="text-revamp-error-300 cursor-pointer">Logout</a></span>
                         </div>
                     </div>
                     </div>
