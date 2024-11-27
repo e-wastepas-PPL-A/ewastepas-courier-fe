@@ -5,6 +5,7 @@ import IcEmptyFile from "../../assets/empty-file.svg"
 import IcImages from "../../assets/ic-images.svg"
 
 const FileUploader = ({
+  id,
   value = [],
   label = "",
   subLabel = "",
@@ -150,7 +151,7 @@ const FileUploader = ({
         </div>
       ) : (
         <label
-          htmlFor="file-upload"
+          htmlFor={id}
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
@@ -181,7 +182,7 @@ const FileUploader = ({
       <input
         type="file"
         ref={fileInputRef}
-        id="file-upload"
+        id={id}
         onChange={handleFileChange}
         className="hidden"
         accept={acceptedFormats}
