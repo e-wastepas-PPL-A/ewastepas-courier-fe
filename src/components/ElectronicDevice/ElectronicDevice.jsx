@@ -19,9 +19,9 @@ const ElectronicDevices = (searchInput) => {
           getWasteType(),
         ]);
 
-        setWasteLists(wasteListResponse.data.data);
+        setWasteLists(wasteListResponse.data.data.items);
         setWasteType(wasteTypeResponse.data.data);
-        setPagination(wasteListResponse.data.pagination);
+        setPagination(wasteListResponse.data.data.pagination);
         setIsLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);

@@ -8,10 +8,9 @@ export default function HistoryPage() {
   const [history, setHistory] = useState([]);
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("users"));
     const fetchHistory = async () => {
       try {
-        const response = await getHistoryCourier(user.courier_id);
+        const response = await getHistoryCourier();
         setHistory(response.data.data);
       } catch (error) {
         setError(error);
@@ -25,7 +24,7 @@ export default function HistoryPage() {
   const columns = [
     {
       name: "Nama Customer",
-      selector: (row) => row.namaCustomer, // kosong
+      selector: (row) => row.community.name,
       sortable: true,
     },
     {
@@ -57,7 +56,7 @@ export default function HistoryPage() {
       name: "Status",
       selector: (row) => row.status,
       cell: (row) => (
-        <span className="font-bold bg-revamp-neutral-5 px-6 py-1 rounded-xl">
+        <span className="font-bold bg-revamp-neutral-5 px-6 py-1 rounded-md">
           {row.pickup_status}
         </span>
       ),

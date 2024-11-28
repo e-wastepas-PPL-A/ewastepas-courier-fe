@@ -128,14 +128,16 @@ export async function getAllPickup() {
 }
 
 export async function getTotalCourier(id) {
-  return await axios.get(`${BASE_URL}/pickup/totals/${id}`).catch((error) => {
-    return error;
-  });
+  return await axios
+    .get(`${BASE_URL}/pickup/courier/${id}/totals`)
+    .catch((error) => {
+      return error;
+    });
 }
 
-export async function getHistoryCourier(id) {
+export async function getHistoryCourier() {
   return await axios
-    .get(`${BASE_URL}/pickup-history/courier?courierId=${id}`)
+    .get(`${BASE_URL}/pickup/courier/history`)
     .catch((error) => {
       return error;
     });

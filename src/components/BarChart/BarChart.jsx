@@ -11,6 +11,10 @@ import {
 } from "recharts";
 
 const Chart = ({ data }) => {
+  if (!data) {
+    return <div className="flex justify-center py-4">No data available</div>;
+  }
+
   return (
     <ResponsiveContainer width="100%" height={400}>
       <BarChart

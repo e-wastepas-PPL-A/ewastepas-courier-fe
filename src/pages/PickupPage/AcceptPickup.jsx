@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Table from "../../components/Tables/DataTable";
 import { getAllPickup } from "../../services";
+import { formatDate } from "../../utils/date";
 
 // const data = [
 //   {
@@ -27,15 +28,15 @@ export default function AcceptPickupPage() {
   const columns = [
     {
       name: "Nama Customer",
-      selector: (row) => row.nama,
+      selector: (row) => row.community.name,
     },
     {
       name: "Tanggal",
-      selector: (row) => row.tanggal,
+      selector: (row) => formatDate(row.pickup_date),
     },
     {
       name: "Alamat",
-      selector: (row) => row.alamat,
+      selector: (row) => row.pickup_address,
     },
     {
       name: "Kategori",
@@ -47,7 +48,7 @@ export default function AcceptPickupPage() {
     },
     {
       name: "Status",
-      selector: (row) => row.status,
+      selector: (row) => row.pickup_status,
     },
     {
       name: "Action",
@@ -62,8 +63,6 @@ export default function AcceptPickupPage() {
     };
     fetchPickup();
   }, []);
-
-  console.log(pickup);
 
   return (
     <>

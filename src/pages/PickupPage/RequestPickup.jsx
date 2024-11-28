@@ -38,7 +38,7 @@ export default function RequestPickupPage() {
   const columns = [
     {
       name: "Nama Customer",
-      selector: (row) => row.nama,
+      selector: (row) => row.community.name,
     },
     {
       name: "Tanggal",

@@ -1,6 +1,5 @@
 import StatisticCard from "../components/StatisticCard/StatisticCard";
 import { ChevronDown } from "lucide-react";
-import { totalDelivery } from "../services/dummy";
 import Chart from "../components/BarChart/BarChart";
 import { useEffect, useState } from "react";
 import { getTotalCourier } from "../services";
