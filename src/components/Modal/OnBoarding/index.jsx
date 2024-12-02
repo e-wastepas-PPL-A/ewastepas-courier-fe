@@ -167,7 +167,7 @@ export default function OnBoarding() {
                 id="profile-picture"
                 value={photo}
                 onChange={(e) => {
-                    setKtp(e);
+                    setphoto(e);
                 }}
                 errorMessage={errorMessage.photo}
                 format="image" 
