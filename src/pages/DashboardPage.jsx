@@ -3,20 +3,27 @@ import { ChevronDown } from "lucide-react";
 import Chart from "../components/BarChart/BarChart";
 import { useEffect, useState } from "react";
 import { getTotalCourier } from "../services";
+import { useCourier } from "../stores/courier";
 
 export default function DashboardPage() {
+  const user = useCourier((state) => state.userDummy);
   const [todayTotals, setTodayTotals] = useState([]);
   const [monthlyTotals, setMonthlyTotals] = useState([]);
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("users"));
+    if (!localStorage.getItem("users")) {
+      localStorage.setItem("users", JSON.stringify(user));
+    }
+  }, [user]);
+
+  useEffect(() => {
     const fetchCourierStatistic = async () => {
       const response = await getTotalCourier(user.courier_id);
       setTodayTotals(response.data.todayTotals);
       setMonthlyTotals(response.data.monthlyTotals);
     };
     fetchCourierStatistic();
-  }, []);
+  }, [user]);
 
   return (
     <>

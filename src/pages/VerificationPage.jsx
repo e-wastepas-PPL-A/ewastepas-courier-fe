@@ -16,6 +16,9 @@ export default function PageName() {
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(null);
     const [countdown, setCountdown] = useState(0);
+    const [errorMessage, setErrorMessage] = useState({
+        otp: "",
+    });
 
     useEffect(() => {
         document.title = "E-Wastepas | Login";
@@ -23,7 +26,7 @@ export default function PageName() {
         setEmail(urlParams.get('email'));
 
         const expiredOtp = sessionStorage.getItem("expiredOtp");
-        console.log(expiredOtp)
+
         if (expiredOtp) {
             const timeLeft = new Date(expiredOtp) - new Date();
             if (timeLeft > 0) {
@@ -41,6 +44,12 @@ export default function PageName() {
         }
     }, [countdown]);
 
+    const formatCountdown = (seconds) => {
+        const minutes = Math.floor(seconds / 60).toString().padStart(2, '0');
+        const remainingSeconds = (seconds % 60).toString().padStart(2, '0');
+        return `${minutes}:${remainingSeconds}`;
+    };
+
     const handleSendOtp = async () => {
         setIsLoading(true);
         const payload = {
@@ -52,11 +61,13 @@ export default function PageName() {
         try {
             const response = await verifyOtp(payload);
             if (response.status === 200) {
-                setSuccess("OTP verified successfully!");
                 setError(null);
                 window.location.href = location.pathname.split('/')[1] === 'register' ? "/login" : "/forgot/change-password?token=" + response.data.token;
             } else {
-                setError("OTP verification failed. Please try again.");
+                setErrorMessage((prev) => ({
+                    ...prev,
+                    otp: "OTP gagal dikirim"
+                }));
                 setSuccess(null);
             }
         } catch {
@@ -68,12 +79,13 @@ export default function PageName() {
     };
 
     const handleResendOtp = async () => {
+        if(countdown === 0){
         setIsLoadingOtp(true);
         const payload = { email };
         try {
             const response = await sendOtp(payload);
             if (response.status === 200) {
-                setSuccess("OTP sent successfully!");
+                setSuccess("OTP telah terkirim!");
                 setError(null);
 
                 // Set new expiredOtp session with 60 seconds (or any duration you want)
@@ -81,7 +93,7 @@ export default function PageName() {
                 sessionStorage.setItem("expiredOtp", newExpiredOtp);
                 setCountdown(60); // Start a new 60 seconds countdown
             } else {
-                setError("OTP resend failed. Please try again.");
+                setError("OTP gagal terkirim");
                 setSuccess(null);
             }
         } catch {
@@ -90,7 +102,16 @@ export default function PageName() {
         }finally{
             setIsLoadingOtp(false)
         }
+    }
     };
+
+    const handleInput = (value)=>{
+            setOtp(value);
+            setErrorMessage((prev) => ({
+                ...prev,
+                otp: ""
+            }));
+    }
 
     const isButtonDisabled = !otp || isLoading;
 
@@ -116,7 +137,18 @@ export default function PageName() {
                     {error && <div className="text-white bg-revamp-error-300 py-[8px] mb-[18px] rounded-[6px]">{error}</div>}
                     {success && <div className="text-white bg-revamp-success-300 py-[8px] mb-[18px] rounded-[6px]">{success}</div>}
                     <div className="mb-[24px]">
-                        <InputText label={'Masukan Kode'} value={otp} onChange={(e) => setOtp(e.target.value)} />
+                        <InputText label={'Masukan Kode'} value={otp} onChange={(e) => handleInput(e.target.value)} errorMessage={errorMessage.otp} />
+                        <div className="flex justify-between items-center mt-[-8px]">
+                            <span className="text-revamp-neutral-10 font-[500] text-[14px]">
+                                Tidak mendapatkan kode? {' '}
+                                {isLoadingOtp ? (
+                                    <span className="text-revamp-error-300 cursor-pointer">Loading...</span>
+                                ) : (
+                                    <a onClick={handleResendOtp} className={`${countdown > 0 ? 'cursor-default text-revamp-neutral-6' : 'text-revamp-error-300 hover:underline cursor-pointer'}`}>Kirim Ulang</a>
+                                )}
+                            </span>
+                            <span className="text-revamp-secondary-500">{formatCountdown(countdown)}</span>
+                        </div>
                     </div>
                     <div className="mb-[24px]">
                         <button 
@@ -126,18 +158,6 @@ export default function PageName() {
                         >
                             {isLoading ? 'Loading...' : 'Kirim'}
                         </button>
-                        <div className="flex justify-center items-center mt-[10px]">
-                            <span className="text-revamp-neutral-10 font-[500] text-[14px]">
-                                Tidak mendapatkan kode? {' '}
-                                {isLoadingOtp ? (
-                                      <span className="text-revamp-error-300 cursor-pointer ">Loading...</span>
-                                ):countdown > 0 ? (
-                                    <span className="text-revamp-error-300 cursor-not-allowed"> Kirim Ulang ({countdown}s)</span>
-                                ) : (
-                                    <a onClick={handleResendOtp} className="text-revamp-error-300 cursor-pointer hover:underline">Kirim Ulang</a>
-                                )}
-                            </span>
-                        </div>
                     </div>
                     <FooterBar />
                 </div>

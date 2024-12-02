@@ -12,7 +12,6 @@ const FooterBar = () => {
         <div className="flex justify-center">
             <div className="rounded-full shadow-lg w-fit p-[8px] flex justify-center cursor-pointer">
                 <img src={IcGoogle} onClick={oauthHandler} />
-                 <div id="my-signin2"></div>
             </div>
         </div>
         </div>
