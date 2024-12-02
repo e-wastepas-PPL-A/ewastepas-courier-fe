@@ -66,7 +66,7 @@ export default function PageName() {
             } else {
                 setErrorMessage((prev) => ({
                     ...prev,
-                    otp: "OTP gagal dikirim"
+                    otp: "OTP tidak valid"
                 }));
                 setSuccess(null);
             }
@@ -113,8 +113,6 @@ export default function PageName() {
             }));
     }
 
-    const isButtonDisabled = !otp || isLoading;
-
     return (
         <div className="h-[100dvh] px-[8px] md:p-[100px] flex justify-center items-center">
             <div className="w-1/2 md:p-[10px] lg:p-[52px] hidden lg:block">
@@ -152,9 +150,9 @@ export default function PageName() {
                     </div>
                     <div className="mb-[24px]">
                         <button 
-                            className={`${isButtonDisabled ? 'bg-revampV2-neutral-400' : 'bg-revamp-secondary-500'} w-full py-[8px] text-white text-[14px] font-[600]`}
+                            className={`${isLoading ? 'bg-revampV2-neutral-400' : 'bg-revamp-secondary-500'} w-full py-[8px] text-white text-[14px] font-[600] rounded-[15px]`}
                             onClick={handleSendOtp}
-                            disabled={isButtonDisabled}
+                            disabled={isLoading}
                         >
                             {isLoading ? 'Loading...' : 'Kirim'}
                         </button>

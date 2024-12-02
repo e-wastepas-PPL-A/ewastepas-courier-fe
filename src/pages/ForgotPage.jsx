@@ -5,42 +5,73 @@ import IcBack from '../assets/ic-back.svg'
 import InputEmail from '../components/Input/InputEmail'
 import FooterBar from '../components/Register/FooterBar'
 import { sendOtp } from "../services";
+import { EMAIL_REGEX } from '../constants/regex';
 
 export default function PageName() {
     const [email, setEmail] = useState('')
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState(null); // State to manage errors
-    const [success, setSuccess] = useState(null); 
+    const [errorMessage, setErrorMessage] = useState({
+        email: "",
+    });
+
 
     useEffect(()=>{
         document.title = "E-Wastepas | Login"
     }, [])
 
+    const validateEmail = (value) => {
+        if (!value) {
+            setErrorMessage((prev) => ({
+                ...prev,
+                email: "Email tidak boleh kosong"
+            }));
+        }else if (!EMAIL_REGEX.test(value)) {
+            setErrorMessage((prev) => ({
+                ...prev,
+                email: "Email tidak valid"
+            }));
+        } else {
+            setErrorMessage((prev) => ({
+                ...prev,
+                email: ""
+            }));
+        }
+    };
+
+
     const handleSend = async () => {
+        validateEmail(email);
+
+        if(isDisabled){
+            return;
+        }
         setIsLoading(true);
+
         const payload = {
             email
         };
+        
 
         try {
             const response = await sendOtp(payload);
             if (response.status === 200) { // Assuming 200 is the success status code
-                setSuccess("OTP send successfully!");
+                const newExpiredOtp = new Date(new Date().getTime() + 60 * 3000);
+                sessionStorage.setItem("expiredOtp", newExpiredOtp);
+                
                 setError(null); // Clear any previous error
                 window.location.href = "/forgot/verification?email=" + email;
             } else {
                 setError("OTP verification failed. Please try again.");
-                setSuccess(null); // Clear any previous success message
             }
             setIsLoading(false);
         } catch {
             setError("An error occurred during OTP verification. Please try again.");
-            setSuccess(null); // Clear any previous success message
             setIsLoading(false);
         }
     };
 
-    const isButtonDisabled =  !email || isLoading;
+    const isDisabled =  !email ||  errorMessage.email;
 
     return (
         <div className="h-[100dvh] px-[8px] md:p-[100px] flex justify-center items-center">
@@ -60,12 +91,19 @@ export default function PageName() {
                         <span className="text-[16px] font-[400] text-revamp-neutral-7">Jangan khawatir, ini bisa terjadi pada siapa saja. Masukkan email Anda di bawah ini untuk memulihkan kata sandi Anda.</span>
                     </div>
                     {error && <div className="text-white bg-revamp-error-300 py-[8px] mb-[18px] rounded-[6px]">{error}</div>}
-                    {success && <div className="text-white bg-revamp-success-300 py-[8px] mb-[18px] rounded-[6px]">{success}</div>}
                     <div className="mb-[24px]">
-                        <InputEmail label={'Email'} value={email} onChange={(e)=> setEmail(e.target.value)} />
+                    <InputEmail
+                            label={'Email'}
+                            value={email}
+                            onChange={(e) => {
+                                setEmail(e.target.value);
+                                validateEmail(e.target.value);
+                            }}
+                            errorMessage={errorMessage.email}
+                        />
                     </div>
                     <div className="mb-[24px]">
-                        <button onClick={handleSend} disabled={isButtonDisabled} className={`${isButtonDisabled ? 'bg-revampV2-neutral-400' : 'bg-revamp-secondary-500'} w-full py-[8px] text-white text-[14px] font-[600]`}>Kirim</button>
+                        <button onClick={handleSend} disabled={isLoading} className={`${isLoading ? 'bg-revampV2-neutral-400' : 'bg-revamp-secondary-500'} w-full py-[8px] text-white text-[14px] font-[600] rounded-[15px]`}>{isLoading ? 'Loading...' :'Kirim'}</button>
                         <div className="flex justify-center items-center mt-[10px]">
                             <span className="text-revamp-neutral-10 font-[500] text-[14px]">Tidak memiliki akun? <a href="/register" className="text-revamp-error-300">Registrasi</a></span>
                         </div>

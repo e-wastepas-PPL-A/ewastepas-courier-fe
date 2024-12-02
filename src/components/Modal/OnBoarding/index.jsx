@@ -5,18 +5,20 @@ import InputEmail from '../../../components/Input/InputEmail';
 import InputText from '../../../components/Input/InputText';
 import InputPhone from '../../../components/Input/InputPhone';
 import InputFile from '../../../components/Input/InputFile';
+import InputProfile from '../../../components/Input/InputProfile';
 import { EMAIL_REGEX, PHONE_REGEX } from '../../../constants/regex';
-import { registration, sendOtp } from "../../../services";
-import Avatar from 'react-avatar';
+import { updateUser } from "../../../services";
 import { useCourier } from "../../../stores/courier";
 import { useNavigate } from "react-router-dom";
 
 export default function OnBoarding() {
+    const [token, setToken] = useState('');
     const user = useCourier((state) => state.user);
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
     const [ktp, setKtp] = useState([]);
+    const [photo, setphoto] = useState([]);
     const [kk, setKk] = useState([]);
     const [canProceed, setCanProceed] = useState(false)
     const [error, setError] = useState(null);
@@ -28,6 +30,12 @@ export default function OnBoarding() {
         phone: "",
     });
     const navigate = useNavigate();
+
+    useEffect(() => {
+        setToken(Cookies.get('PHPSESSID'));
+    }, []);
+
+    
 
     const stepHandler = () => {
         if (canProceed && step < 4) {
@@ -61,10 +69,12 @@ export default function OnBoarding() {
       }, [step, name, email, phone])
 
     useEffect(() => {
-        document.title = "E-Wastepas | Register";
         setName(user?.name);
         setEmail(user?.email);
         setPhone(user?.phone);
+        setphoto(user?.photo ? [{url:user?.photo}] : []);
+        setKtp(user?.ktp_url ? [{url:user?.ktp_url}] : []);
+        setKk(user?.kk_url ? [{url:user?.kk_url}] : []);
     }, []);
 
     const validateName = (value) => {
@@ -129,26 +139,17 @@ export default function OnBoarding() {
         }
     };
 
-
     const handleRegister = async () => {
         validateEmail(email)
 
-        const payload = { name, email, phone, ktp, kk };
+        const payload = { name, email, phone_number: phone, ktp, kk };
 
         setIsLoading(true);
 
         try {
-            const response = await registration(payload);
+            const response = await updateUser(payload, token);
             if (response.status === 201 || response.status === 200) {
-                const newExpiredOtp = new Date(new Date().getTime() + 60 * 3000);
-                sessionStorage.setItem("expiredOtp", newExpiredOtp);
-
-                window.location.href = "/register/verification?email=" + email;
-            } else if (response.response.data.error === "Your account has not been verified") {
-                await sendOtp({ email });
-                sessionStorage.removeItem("expiredOtp");
-
-                window.location.href = "/register/verification?email=" + email;
+                alert('good')
             } else {
                 setError(response.response.data.error);
                 sessionStorage.removeItem("expiredOtp");
@@ -162,7 +163,15 @@ export default function OnBoarding() {
 
     const StepOne = () => (
         <div className={`${step === 1 ? "block" : "hidden"}`}>
-            <Avatar name={user?.name} round={true} className="mb-2" />
+            <InputProfile      
+                id="profile-picture"
+                value={photo}
+                onChange={(e) => {
+                    setKtp(e);
+                }}
+                errorMessage={errorMessage.photo}
+                format="image" 
+                />
             <div className="text-center mb-6">
                 <h1 className="text-2xl font-semibold">Hello, {user?.name}</h1>
                 <span className="text-sm text-revamp-neutral-7">
@@ -263,7 +272,7 @@ export default function OnBoarding() {
                 {StepFour()}
                     <div className="mb-[24px]">
                         <button
-                            className={`${isLoading ? 'bg-revampV2-neutral-400' : 'bg-revamp-secondary-500'} w-full py-[8px] text-white text-[14px] font-[600] rounded-[4px]`}
+                            className={`${isLoading ? 'bg-revampV2-neutral-400' : 'bg-revamp-secondary-500'} w-full py-[8px] px-[46px] text-white text-[14px] font-[600] rounded-[15px]`}
                             onClick={stepHandler}
                             disabled={!canProceed}
                         >
