@@ -114,8 +114,8 @@ const FileUploader = ({
               fallbackSrc={"https://claritycareconsulting.co.uk/wp-content/uploads/2023/05/Blank-Profile-Picture.jpg"}
               className="w-[100px] h-[100px] rounded-full object-cover"
             />
-            <div className={`absolute bg-[black] rounded-full duration-300 opacity-[${isHovered ? ' 0.6' : '0'}] w-full h-full`}></div>
-            <div className={`absolute text-white font-[500] duration-300 opacity-[${isHovered ? '1' : '0'}]`}>Clear</div>
+            <div className={`absolute bg-[black] rounded-full duration-300 w-full h-full`} style={{opacity: isHovered ? '0.6' : '0'}}></div>
+            <div className={`absolute text-white font-[500] duration-300`} style={{opacity: isHovered ? '1' : '0'}}>Clear</div>
             </div>
         ):(
         <label
