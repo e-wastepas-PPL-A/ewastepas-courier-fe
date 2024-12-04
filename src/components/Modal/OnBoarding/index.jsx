@@ -4,8 +4,10 @@ import Cookies from "js-cookie";
 import InputEmail from '../../../components/Input/InputEmail';
 import InputText from '../../../components/Input/InputText';
 import InputPhone from '../../../components/Input/InputPhone';
+import InputDate from '../../../components/Input/InputDate';
 import InputFile from '../../../components/Input/InputFile';
 import InputProfile from '../../../components/Input/InputProfile';
+import InputNumerik from '../../../components/Input/InputNumerik';
 import { EMAIL_REGEX, PHONE_REGEX } from '../../../constants/regex';
 import { updateUser } from "../../../services";
 import { useCourier } from "../../../stores/courier";
@@ -14,9 +16,11 @@ import { useNavigate } from "react-router-dom";
 export default function OnBoarding() {
     const [token, setToken] = useState('');
     const user = useCourier((state) => state.user);
+    const [nik, setNik] = useState('');
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
+    const [date, setDate] = useState('');
     const [ktp, setKtp] = useState([]);
     const [photo, setphoto] = useState([]);
     const [kk, setKk] = useState([]);
@@ -25,17 +29,19 @@ export default function OnBoarding() {
     const [isLoading, setIsLoading] = useState(false);
     const [step, setStep] = useState(1);
     const [errorMessage, setErrorMessage] = useState({
+        nik: "",
         email: "",
         name: "",
         phone: "",
     });
     const navigate = useNavigate();
+    const maxDate = new Date();
+    maxDate.setFullYear(maxDate.getFullYear() - 17); // Subtract 17 years
+    const formattedMaxDate = maxDate.toISOString().split("T")[0];
 
     useEffect(() => {
         setToken(Cookies.get('PHPSESSID'));
     }, []);
-
-    
 
     const stepHandler = () => {
         if (canProceed && step < 4) {
@@ -57,18 +63,21 @@ export default function OnBoarding() {
         if (step === 1) {
           setCanProceed(true)
         } else if (step === 2) {
+        const isNikValid = !errorMessage.nik && !!nik;
         const isNameValid = !errorMessage.name && !!name;
         const isEmailValid = !errorMessage.email && !!email;
         const isPhoneValid = !errorMessage.phone && !!phone;
-        setCanProceed(isNameValid && isEmailValid && isPhoneValid);
+        const isDateValid = !errorMessage.date && !!date;
+        setCanProceed(isNikValid && isNameValid && isEmailValid && isPhoneValid && isDateValid);
         } else if (step === 3) {
           setCanProceed(!!ktp)
         } else if (step === 4) {
           setCanProceed(!!kk)
         }
-      }, [step, name, email, phone])
+      }, [step, nik, name, email, phone, date])
 
     useEffect(() => {
+        setNik(user?.nik);
         setName(user?.name);
         setEmail(user?.email);
         setPhone(user?.phone);
@@ -83,7 +92,7 @@ export default function OnBoarding() {
                 ...prev,
                 name: "Nama tidak boleh kosong"
             }));
-        }else if (value.length < 2) {
+        }else if (value?.length < 2) {
             setErrorMessage((prev) => ({
                 ...prev,
                 name: "Nama minimal 2 karakter"
@@ -105,9 +114,9 @@ export default function OnBoarding() {
         }else if (!PHONE_REGEX.test(value)) {
             setErrorMessage((prev) => ({
                 ...prev,
-                phone: "Email tidak valid"
+                phone: "No telepon  tidak valid"
             }));
-        }else if (value.length < 8) {
+        }else if (value?.length < 8) {
             setErrorMessage((prev) => ({
                 ...prev,
                 phone: "No telepon minimal 8 karakter"
@@ -116,6 +125,25 @@ export default function OnBoarding() {
             setErrorMessage((prev) => ({
                 ...prev,
                 phone: ""
+            }));
+        }
+    };
+
+    const validateNik = (value) => {
+        if (!value) {
+            setErrorMessage((prev) => ({
+                ...prev,
+                nik: "NIK tidak boleh kosong"
+            }));
+        }else if (value?.length < 16) {
+            setErrorMessage((prev) => ({
+                ...prev,
+                nik: "NIK minimal 16 karakter"
+            }));
+        } else {
+            setErrorMessage((prev) => ({
+                ...prev,
+                nik: ""
             }));
         }
     };
@@ -139,10 +167,51 @@ export default function OnBoarding() {
         }
     };
 
+    const validateDate = (value) => {
+        if (!value) {
+            setErrorMessage((prev) => ({
+                ...prev,
+                date: "Tanggal lahir tidak boleh kosong",
+            }));
+        } else {
+            const now = new Date(); // Tanggal saat ini
+            const birthDate = new Date(value); // Tanggal yang dimasukkan
+    
+            if (birthDate > now) {
+                setErrorMessage((prev) => ({
+                    ...prev,
+                    date: "Tanggal lahir tidak boleh di masa depan",
+                }));
+            } else {
+                // Hitung usia berdasarkan tanggal lahir
+                const age = now.getFullYear() - birthDate.getFullYear();
+                const monthDiff = now.getMonth() - birthDate.getMonth();
+                const dayDiff = now.getDate() - birthDate.getDate();
+    
+                // Pastikan usia kurang dari 17 tahun memperhitungkan bulan dan hari
+                if (
+                    age < 17 ||
+                    (age === 17 && (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)))
+                ) {
+                    setErrorMessage((prev) => ({
+                        ...prev,
+                        date: "Usia harus minimal 17 tahun",
+                    }));
+                } else {
+                    setErrorMessage((prev) => ({
+                        ...prev,
+                        date: "",
+                    }));
+                }
+            }
+        }
+    };
+    
+
     const handleRegister = async () => {
         validateEmail(email)
 
-        const payload = { name, email, phone_number: phone, ktp, kk };
+        const payload = { nik, name, email, phone_number: phone, ktp, kk, photo };
 
         setIsLoading(true);
 
@@ -183,6 +252,15 @@ export default function OnBoarding() {
 
     const StepTwo = () => (
         <div className={`${step === 2 ? "block" : "hidden"}`}>
+             <InputNumerik
+                label="NIK"
+                value={nik}
+                onChange={(e) => {
+                    setNik((e));
+                    validateNik(e);
+                }}
+                errorMessage={errorMessage.nik}
+            />
             <InputText
                 label="Nama"
                 value={name}
@@ -209,6 +287,16 @@ export default function OnBoarding() {
                     validatePhone(e);
                 }}
                 errorMessage={errorMessage.phone}
+            />
+            <InputDate
+                label="Tanggal Lahir"
+                value={date}
+                onChange={(e) => {
+                    setDate((e));
+                    validateDate(e);
+                }}
+                max={formattedMaxDate}
+                errorMessage={errorMessage.date}
             />
         </div>
     );
@@ -244,7 +332,7 @@ export default function OnBoarding() {
 
     return (
         <div className="fixed left-0 right-0 top-0 h-[100dvh] z-[99] flex justify-center items-center">
-            <div className="w-full h-[100dvh] bg-black-100 opacity-[0.8]"></div>
+            <div className="w-full h-[100dvh] bg-black opacity-[0.8]"></div>
         <div className="fixed p-[12px] flex-col bg-white rounded-md justify-center items-center h-max-[500px] w-[400px] overflow-x-auto">
                  {step !== 5 && (
                   <div className="mb-[24px] flex items-center justify-center gap-2">

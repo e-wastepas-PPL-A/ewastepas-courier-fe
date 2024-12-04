@@ -17,8 +17,10 @@ const FileUploader = ({
   const user = useCourier((state) => state.user);
   const [isHovered, setIsHovered] = useState(false);
 
-  useEffect(() => {
-    setFile(value);
+  useEffect(() => { 
+    if(value.length > 0 ){
+      setFile(value);
+    }
 }, [value]);
 
   const acceptedFormats = {
@@ -69,7 +71,7 @@ const FileUploader = ({
     }
 
     setFile(incomingFiles);
-    onChange?.([incomingFiles[0]]);
+    onChange?.(incomingFiles[0]);
   };
 
   const validateFile = (files) => {
@@ -112,7 +114,7 @@ const FileUploader = ({
               fallbackSrc={"https://claritycareconsulting.co.uk/wp-content/uploads/2023/05/Blank-Profile-Picture.jpg"}
               className="w-[100px] h-[100px] rounded-full object-cover"
             />
-            <div className={`absolute bg-[black] rounded-full duration-300 opacity-[${isHovered ? '0.6' : '0'}] w-full h-full`}></div>
+            <div className={`absolute bg-[black] rounded-full duration-300 opacity-[${isHovered ? ' 0.6' : '0'}] w-full h-full`}></div>
             <div className={`absolute text-white font-[500] duration-300 opacity-[${isHovered ? '1' : '0'}]`}>Clear</div>
             </div>
         ):(
@@ -123,8 +125,8 @@ const FileUploader = ({
           className={`relative w-fit flex items-center justify-center mb-2 mx-auto cursor-pointer`}
         >
               <Avatar name={user?.name} round={true} className="w-[120px] h-[120px] rounded-full object-cover" />
-            <div className={`absolute bg-[black] rounded-full duration-300 opacity-[${isHovered ? '0.6' : '0'}] w-full h-full`}></div>
-            <div className={`absolute text-white font-[500] duration-300 opacity-[${isHovered ? '1' : '0'}]`}>Edit</div>
+            <div className={`absolute bg-[black] rounded-full duration-300 w-full h-full`} style={{opacity: isHovered ? '0.6' : '0'}}></div>
+            <div className={`absolute text-white font-[500] duration-300`} style={{opacity: isHovered ? '1' : '0'}}>Edit</div>
         </label>
         )}
       <input

@@ -18,10 +18,11 @@ const FileUploader = ({
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef(null);
 
-      useEffect(() => {
-        setFile(value);
-        console.log("knt", value)
-    }, [value]);
+  useEffect(() => { 
+    if(value.length > 0 ){
+      setFile(value);
+    }
+}, [value]);
 
   const acceptedFormats = {
     image: "image/png, image/jpg, image/jpeg",
@@ -77,7 +78,7 @@ const FileUploader = ({
     }
 
     setFile(incomingFiles);
-    onChange?.([incomingFiles[0]]);
+    onChange?.(incomingFiles[0]);
   };
 
   const validateFile = (files) => {
@@ -116,12 +117,9 @@ const FileUploader = ({
       setTimeout(() => URL.revokeObjectURL(fileSrc), 1000);
     }else{
         fileSrc=file?.url;
-        console.log('test', file)
       }
     return fileSrc;
   };
-
-  console.log(file)
 
   return (
     <div className="my-2">
