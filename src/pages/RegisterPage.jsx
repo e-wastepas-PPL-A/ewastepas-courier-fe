@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Logo from '../assets/logo.png';
-import Slide2 from '../assets/vertical-slide-2.png';
+import Slide1 from '../assets/vertical-slide-1.png';
 import InputEmail from '../components/Input/InputEmail';
 import InputPassword from '../components/Input/InputPassword';
 import InputCheck from '../components/Input/InputCheck';
@@ -139,7 +139,7 @@ export default function RegisterPage() {
     return (
         <div className="h-[100dvh] p-[8px] md:p-[100px] flex justify-center md:items-center">
             <div className="w-1/2 md:p-[10px] lg:p-[52px] hidden lg:block">
-                <img src={Slide2} className="max-h-[90vh]" alt="Slide" />
+                <img src={Slide1} className="max-h-[90vh]" alt="Slide" />
             </div>
             <div className="text-center w-full lg:w-1/2">
                 <div className="flex justify-center">
@@ -158,6 +158,7 @@ export default function RegisterPage() {
                             value={email}
                             onChange={(e) => {
                                 setEmail(e.target.value);
+                                validateEmail(e.target.value);
                             }}
                             errorMessage={errorMessage.email}
                         />
@@ -188,7 +189,7 @@ export default function RegisterPage() {
                     </div>
                     <div className="mb-[24px]">
                         <button
-                             className={`${isLoading ? 'bg-revampV2-neutral-400' : 'bg-revamp-secondary-500'} w-full py-[8px] text-white text-[14px] font-[600]`}
+                             className={`${isLoading ? 'bg-revampV2-neutral-400' : 'bg-revamp-secondary-500'} w-full py-[8px] text-white text-[14px] font-[600] rounded-[15px]`}
                             onClick={handleRegister}
                             disabled={isLoading}
                         >

@@ -1,8 +1,9 @@
 /* eslint-disable react/prop-types */
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Swal from "sweetalert2";
 import IcEmptyFile from "../../assets/empty-file.svg"
 import IcImages from "../../assets/ic-images.svg"
+import ImageWithFallback from "../TagImage/ImageWithFallback"
 
 const FileUploader = ({
   id,
@@ -16,6 +17,12 @@ const FileUploader = ({
   const [file, setFile] = useState(value);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef(null);
+
+  useEffect(() => { 
+    if(value.length > 0 ){
+      setFile(value);
+    }
+}, [value]);
 
   const acceptedFormats = {
     image: "image/png, image/jpg, image/jpeg",
@@ -43,7 +50,7 @@ const FileUploader = ({
       return;
     }
 
-    if (incomingFiles.length > 1 || file.length === 1) {
+    if (incomingFiles?.length > 1 || file?.length === 1) {
       Swal.fire({
         title: "Upload File",
         text: "Only 1 file can be uploaded at a time.",
@@ -99,12 +106,18 @@ const FileUploader = ({
 
   const handleRemoveFile = () => {
     setFile([]);
-    onChange?.(null);
+    onChange?.([]);
   };
 
+
   const generateURL = (file) => {
-    const fileSrc = URL.createObjectURL(file);
-    setTimeout(() => URL.revokeObjectURL(fileSrc), 1000);
+    let fileSrc;
+    if(!file?.url){
+      fileSrc = URL.createObjectURL(file);
+      setTimeout(() => URL.revokeObjectURL(fileSrc), 1000);
+    }else{
+        fileSrc=file?.url;
+      }
     return fileSrc;
   };
 
@@ -126,20 +139,22 @@ const FileUploader = ({
           ></label>
         )}
       </div>
-      {file.length > 0 ? (
+      {file?.length > 0 ? (
         <div className="flex items-center gap-2 mt-2 w-full h-[80px] border border-gray-400 border-dashed rounded-[8px] p-2">
-          {file[0].type.startsWith("image") ? (
-            <img
+          {file[0]?.type?.startsWith("image") || file[0]?.url ? (
+            <ImageWithFallback
               src={generateURL(file[0])}
               alt="Preview"
+              fallbackSrc={IcEmptyFile}
               className="w-[50px] h-[50px] object-cover"
             />
           ) : (
-            <img
-              src={IcEmptyFile}
-              alt="Preview"
-              className="w-[50px] h-[50px] object-cover"
-            />
+            <ImageWithFallback
+            src={IcEmptyFile}
+            alt="Preview"
+            fallbackSrc={IcEmptyFile}
+            className="w-[50px] h-[50px] object-cover"
+          />
           )}
           <span className="flex-grow text-sm truncate">{file[0].name}</span>
           <button

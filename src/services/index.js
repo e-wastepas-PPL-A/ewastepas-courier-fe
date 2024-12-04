@@ -43,6 +43,25 @@ export async function changePassword(payload, token) {
   }
 }
 
+export async function updateUser(payload, token) {
+  try {
+    const formData = new FormData();
+    Object.keys(payload).forEach(key => {
+      formData.append(key, payload[key]);
+    });
+    const response = await axios.patch(`${BASE_URL}/users`, formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+    return response;
+  } catch (error) {
+    console.error("Error in updateUser:", error.response ? error.response.data : error.message);
+    return error.response || error;
+  }
+}
+
 export async function oauthHandler() {
   try {
     window.location = `${BASE_URL}/auth/google`

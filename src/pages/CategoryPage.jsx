@@ -6,11 +6,6 @@ import { useState } from "react";
 export default function CategoryPage() {
   const [searchInput, setSearchInput] = useState("");
 
-  // const handleSearch = (search) => {
-  //   setSearchInput(search);
-  //   console.log("skaodksd");
-  // };
-
   return (
     <>
       <div className="container-sm min-h-screen lg:max-w-[1000px] mx-auto px-4 sm:w-screen">
