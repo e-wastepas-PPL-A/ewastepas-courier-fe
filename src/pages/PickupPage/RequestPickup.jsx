@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Table from "../../components/Tables/DataTable";
 import { getAllPickup } from "../../services";
 import { formatDate } from "../../utils/date";
+import { EyeIcon } from "lucide-react";
 
 // const data = [
 //   {
@@ -24,16 +25,24 @@ import { formatDate } from "../../utils/date";
 
 export default function RequestPickupPage() {
   const [pickup, setPickup] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchPickup = async () => {
-      const response = await getAllPickup();
-      setPickup(response.data.data);
+      try {
+        const response = await getAllPickup();
+        setPickup(response.data.data);
+        setIsLoading(false);
+      } catch (e) {
+        console.log(e);
+      }
     };
     fetchPickup();
   }, []);
 
-  console.log(pickup);
+  if (isLoading) {
+    return <div className="loader mx-auto items-center mt-5"></div>;
+  }
 
   const columns = [
     {
@@ -58,7 +67,13 @@ export default function RequestPickupPage() {
     },
     {
       name: "Action",
-      cell: () => <button className="text-xl">...</button>,
+      cell: (row) => (
+        <button
+          className="text-xl cursor-pointer"
+          onClick={() => alert(row.dropbox_id)}>
+          <EyeIcon color="#005b96" />
+        </button>
+      ),
     },
   ];
 

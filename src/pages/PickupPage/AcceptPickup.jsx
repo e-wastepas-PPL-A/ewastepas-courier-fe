@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Table from "../../components/Tables/DataTable";
 import { getAllPickup } from "../../services";
 import { formatDate } from "../../utils/date";
+import { EyeIcon } from "lucide-react";
 
 // const data = [
 //   {
@@ -24,6 +25,7 @@ import { formatDate } from "../../utils/date";
 
 export default function AcceptPickupPage() {
   const [pickup, setPickup] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const columns = [
     {
@@ -52,17 +54,32 @@ export default function AcceptPickupPage() {
     },
     {
       name: "Action",
-      cell: () => <button className="text-xl">...</button>,
+      cell: (row) => (
+        <button
+          className="text-xl cursor-pointer"
+          onClick={() => alert(row.dropbox_id)}>
+          <EyeIcon color="#005b96" />
+        </button>
+      ),
     },
   ];
 
   useEffect(() => {
     const fetchPickup = async () => {
-      const response = await getAllPickup();
-      setPickup(response.data.data);
+      try {
+        const response = await getAllPickup();
+        setPickup(response.data.data);
+        setIsLoading(false);
+      } catch (e) {
+        console.log(e);
+      }
     };
     fetchPickup();
   }, []);
+
+  if (isLoading) {
+    return <div className="loader mx-auto items-center mt-5"></div>;
+  }
 
   return (
     <>

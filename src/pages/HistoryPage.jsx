@@ -4,7 +4,7 @@ import { formatDate } from "../utils/date";
 import { getHistoryCourier } from "../services";
 
 export default function HistoryPage() {
-  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [history, setHistory] = useState([]);
 
   useEffect(() => {
@@ -12,14 +12,17 @@ export default function HistoryPage() {
       try {
         const response = await getHistoryCourier();
         setHistory(response.data.data);
-      } catch (error) {
-        setError(error);
+        setIsLoading(false);
+      } catch (e) {
+        console.log(e);
       }
     };
     fetchHistory();
   }, []);
 
-  console.log(history);
+  if (isLoading) {
+    return <div className="loader mx-auto items-center mt-5"></div>;
+  }
 
   const columns = [
     {
@@ -66,7 +69,6 @@ export default function HistoryPage() {
 
   return (
     <>
-      {error && <p>{error.message}</p>}
       <div className="container mx-auto p-4">
         <h1 className="text-2xl text-revamp-neutral-8 font-medium">
           Detail History Penjemputan Sampah
