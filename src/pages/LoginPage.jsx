@@ -12,6 +12,7 @@ import { login } from "../services";
 export default function PageName() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [isRemember, setIsRemember] = useState(false);
     const [isLoading, setIsLoading] = useState('');
     const [error, setError] = useState(null); // State for error handling
     const [success, setSuccess] = useState(null); // State for success messages
@@ -62,10 +63,10 @@ export default function PageName() {
                     {error && <div className="text-white bg-revamp-error-300 py-[8px] mb-[18px] rounded-[6px]">{error}</div>}
                     {success && <div className="text-white bg-revamp-success-300 py-[8px] mb-[18px] rounded-[6px]">{success}</div>}
                     <div className="mb-[24px]">
-                        <InputEmail label={'Email'} value={email} onChange={(e) => setEmail(e.target.value)} />
-                        <InputPassword label={'Kata Sandi'} value={password} onChange={(e) => setPassword(e.target.value)} />
+                        <InputEmail label={'Email'} value={email} onChange={(value) => setEmail(value)} />
+                        <InputPassword label={'Kata Sandi'} value={password} onChange={(value) => setPassword(value)} />
                         <div className="flex justify-between items-center">
-                            <InputCheck label={'Ingatkan Saya'} value={true} onChange={(e) => setPassword(e.target.value)} />
+                            <InputCheck label={'Ingatkan Saya'} value={isRemember} onChange={(value) => setIsRemember(value)} />
                             <a href="/forgot" className="text-revamp-error-300 font-[500]">Lupa kata sandi</a>
                         </div>
                     </div>

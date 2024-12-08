@@ -29,9 +29,23 @@ export async function sendOtp(payload) {
   });
 }
 
-export async function changePassword(payload, token) {
+export async function changeForgot(payload, token) {
   try {
     const response = await axios.patch(`${BASE_URL}/auth/forgot-password`, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    return response;
+  } catch (error) {
+    console.error("Error in changePassword:", error.response ? error.response.data : error.message);
+    return error.response || error;
+  }
+}
+
+export async function changePassword(payload, token) {
+  try {
+    const response = await axios.patch(`${BASE_URL}/users/change-password`, payload, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -46,6 +60,7 @@ export async function changePassword(payload, token) {
 export async function updateUser(payload, token) {
   try {
     const formData = new FormData();
+    console.log(payload)
     Object.keys(payload).forEach(key => {
       formData.append(key, payload[key]);
     });

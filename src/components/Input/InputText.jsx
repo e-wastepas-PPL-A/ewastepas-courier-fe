@@ -1,13 +1,24 @@
 /* eslint-disable react/prop-types */
-const TextInput = ({ label, value, onChange, placeholder, readOnly = false, errorMessage }) => {
+const TextInput = ({ label, value, onChange, placeholder, readOnly = false, type="text", errorMessage = "" }) => {
   const hasError = errorMessage.length > 0;
+
+  const validate = (e) => {
+    const value = e.target.value;
+
+    if (type == "text" || type == "numerik" && /^\d*$/.test(value)) {
+     onChange(value);
+      }else{
+        onChange("");
+      }
+  }
+
   return (
     <div className={`relative ${errorMessage.length > 0 ? 'mb-4' : 'mb-6'}`} data-twe-input-wrapper-init>
         <input
         type="text"
-          className={`peer block min-h-[auto] w-full rounded border ${hasError ? "border-revamp-error-500" : "border-revamp-neutral-10"} px-3 py-[0.50rem] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-revamp-neutral-10 data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0`}
+        className={`peer block min-h-[auto] w-full rounded border ${hasError ? "border-revamp-error-500" : "border-revamp-neutral-10"} px-3 py-[0.50rem] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-revamp-neutral-10 data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0`}
         value={value}
-        onChange={onChange}
+        onChange={validate}
         placeholder={placeholder}
         readOnly={readOnly}
         />
