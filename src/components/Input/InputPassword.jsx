@@ -78,7 +78,7 @@ const TextInput = ({
         type={isPasswordVisible ? "text" : "password"}
         className={inputClass}
         value={value}
-        onChange={onChange}
+        onChange={(e)=> onChange(e.target.value)}
         placeholder={placeholder}
         readOnly={readOnly}
         onFocus={handleFocus}

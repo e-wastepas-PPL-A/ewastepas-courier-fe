@@ -3,8 +3,9 @@ import Logo from '../assets/logo.png';
 import Slide2 from '../assets/vertical-slide-2.png';
 import InputPassword from '../components/Input/InputPassword';
 import FooterBar from '../components/Register/FooterBar';
-import { changePassword } from "../services";
-import { PASSWORD_REGEX } from '../constants/regex';
+import { changeForgot } from "../services";
+import validatePassword from "../utils/ValidationPassword";
+import validateConfrimPassword from "../utils/ValidationConfirmPassword";
 
 export default function PageName() {
     const [token, setToken] = useState('');
@@ -23,44 +24,6 @@ export default function PageName() {
         setToken(urlParams.get('token'));
     }, []);
 
-    const validatePassword = (value) => {
-        if (!value) {
-            setErrorMessage((prev) => ({
-                ...prev,
-                password: "Kata sandi tidak boleh kosong",
-            }));
-        }else if (!PASSWORD_REGEX.test(value)) {
-            setErrorMessage((prev) => ({
-                ...prev,
-                password: "Kata sandi tidak valid",
-            }));
-        } else {
-            setErrorMessage((prev) => ({
-                ...prev,
-                password: "",
-            }));
-        }
-    };
-
-    const validateConfrimPassword = (value) => {
-        if (!value) {
-            setErrorMessage((prev) => ({
-                ...prev,
-                confirmPassword: "Konfirmasi kata sandi tidak boleh kosong"
-            }));
-        }else if (password !== value) {
-            setErrorMessage((prev) => ({
-                ...prev,
-                confirmPassword: "Konfirmasi kata sandi tidak valid",
-            }));
-        } else {
-            setErrorMessage((prev) => ({
-                ...prev,
-                confirmPassword: ""
-            }));
-        }
-    };
-
     const handleRegister = async () => {
         validatePassword(password)
         validateConfrimPassword(confirmPassword)
@@ -77,7 +40,7 @@ export default function PageName() {
         setIsLoading(true); // Set loading state to true
 
         try {
-            const response = await changePassword(payload, token);
+            const response = await changeForgot(payload, token);
             if (response.status === 200) {
                 window.location.href = "/login";
                 setError(null);
@@ -93,7 +56,7 @@ export default function PageName() {
     };
 
     // Determine if the button should be disabled
-    const isDisabled = !password || !confirmPassword ||     errorMessage.password || errorMessage.confirmPassword;
+    const isDisabled = !password || !confirmPassword || errorMessage.password || errorMessage.confirmPassword;
     return (
         <div className="h-[100dvh] px-[8px] md:p-[100px] flex justify-center items-center">
             <div className="w-1/2 md:p-[10px] lg:p-[52px] hidden lg:block">
@@ -113,9 +76,12 @@ export default function PageName() {
                     <InputPassword
                             label={'Kata Sandi'}
                             value={password}
-                            onChange={(e) => {
-                                setPassword(e.target.value);
-                                validatePassword(e.target.value);
+                            onChange={(value) => {
+                                setPassword(value);
+                                setErrorMessage((prev) => ({
+                                    ...prev,
+                                    password: validatePassword(value)
+                                }));
                             }}
                             errorMessage={errorMessage.password}
                             isValidateCheck={true}
@@ -123,7 +89,13 @@ export default function PageName() {
                         <InputPassword
                             label={'Konfirmasi Kata Sandi'}
                             value={confirmPassword}
-                            onChange={(e) => {setConfirmPassword(e.target.value); validateConfrimPassword(e.target.value)}}
+                            onChange={(value) => {
+                                setConfirmPassword(value);
+                                setErrorMessage((prev) => ({
+                                    ...prev,
+                                    confirmPassword: validateConfrimPassword(value, password)
+                                }));
+                            }}
                             errorMessage={errorMessage.confirmPassword}
                         />
                     </div>

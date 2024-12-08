@@ -5,8 +5,10 @@ import InputEmail from '../components/Input/InputEmail';
 import InputPassword from '../components/Input/InputPassword';
 import InputCheck from '../components/Input/InputCheck';
 import FooterBar from '../components/Register/FooterBar';
-import { EMAIL_REGEX, PASSWORD_REGEX } from '../constants/regex';
 import { registration, sendOtp } from "../services";
+import validateEmail from "../utils/ValidationEmail";
+import validatePassword from "../utils/ValidationPassword";
+import validateConfrimPassword from "../utils/ValidationConfirmPassword";
 
 export default function RegisterPage() {
     const [email, setEmail] = useState('');
@@ -27,67 +29,20 @@ export default function RegisterPage() {
         document.title = "E-Wastepas | Register";
     }, []);
 
-    const validateEmail = (value) => {
-        if (!value) {
-            setErrorMessage((prev) => ({
-                ...prev,
-                email: "Email tidak boleh kosong"
-            }));
-        }else if (!EMAIL_REGEX.test(value)) {
-            setErrorMessage((prev) => ({
-                ...prev,
-                email: "Email tidak valid"
-            }));
-        } else {
-            setErrorMessage((prev) => ({
-                ...prev,
-                email: ""
-            }));
-        }
-    };
-
-    const validatePassword = (value) => {
-        if (!value) {
-            setErrorMessage((prev) => ({
-                ...prev,
-                password: "Kata sandi tidak boleh kosong",
-            }));
-        }else if (!PASSWORD_REGEX.test(value)) {
-            setErrorMessage((prev) => ({
-                ...prev,
-                password: "Kata sandi tidak valid",
-            }));
-        } else {
-            setErrorMessage((prev) => ({
-                ...prev,
-                password: "",
-            }));
-        }
-    };
-
-    const validateConfrimPassword = (value) => {
-        if (!value) {
-            setErrorMessage((prev) => ({
-                ...prev,
-                confirmPassword: "Konfirmasi kata sandi tidak boleh kosong"
-            }));
-        }else if (password !== value) {
-            setErrorMessage((prev) => ({
-                ...prev,
-                confirmPassword: "Konfirmasi kata sandi tidak valid",
-            }));
-        } else {
-            setErrorMessage((prev) => ({
-                ...prev,
-                confirmPassword: ""
-            }));
-        }
-    };
 
     const handleRegister = async () => {
-        validateEmail(email)
-        validatePassword(password)
-        validateConfrimPassword(confirmPassword)
+        setErrorMessage((prev) => ({
+            ...prev,
+            email: validateEmail(email)
+        }));
+        setErrorMessage((prev) => ({
+            ...prev,
+            password: validatePassword(password)
+        }));
+        setErrorMessage((prev) => ({
+            ...prev,
+            confirmPassword: validateConfrimPassword(confirmPassword, password)
+        }));
         if (!agreeToTerms) {
             setErrorMessage((prev) => ({
                 ...prev,
@@ -156,18 +111,24 @@ export default function RegisterPage() {
                         <InputEmail
                             label={'Email'}
                             value={email}
-                            onChange={(e) => {
-                                setEmail(e.target.value);
-                                validateEmail(e.target.value);
+                            onChange={(value) => {
+                                setEmail(value);
+                                setErrorMessage((prev) => ({
+                                    ...prev,
+                                    email: validateEmail(value)
+                                }));
                             }}
                             errorMessage={errorMessage.email}
                         />
                         <InputPassword
                             label={'Kata Sandi'}
                             value={password}
-                            onChange={(e) => {
-                                setPassword(e.target.value);
-                                validatePassword(e.target.value);
+                            onChange={(value) => {
+                                setPassword(value);
+                                setErrorMessage((prev) => ({
+                                    ...prev,
+                                    password: validatePassword(value)
+                                }));
                             }}
                             errorMessage={errorMessage.password}
                             isValidateCheck={true}
@@ -175,14 +136,20 @@ export default function RegisterPage() {
                         <InputPassword
                             label={'Konfirmasi Kata Sandi'}
                             value={confirmPassword}
-                            onChange={(e) => {setConfirmPassword(e.target.value); validateConfrimPassword(e.target.value)}}
+                            onChange={(value) => {
+                                 setConfirmPassword(value);
+                                 setErrorMessage((prev) => ({
+                                    ...prev,
+                                    confirmPassword: validateConfrimPassword(value, password)
+                                }));
+                                }}
                             errorMessage={errorMessage.confirmPassword}
                         />
                         <div>
                             <InputCheck
                                 label={<span>Saya menyetujui semua <a href="#" className="text-revamp-red-700 font-[500]">Syarat</a> dan <a href="#" className="text-revamp-red-700 font-[500]">Kebijakan Privasi</a></span>}
                                 value={agreeToTerms}
-                                onChange={(e) => setAgreeToTerms(e.target.checked)}
+                                onChange={(value) =>{setAgreeToTerms(value);setErrorMessage((prev) => ({...prev, tnc: ""}))}}
                                 errorMessage={errorMessage.tnc}
                             />
                         </div>

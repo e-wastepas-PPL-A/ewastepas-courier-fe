@@ -1,15 +1,18 @@
 /* eslint-disable react/prop-types */
-const InputPhone = ({ label, value, onChange, placeholder, readOnly = false, errorMessage }) => {
-  const handlePhoneChange = (inputValue) => {
-    // If input value is valid, call onChange with the new value
-    if (/^\d*$/.test(inputValue)) {
+const InputPhone = ({ label, value, onChange, placeholder, readOnly = false, errorMessage = "" }) => {
+  const hasError = errorMessage.length > 0;
+
+  const validate = (e) => {
+    const value = e.target.value;
+
+    if (/^\d*$/.test(value)) {
       // Allow only digits
-      onChange?.(inputValue)
+      onChange?.(value)
     }else{
       onChange?.("")
     }
   }
-  const hasError = errorMessage.length > 0;
+
   return (
     <div className={`relative ${errorMessage.length > 0 ? 'mb-4' : 'mb-6'}`} data-twe-input-wrapper-init>
         <input
@@ -17,7 +20,7 @@ const InputPhone = ({ label, value, onChange, placeholder, readOnly = false, err
         inputMode="numeric"
           className="peer block min-h-[auto] w-full rounded border border-revamp-neutral-10 px-3 py-[0.50rem] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-revamp-neutral-10 data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0"
         value={value}
-        onChange={(e) => handlePhoneChange(e.target.value)}
+        onChange={validate}
         placeholder={placeholder}
         readOnly={readOnly}
         />

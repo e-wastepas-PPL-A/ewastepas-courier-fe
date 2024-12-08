@@ -18,7 +18,7 @@ const FileUploader = ({
   const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => { 
-    if(value.length > 0 ){
+    if(value?.length > 0 ){
       setFile(value);
     }
 }, [value]);
@@ -43,7 +43,7 @@ const FileUploader = ({
       return;
     }
 
-    if (incomingFiles.length > 1 || file.length === 1) {
+    if (incomingFiles?.length > 1 || file?.length === 1) {
       Swal.fire({
         title: "Upload File",
         text: "Only 1 file can be uploaded at a time.",
@@ -77,7 +77,7 @@ const FileUploader = ({
   const validateFile = (files) => {
     const validTypes = acceptedFormats.split(", ").map((type) => type.trim());
     return (
-      files.length === 1 &&
+      files?.length === 1 &&
       validTypes.includes(files[0].type) &&
       files[0].size <= 5 * 1024 * 1024 // Limit size to 5 MB
     );
@@ -94,14 +94,14 @@ const FileUploader = ({
       fileSrc = URL.createObjectURL(file);
       setTimeout(() => URL.revokeObjectURL(fileSrc), 1000);
     }else{
-        fileSrc=file[0]?.url;
+        fileSrc=file?.url;
     }
     return fileSrc;
   };
 
   return (
     <div className="my-2">
-        {file.length > 0 && file[0]?.type?.startsWith("image") || file[0]?.url ? (
+        {file?.length > 0 && file[0]?.type?.startsWith("image") || file[0]?.url ? (
             <div
             onMouseEnter={() => setIsHovered(true)} // Set hover state true
             onMouseLeave={() => setIsHovered(false)}

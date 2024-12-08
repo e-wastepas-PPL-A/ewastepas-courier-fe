@@ -40,7 +40,7 @@ const TextInput = ({
         type="email"
         className={inputClass}
         value={value}
-        onChange={onChange}
+        onChange={(e)=> onChange(e.target.value)}
         placeholder={placeholder}
         readOnly={readOnly}
       />

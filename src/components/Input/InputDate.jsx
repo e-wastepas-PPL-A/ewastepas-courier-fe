@@ -116,7 +116,7 @@ const displayDate = value ? value.toLocaleDateString('en-GB') : "";
         >{label}
     </label>
 
-     {isDatepickerVisible && (<Datepicker inline showTodayButton={false}  autoHide={true} maxDate={max ? new Date(maxYear, maxMounth, maxDay) : ""} minDate={min ? new Date(minYear, minMounth, minDay) : ""} defaultValue={new Date(2000,0,1)} value={value || null} onChange={handleDateChange} theme={customTheme} className="absolute text-black" />)}
+     {isDatepickerVisible && (<Datepicker inline showTodayButton={false}  autoHide={true} maxDate={max ? new Date(maxYear, maxMounth, maxDay) : ""} minDate={min ? new Date(minYear, minMounth, minDay) : ""} defaultValue={new Date(2000,0,1)} value={value || null} onChange={handleDateChange} theme={customTheme} className="absolute text-black z-[9]" />)}
     </div>
     {hasError && <div className="text-revamp-error-500 flex text-base">{errorMessage}</div>}
     </div>

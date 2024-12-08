@@ -1,15 +1,15 @@
 import { LogOut } from "lucide-react";
-import Cookies from "js-cookie";
-import { useNavigate } from "react-router-dom";
+import handleLogout from "../../utils/HandleLogout";
 import { useEffect, useState } from "react";
 import NavbarSkeleton from "../Skeleton/NavbarSkeleton";
 import { useCourier } from "../../stores/courier";
+import IcLock from "../../assets/ic-lock.svg";
+import IcProfile from "../../assets/ic-profile.svg";
 
 const Navbar = () => {
   const user = useCourier((state) => state.user);
   const [isLoading, setIsLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -17,14 +17,6 @@ const Navbar = () => {
     };
     fetchUsers();
   }, []);
-
-  const handleLogout = () => {
-    // Destroy the PHPSESSID cookie
-    Cookies.remove("PHPSESSID");
-
-    // Redirect to login page
-    navigate("/login");
-  };
 
   const greetings = () => {
     const currentHour = new Date().getHours();
@@ -85,14 +77,32 @@ const Navbar = () => {
                 <div
                   className={`${
                     !isOpen && "hidden"
-                  } transition-all duration-200 absolute end-0 z-10 mt-2 w-56 rounded-md border-1 border-revamp-neutral-8 bg-white shadow-lg`}
+                  } transition-all duration-200 absolute end-0 z-10 mt-2 w-56 rounded-md border-1 border-revamp-neutral-8 bg-revamp-secondary-600 shadow-lg flex flex-col`}
                   role="menu">
-                  <div className="p-2 inline-flex items-center text-revamp-error-500">
-                    <LogOut size={15} />
+                  <div className="p-2 inline-flex items-center text-revamp-error-500 w-full hover:bg-revamp-secondary-700">
+                    <img src={IcProfile} className="w-[25px]"/>
+                    <a
+                      href="/profile"
+                      className="block rounded-lg px-4 py-2 text-sm text-white w-full"
+                      role="menuitem">
+                      Ubah Profile
+                    </a>
+                  </div>
+                  <div className="p-2 inline-flex items-center text-revamp-error-500 w-full hover:bg-revamp-secondary-700">
+                    <img src={IcLock} className="w-[20px]"/>
+                    <a
+                      href="/change-password"
+                      className="block rounded-lg px-4 py-2 text-sm text-white w-full"
+                      role="menuitem">
+                      Ubah Kata Sandi
+                    </a>
+                  </div>
+                  <div className="p-2 inline-flex items-center text-revamp-error-500 w-full hover:bg-revamp-secondary-700">
+                  <LogOut size={20} className="text-white" />
                     <a
                       href="#"
                       onClick={handleLogout}
-                      className="block rounded-lg px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 hover:text-gray-700"
+                      className="block rounded-lg px-4 py-2 text-sm text-white w-full"
                       role="menuitem">
                       Keluar
                     </a>
