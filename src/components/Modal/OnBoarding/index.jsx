@@ -39,7 +39,7 @@ export default function OnBoarding() {
     });
     const maxDate = new Date();
     maxDate.setFullYear(maxDate.getFullYear() - 17); // Subtract 17 years
-    const formattedMaxDate = maxDate.toISOString().split("T")[0];
+    const formattedMaxDate = maxDate.toISOString()?.split("T")[0];
 
     useEffect(() => {
         setToken(Cookies.get('PHPSESSID'));
@@ -78,8 +78,9 @@ export default function OnBoarding() {
         setName(user?.name);
         setPhone(user?.phone);
         setAccountNumber(user?.account_number)
-        const dateOfBirth = user?.date_of_birth.split('T')[0].split('-');
-        setDate(new Date(dateOfBirth[0], dateOfBirth[1] - 1, dateOfBirth[2]));
+        const dateOfBirth = user?.date_of_birth?.split('T')?.[0]?.split('-');
+        setDate(new Date(dateOfBirth?.[0]||2000, dateOfBirth?.[1] - 1||1, dateOfBirth?.[2]||1));
+        console.log(date)
         setAddress(user?.address);
         setPhoto(user?.photo ? [{url:user?.photo}] : []);
         setKtp(user?.ktp_url ? [{url:user?.ktp_url}] : []);
@@ -88,7 +89,7 @@ export default function OnBoarding() {
 
     const handleRegister = async () => {
         const formatDate = new Date(date).toISOString()
-        let payload = { nik, name, phone_number: phone, date_of_birth: formatDate, account_number: accountNumber, address};
+        let payload = { nik, name, phone: phone, date_of_birth: formatDate, account_number: accountNumber, address};
         if(!photo[0]?.url){
             payload.photo = photo;
         }

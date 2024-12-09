@@ -57,7 +57,7 @@ export default function ProfileChangePassword() {
 
     const saveHandler = async () => {
         const formatDate = new Date(date).toISOString()
-        let payload = { nik, name, phone_number: phone, date_of_birth: formatDate, account_number: accountNumber, address};
+        let payload = { nik, name, phone: phone, date_of_birth: formatDate, account_number: accountNumber, address};
         if(!photo[0]?.url){
             payload.photo = photo;
         }

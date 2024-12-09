@@ -5,47 +5,20 @@ import IcBack from '../assets/ic-back.svg'
 import InputEmail from '../components/Input/InputEmail'
 import FooterBar from '../components/Register/FooterBar'
 import { sendOtp } from "../services";
-import { EMAIL_REGEX } from '../constants/regex';
 
 export default function PageName() {
     const [email, setEmail] = useState('')
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState(null); // State to manage errors
-    const [errorMessage, setErrorMessage] = useState({
-        email: "",
-    });
 
 
     useEffect(()=>{
         document.title = "E-Wastepas | Login"
     }, [])
 
-    const validateEmail = (value) => {
-        if (!value) {
-            setErrorMessage((prev) => ({
-                ...prev,
-                email: "Email tidak boleh kosong"
-            }));
-        }else if (!EMAIL_REGEX.test(value)) {
-            setErrorMessage((prev) => ({
-                ...prev,
-                email: "Email tidak valid"
-            }));
-        } else {
-            setErrorMessage((prev) => ({
-                ...prev,
-                email: ""
-            }));
-        }
-    };
-
 
     const handleSend = async () => {
-        validateEmail(email);
 
-        if(isDisabled){
-            return;
-        }
         setIsLoading(true);
 
         const payload = {
@@ -71,8 +44,6 @@ export default function PageName() {
         }
     };
 
-    const isDisabled =  !email ||  errorMessage.email;
-
     return (
         <div className="h-[100dvh] px-[8px] md:p-[100px] flex justify-center items-center">
             <div className="w-1/2 md:p-[10px] lg:p-[52px] hidden lg:block">
@@ -95,11 +66,9 @@ export default function PageName() {
                     <InputEmail
                             label={'Email'}
                             value={email}
-                            onChange={(e) => {
-                                setEmail(e.target.value);
-                                validateEmail(e.target.value);
+                            onChange={(value) => {
+                                setEmail(value);
                             }}
-                            errorMessage={errorMessage.email}
                         />
                     </div>
                     <div className="mb-[24px]">
