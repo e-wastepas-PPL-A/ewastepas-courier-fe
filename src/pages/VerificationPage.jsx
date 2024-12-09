@@ -6,6 +6,7 @@ import InputText from '../components/Input/InputText';
 import FooterBar from '../components/Register/FooterBar';
 import { verifyOtp, sendOtp } from "../services";
 import { useLocation } from "react-router-dom";
+import ValidateText from "../utils/ValidationText.js";
 
 export default function PageName() {
     const location = useLocation();
@@ -105,14 +106,6 @@ export default function PageName() {
     }
     };
 
-    const handleInput = (value)=>{
-            setOtp(value);
-            setErrorMessage((prev) => ({
-                ...prev,
-                otp: ""
-            }));
-    }
-
     return (
         <div className="h-[100dvh] px-[8px] md:p-[100px] flex justify-center items-center">
             <div className="w-1/2 md:p-[10px] lg:p-[52px] hidden lg:block">
@@ -135,7 +128,15 @@ export default function PageName() {
                     {error && <div className="text-white bg-revamp-error-300 py-[8px] mb-[18px] rounded-[6px]">{error}</div>}
                     {success && <div className="text-white bg-revamp-success-300 py-[8px] mb-[18px] rounded-[6px]">{success}</div>}
                     <div className="mb-[24px]">
-                        <InputText label={'Masukan Kode'} value={otp} onChange={(e) => handleInput(e.target.value)} errorMessage={errorMessage.otp} />
+                        <InputText label={'Masukan Kode'} value={otp} 
+                        onChange={(value) =>{ 
+                            setOtp(value);  
+                            setErrorMessage((prev) => ({
+                                ...prev,
+                                otp: ValidateText("otp", value, 6)
+                            }));}}
+                             errorMessage={errorMessage.otp} 
+                             />
                         <div className="flex justify-between items-center mt-[-8px]">
                             <span className="text-revamp-neutral-10 font-[500] text-[14px]">
                                 Tidak mendapatkan kode? {' '}

@@ -1,10 +1,12 @@
 /* eslint-disable react/prop-types */
 const InputNumerik = ({ label, value, onChange, placeholder, readOnly = false, errorMessage }) => {
-  const handlePhoneChange = (inputValue) => {
+  const handleChange = (inputValue) => {
     // If input value is valid, call onChange with the new value
     if (/^\d*$/.test(inputValue)) {
       // Allow only digits
       onChange?.(inputValue)
+    }else{
+      onChange?.("")
     }
   }
   const hasError = errorMessage?.length > 0;
@@ -15,7 +17,7 @@ const InputNumerik = ({ label, value, onChange, placeholder, readOnly = false, e
         inputMode="numeric"
         className="peer block min-h-[auto] w-full rounded border border-revamp-neutral-10 px-3 py-[0.50rem] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-revamp-neutral-10 data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0"
         value={value}
-        onChange={(e) => handlePhoneChange(e.target.value)}
+        onChange={(e) => handleChange(e.target.value)}
         placeholder={placeholder}
         readOnly={readOnly}
         />
