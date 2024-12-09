@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Logo from '../assets/logo.png';
-import Slide2 from '../assets/vertical-slide-2.png';
+import Slide from '../assets/vertical-slide-1.png';
 import InputPassword from '../components/Input/InputPassword';
 import FooterBar from '../components/Register/FooterBar';
 import { changeForgot } from "../services";
@@ -60,7 +60,7 @@ export default function PageName() {
     return (
         <div className="h-[100dvh] px-[8px] md:p-[100px] flex justify-center items-center">
             <div className="w-1/2 md:p-[10px] lg:p-[52px] hidden lg:block">
-                <img src={Slide2} className="max-h-[90vh]" alt="Slide" />
+                <img src={Slide} className="max-h-[90vh]" alt="Slide" />
             </div>
             <div className="text-center w-full lg:w-1/2">
                 <div className="flex justify-center">
