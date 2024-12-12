@@ -2,30 +2,16 @@ import { useEffect, useState } from "react";
 import Table from "../../components/Tables/DataTable";
 import { getAllPickup } from "../../services";
 import { formatDate } from "../../utils/date";
-import { EyeIcon } from "lucide-react";
-
-// const data = [
-//   {
-//     nama: "Muhammad Ardhan",
-//     tanggal: "10 Oktober 2024",
-//     alamat: "Jl. Durian, Runtuh No. 32",
-//     kategori: "Peralatan IT",
-//     total_sampah: 15,
-//     status: <span className="font-bold">Dalam Perjalanan</span>,
-//   },
-//   {
-//     nama: "Devan Wiyata Putra",
-//     tanggal: "12 Oktober 2024",
-//     alamat: "Jl. Durian, Runtuh No. 22",
-//     kategori: "Layar & Monitor",
-//     total_sampah: 8,
-//     status: <span className="font-bold">Menunggu</span>,
-//   },
-// ];
+import { EyeIcon, XIcon } from "lucide-react";
+import { useCourier } from "../../stores/courier";
+import CancelPickup from "../../components/Modal/CancelPickup";
 
 export default function AcceptPickupPage() {
+  const users = useCourier((state) => state.userDummy);
   const [pickup, setPickup] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedRowId, setSelectedRowId] = useState(null);
+  const [isCancelled, setIsCancelled] = useState(false);
 
   const columns = [
     {
@@ -42,11 +28,11 @@ export default function AcceptPickupPage() {
     },
     {
       name: "Kategori",
-      selector: (row) => row.kategori,
+      selector: (row) => row.wasteDetails[0]?.quantity,
     },
     {
       name: "Total Sampah",
-      selector: (row) => row.total_sampah,
+      selector: (row) => row.wasteDetails[0]?.wasteName,
     },
     {
       name: "Status",
@@ -55,11 +41,16 @@ export default function AcceptPickupPage() {
     {
       name: "Action",
       cell: (row) => (
-        <button
-          className="text-xl cursor-pointer"
-          onClick={() => alert(row.dropbox_id)}>
-          <EyeIcon color="#005b96" />
-        </button>
+        <div className="flex flex-row gap-2">
+          <button onClick={() => handleAction(row.pickup_id, "reject")}>
+            <XIcon color="#005b96" />
+          </button>
+          <button
+            className="text-xl cursor-pointer"
+            onClick={() => alert(row.pickup_id)}>
+            <EyeIcon color="#005b96" />
+          </button>
+        </div>
       ),
     },
   ];
@@ -68,7 +59,8 @@ export default function AcceptPickupPage() {
     const fetchPickup = async () => {
       try {
         const response = await getAllPickup();
-        setPickup(response.data.data);
+        const data = response.data.data;
+        setPickup(data);
         setIsLoading(false);
       } catch (e) {
         console.log(e);
@@ -81,6 +73,21 @@ export default function AcceptPickupPage() {
     return <div className="loader mx-auto items-center mt-5"></div>;
   }
 
+  const handleFilter = (data) => {
+    return data.filter(
+      (p) => p.pickup_status === "accepted" && p.courier?.name === users.name
+    );
+  };
+
+  const handleAction = (id) => {
+    setSelectedRowId(id);
+    setIsCancelled(!isCancelled);
+  };
+
+  const handleClose = () => {
+    setIsCancelled(false);
+  };
+
   return (
     <>
       <div className="container mx-auto p-4">
@@ -88,8 +95,15 @@ export default function AcceptPickupPage() {
           Detail Penerimaan Penjemputan Sampah
         </h1>
         <div className="mt-4 rounded-md border p-4 border-revamp-neutral-6">
-          <Table columns={columns} data={pickup} />
+          <Table columns={columns} data={handleFilter(pickup)} />
         </div>
+        {isCancelled && (
+          <CancelPickup
+            pickupId={selectedRowId}
+            courierId={users.courier_id}
+            handleClose={handleClose}
+          />
+        )}
       </div>
     </>
   );

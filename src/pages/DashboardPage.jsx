@@ -12,12 +12,6 @@ export default function DashboardPage() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (!localStorage.getItem("users")) {
-      localStorage.setItem("users", JSON.stringify(user));
-    }
-  }, [user]);
-
-  useEffect(() => {
     const fetchCourierStatistic = async () => {
       const response = await getTotalCourier(user.courier_id);
       const { day, month } = response.data.totals;

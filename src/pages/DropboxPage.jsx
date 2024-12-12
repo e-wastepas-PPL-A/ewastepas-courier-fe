@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Table from "../components/Tables/DataTable";
 import { getDropbox } from "../services";
 import { EyeIcon } from "lucide-react";
-import ModalDropbox from "../components/ModalDropbox/ModalDropbox";
+import ModalDropbox from "../components/Modal/Dropbox";
 
 export default function HistoryPage() {
   const [dataDropbox, setDataDropbox] = useState([]);

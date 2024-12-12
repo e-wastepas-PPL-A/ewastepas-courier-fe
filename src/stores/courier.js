@@ -8,7 +8,7 @@ export const useCourier = create((set) => ({
   user: {}, // Data pengguna
   userDummy: {
     courier_id: 1,
-    name: "znfifty",
+    name: "Haykal",
     email: "znfifty@gmail.com",
     password: "$2b$10$V8MtEpj5mKqUy8QuZUy9m.gVnwFr8lFcOWA0LHG0vZnyFz6tpnu/q",
     phone: null,
