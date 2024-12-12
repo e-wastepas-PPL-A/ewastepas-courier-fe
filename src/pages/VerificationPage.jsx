@@ -7,6 +7,7 @@ import FooterBar from '../components/Register/FooterBar';
 import { verifyOtp, sendOtp } from "../services";
 import { useLocation } from "react-router-dom";
 import ValidateText from "../utils/ValidationText.js";
+import Swal from "sweetalert2";
 
 export default function PageName() {
     const location = useLocation();
@@ -63,7 +64,27 @@ export default function PageName() {
             const response = await verifyOtp(payload);
             if (response.status === 200) {
                 setError(null);
-                window.location.href = location.pathname.split('/')[1] === 'register' ? "/login" : "/forgot/change-password?token=" + response.data.token;
+                if( location.pathname.split('/')[1] === 'register'){
+                Swal.fire({
+                    title: "Berhasil",
+                    text: "Akun berhasil dibuat.",
+                    icon: "success",
+                    confirmButtonColor: "#7066e0",
+                    willClose: () => {
+                        window.location.href = "/login";
+                    }
+                  });
+                }else{
+                    Swal.fire({
+                        title: "Berhasil",
+                        text: "Akun berhasil terverifikasi.",
+                        icon: "success",
+                        confirmButtonColor: "#7066e0",
+                        willClose: () => {
+                            window.location.href = "/forgot/change-password?token=" + response.data.token;
+                        }
+                      });
+                }
             } else {
                 setErrorMessage((prev) => ({
                     ...prev,

@@ -57,15 +57,23 @@ export default function ProfileChangePassword() {
 
     const saveHandler = async () => {
         const formatDate = new Date(date).toISOString()
-        let payload = { nik, name, phone: phone, date_of_birth: formatDate, account_number: accountNumber, address};
-        if(!photo[0]?.url){
-            payload.photo = photo;
-        }
+        let payload = { nik, name, phone: phone, date_of_birth: formatDate, account_number: accountNumber, address, photo};
+
         if(!ktp[0]?.url){
             payload.ktp = ktp;
         }
         if(!kk[0]?.url){
             payload.kk = kk;
+        }
+
+        if(payload?.ktp?.length === 0 && ktp?.length === 0 || payload?.kk?.length === 0 && kk?.length === 0){
+            Swal.fire({
+                title: "Error",
+                text: "KTP atau KK tidak boleh kosong!",
+                icon: "error",
+                confirmButtonColor: "#7066e0",
+              });
+              return;
         }
 
         setIsLoading(true);
