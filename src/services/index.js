@@ -60,7 +60,6 @@ export async function changePassword(payload, token) {
 export async function updateUser(payload, token) {
   try {
     const formData = new FormData();
-    console.log(payload)
     Object.keys(payload).forEach(key => {
       formData.append(key, payload[key]);
     });

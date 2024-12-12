@@ -18,7 +18,6 @@ export default function OauthPage() {
           if (result?.data && result?.data?.token) {
             // Save the token to cookies
             Cookies.set("PHPSESSID", result?.data?.token, { expires: 7 });
-            console.log("Token saved to cookies:", result?.data?.token);
           }
         }
       } catch (error) {
