@@ -53,11 +53,11 @@ export default function RequestPickupPage() {
     },
     {
       name: "Kategori",
-      selector: (row) => row.wasteDetails[0]?.quantity,
+      selector: (row) => row.wasteDetails[0]?.wasteName,
     },
     {
       name: "Total Sampah",
-      selector: (row) => row.wasteDetails[0]?.wasteName,
+      selector: (row) => row.wasteDetails[0]?.quantity,
     },
     {
       name: "Action",

@@ -27,11 +27,11 @@ export default function AcceptPickupPage() {
       selector: (row) => row.pickup_address,
     },
     {
-      name: "Kategori",
+      name: "Total Sampah",
       selector: (row) => row.wasteDetails[0]?.quantity,
     },
     {
-      name: "Total Sampah",
+      name: "Kategori",
       selector: (row) => row.wasteDetails[0]?.wasteName,
     },
     {
