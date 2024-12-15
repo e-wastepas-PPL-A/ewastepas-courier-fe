@@ -12,7 +12,8 @@ import handleLogout from "../../../utils/HandleLogout";
 import validationText from "../../../utils/ValidationText";
 import validationBirth from "../../../utils/ValidationBirth";
 import validationPhone from "../../../utils/ValidatonPhone";
-import Swal from "sweetalert2";
+import ModalSuccess from '../../../components/Modal/ModalSuccess';
+import ModalError from '../../../components/Modal/ModalError';
 
 export default function OnBoarding() {
     const [token, setToken] = useState('');
@@ -40,6 +41,7 @@ export default function OnBoarding() {
     const maxDate = new Date();
     maxDate.setFullYear(maxDate.getFullYear() - 17); // Subtract 17 years
     const formattedMaxDate = maxDate.toISOString()?.split("T")[0];
+    const [modalItem, setModalItem] = useState({});
 
     useEffect(() => {
         setToken(Cookies.get('PHPSESSID'));
@@ -67,11 +69,11 @@ export default function OnBoarding() {
         const isAddressValid = !errorMessage.address && !!address;
           setCanProceed(isPhoneValid && isaccountNumberValid && isAddressValid)
         } else if (step === 4) {
-            setCanProceed(!!ktp)
+            setCanProceed(ktp[0]?.url?.length > 0 || ktp?.name?.length > 0)
           } else if (step === 5) {
-          setCanProceed(!!kk)
+          setCanProceed(!!kk[0]?.url?.length > 0 || !!kk?.name?.length > 0)
         }
-      }, [step, nik, accountNumber, address, name, phone, date])
+      }, [step, nik, accountNumber, address, name, phone, date, ktp, kk])
 
     useEffect(() => {
         setNik(user?.nik);
@@ -79,8 +81,7 @@ export default function OnBoarding() {
         setPhone(user?.phone);
         setAccountNumber(user?.account_number)
         const dateOfBirth = user?.date_of_birth?.split('T')?.[0]?.split('-');
-        setDate(new Date(dateOfBirth?.[0]||2000, dateOfBirth?.[1] - 1||1, dateOfBirth?.[2]||1));
-        console.log(date)
+        setDate(new Date(dateOfBirth?.[0]||2000, dateOfBirth?.[1] - 1||0, dateOfBirth?.[2]||1));
         setAddress(user?.address);
         setPhoto(user?.photo ? [{url:user?.photo}] : []);
         setKtp(user?.ktp_url ? [{url:user?.ktp_url}] : []);
@@ -105,38 +106,20 @@ export default function OnBoarding() {
         try {
             const response = await updateUser(payload, token);
             if (response.status === 201 || response.status === 200) {
-                Swal.fire({
-                    title: "Berhasil",
-                    text: "Data berhasil terkirim.",
-                    icon: "success",
-                    confirmButtonColor: "#7066e0",
-                    willClose: () => {
-                        window.location.reload();
-                    }
-                  });
+                setModalItem({ isOpen: true, title: "Berhasil", description: "Data berhasil terkirim.", to: "/" });
             } else {
-                Swal.fire({
-                    title: "Error",
-                    text: response.response.data.error,
-                    icon: "error",
-                    confirmButtonColor: "#7066e0",
-                  });
+                setModalItem({ isOpen: true, title: "Error", description: response.response.data.error });
                 sessionStorage.removeItem("expiredOtp");
             }
         } catch {
-            Swal.fire({
-                title: "Error",
-                text: "Terjadi kesalahan saat registrasi. Silakan coba lagi.",
-                icon: "error",
-                confirmButtonColor: "#7066e0",
-              });
+            setModalItem({ isOpen: true, title: "Error", description: "Terjadi kesalahan saat registrasi. Silakan coba lagi." });
         } finally {
             setIsLoading(false);
         }
     };
-
     const StepOne = () => (
-        <div className={`${step === 1 ? "block" : "hidden"}`}>
+        <div className={`${step === 1 ? "block" : "hidden"} mt-8`}>
+            <div className="my-8">
             <InputProfile      
                 id="profile-picture"
                 value={photo}
@@ -145,8 +128,9 @@ export default function OnBoarding() {
                 }}
                 format="image" 
                 />
-            <div className="text-center mb-6">
-                <h1 className="text-2xl font-semibold">Hello, {user?.name}</h1>
+                </div>
+            <div className="text-center my-8">
+                <h1 className="text-2xl font-semibold mb-2">Hello, {user?.name}</h1>
                 <span className="text-sm text-revamp-neutral-7">
                     Mari siapkan semuanya agar Anda dapat mengakses akun Anda
                 </span>
@@ -223,7 +207,7 @@ export default function OnBoarding() {
         </div>
     );
     const StepFour = () => (
-        <div className={`${step === 4 ? "block" : "hidden"}`}>
+        <div className={`${step === 4 ? "block" : "hidden"} mb-8`}>
             <InputFile
                 id="upload-ktp"
                 label="Upload KTP"
@@ -236,7 +220,7 @@ export default function OnBoarding() {
         </div>
     );
     const StepFive = () => (
-        <div className={`${step === 5 ? "block" : "hidden"}`}>
+        <div className={`${step === 5 ? "block" : "hidden"} mb-8`}>
              <InputFile
                 id="upload-kk"
                 label="Upload KK"
@@ -251,14 +235,30 @@ export default function OnBoarding() {
 
     return (
         <div className="fixed left-0 right-0 top-0 h-[100dvh] z-[99] flex justify-center items-center">
+            <ModalSuccess 
+                isOpen={modalItem?.isOpen && modalItem?.title === "Berhasil"} 
+                setIsOpen={setModalItem} 
+                title={modalItem?.title} 
+                description={modalItem?.description} 
+                to={modalItem?.to} 
+                label={"Oke"}
+            />
+            <ModalError 
+                isOpen={modalItem?.isOpen && modalItem?.title === "Error"} 
+                setIsOpen={setModalItem} 
+                title={modalItem?.title} 
+                description={modalItem?.description} 
+                to={modalItem?.to} 
+                label={"Oke"}
+            />
             <div className="w-full h-[100dvh] bg-black opacity-[0.8]"></div>
-        <div className="fixed p-[12px] flex-col bg-white rounded-md justify-center items-center h-max-[500px] w-[400px] overflow-x-auto">
+        <div className="fixed p-[24px] flex-col bg-white rounded-md justify-center items-between h-max-[500px] h-[500px] max-w-[600px] min-w-[300px] w-full overflow-x-auto">
                  {step !== 6 && (
-                  <div className="mb-[24px] flex items-center justify-center gap-2">
+                  <div className="mb-[32px] flex items-center justify-center gap-2">
                     {[...Array(5)].map((_, i) => (
                       <div
                         key={i}
-                        className={`h-[6.38px] w-[6.38px] rounded-full ${i + 1 < step && "cursor-pointer"} ${step == i + 1 ? "bg-revamp-neutral-6" : "bg-revamp-neutral-10"}`}
+                        className={`h-[8px] w-[8px] rounded-full ${i + 1 < step && "cursor-pointer"} ${step == i + 1 ? "bg-revamp-secondary-600" : "bg-revamp-neutral-6"}`}
                         onClick={() => {
                           i + 1 < step && setStep(i + 1)
                         }} // Use arrow function to avoid immediate invocation
@@ -269,7 +269,6 @@ export default function OnBoarding() {
                 {step > 1 && (
                     <h1 className="text-2xl font-semibold text-center mb-8">Lengkapi Data Diri</h1>
                 )}
-            <div className="h-full">
             <div className="text-center w-full">
                 <div>
                 {StepOne()}
@@ -279,20 +278,19 @@ export default function OnBoarding() {
                 {StepFive()}
                     <div className="mb-[24px]">
                         <button
-                            className={`${isLoading ? 'bg-revampV2-neutral-400' : 'bg-revamp-secondary-500'} w-full py-[8px] px-[46px] text-white text-[14px] font-[600] rounded-[15px]`}
+                            className={`${isLoading ? 'bg-revampV2-neutral-400' : 'bg-revamp-secondary-500'} py-[8px] px-[46px] text-white text-[14px] font-[600] rounded-[15px]`}
                             onClick={stepHandler}
                             disabled={!canProceed}
                         >
-                            {isLoading ? 'Loading...' : step === 1 ? 'Mulai' : step < 5 ? "Lanjut" : "Kirim"}
+                            {isLoading ? 'Loading...' : step === 1 ? 'Lengkapi Profile' : step < 5 ? "Lanjut" : "Kirim"}
                         </button>
-                        <div className="flex justify-center items-center mt-[10px]">
-                            <span className="text-revamp-neutral-10 font-[500] text-[14px]">Anda mau ganti akun? <a href="#" onClick={handleLogout} className="text-revamp-error-300 cursor-pointer">Logout</a></span>
+                        <div className="flex justify-center items-center mt-[80px]">
+                            <span className="text-revamp-neutral-10 font-[400] text-[14px]">Anda mau ganti akun? <a href="#" onClick={handleLogout} className="text-revamp-error-300 cursor-pointer">Logout</a></span>
                         </div>
                     </div>
                     </div>
                 </div>
             </div>
-        </div>
         </div>
     );
 }

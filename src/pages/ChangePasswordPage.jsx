@@ -6,6 +6,7 @@ import FooterBar from '../components/Register/FooterBar';
 import { changeForgot } from "../services";
 import validatePassword from "../utils/ValidationPassword";
 import validateConfrimPassword from "../utils/ValidationConfirmPassword";
+import ModalSuccess from "../components/Modal/ModalSuccess/index.jsx";
 
 export default function PageName() {
     const [token, setToken] = useState('');
@@ -17,6 +18,7 @@ export default function PageName() {
         password: "",
         confirmPassword: "",
     });
+    const [modalItem, setModalItem] = useState({});
 
     useEffect(() => {
         document.title = "E-Wastepas | Register";
@@ -42,7 +44,7 @@ export default function PageName() {
         try {
             const response = await changeForgot(payload, token);
             if (response.status === 200) {
-                window.location.href = "/login";
+                setModalItem({ isOpen: true, title: "Berhasil", description: "Kata sandi berhasil diubah.", to: "/login" });
                 setError(null);
             } else {
                 setError(response.response.data.error);
@@ -59,6 +61,7 @@ export default function PageName() {
     const isDisabled = !password || !confirmPassword || errorMessage.password || errorMessage.confirmPassword;
     return (
         <div className="h-[100dvh] px-[8px] md:p-[100px] flex justify-center items-center">
+            <ModalSuccess isOpen={modalItem?.isOpen} setIsOpen={setModalItem} title={modalItem?.title} description={modalItem?.description} to={modalItem?.to} label={"Oke"}/>
             <div className="w-1/2 md:p-[10px] lg:p-[52px] hidden lg:block">
                 <img src={Slide} className="max-h-[90vh]" alt="Slide" />
             </div>
