@@ -11,6 +11,8 @@ import validationPhone from "../utils/ValidatonPhone";
 import { updateUser } from  "../services";
 import Swal from "sweetalert2";
 import Cookies from "js-cookie";
+import ModalSuccess from '../components/Modal/ModalSuccess';
+import ModalError from "../components/Modal/ModalError"
 
 export default function ProfileChangePassword() {
     const [token, setToken] = useState('');
@@ -36,6 +38,7 @@ export default function ProfileChangePassword() {
     const maxDate = new Date();
     maxDate.setFullYear(maxDate.getFullYear() - 17); // Subtract 17 years
     const formattedMaxDate = maxDate.toISOString().split("T")[0];
+    const [modalItem, setModalItem] = useState({});
 
     useEffect(() => {
         setNik(user?.nik);
@@ -81,132 +84,150 @@ export default function ProfileChangePassword() {
         try {
             const response = await updateUser(payload, token);
             if (response.status === 201 || response.status === 200) {
-                Swal.fire({
-                    title: "Berhasil",
-                    text: "Data berhasil terkirim.",
-                    icon: "success",
-                    confirmButtonColor: "#7066e0",
-                  });
+                setModalItem({ isOpen: true, title: "Berhasil", description: "Data berhasil diubah." });
             } else {
-                Swal.fire({
-                    title: "Error",
-                    text: response.response.data.error,
-                    icon: "error",
-                    confirmButtonColor: "#7066e0",
-                  });
-                sessionStorage.removeItem("expiredOtp");
+                setModalItem({ isOpen: true, title: "Error", description: response.response.data.error });
             }
         } catch {
-            Swal.fire({
-                title: "Error",
-                text: "Terjadi kesalahan saat registrasi. Silakan coba lagi.",
-                icon: "error",
-                confirmButtonColor: "#7066e0",
-              });
+            setModalItem({ isOpen: true, title: "Error", description: "Terjadi kesalahan saat registrasi. Silakan coba lagi." });
         } finally {
             setIsLoading(false);
         }
     };
 
     return (
-      <div className="container-sm mx-auto p-4">
-        <h1 className="text-2xl text-revamp-neutral-8 font-medium">
-          Ubah Kata Sandi
-        </h1>
-        <div className="mt-4 rounded-md border p-4 border-revamp-neutral-6">
-        <div className="mb-10">
-            <InputProfile      
-            id="profile-picture"
-            value={photo}
-            onChange={(e) => {
-                setPhoto(e);
-            }}
-            format="image" 
+        <>
+            <ModalSuccess 
+                isOpen={modalItem?.isOpen && modalItem?.title === "Berhasil"} 
+                setIsOpen={setModalItem} 
+                title={modalItem?.title} 
+                description={modalItem?.description} 
+                to={modalItem?.to} 
+                label={"Oke"}
             />
+            <ModalError 
+                isOpen={modalItem?.isOpen && modalItem?.title === "Error"} 
+                setIsOpen={setModalItem} 
+                title={modalItem?.title} 
+                description={modalItem?.description} 
+                to={modalItem?.to} 
+                label={"Oke"}
+            />
+            <div className="container-sm w-full max-w-[800px] min-w-[400px] mx-auto p-4">
+                <h1 className="text-2xl text-revamp-neutral-8 font-medium">
+                    Edit Profile
+                </h1>
+                <div className="mt-4 rounded-md border p-4 border-revamp-neutral-6">
+                    <div className="mb-10 flex">
+                        <InputProfile      
+                        id="profile-picture"
+                        value={photo}
+                        onChange={(e) => {
+                            setPhoto(e);
+                        }}
+                        format="image" 
+                        />
+                    </div>
+                    <div className="md:flex justify-between w-full gap-2">
+                        <div className={"md:w-1/2 w-full"}>
+                        <InputText
+                            label="NIK"
+                            value={nik}
+                            onChange={(value) => {
+                                setNik(value);
+                                setErrorMessage((prev) => ({...prev, nik: validationText("NIK", value, 16, 16)}));
+                            }}
+                            min={16}
+                            type="numerik"
+                            errorMessage={errorMessage.nik}
+                            
+                        />
+                        </div>
+                        <div className={"md:w-1/2 w-full"}>
+                        <InputText
+                            label="Nama"
+                            value={name}
+                            onChange={(value) => {
+                                setName(value);
+                                setErrorMessage((prev) => ({...prev, name: validationText("Nama", value, 2)}));
+                            }}
+                            errorMessage={errorMessage.name}
+                        />
+                        </div>
+                    </div>
+                    <div className="md:flex justify-between w-full gap-2">
+                    <div className={"md:w-1/2 w-full"}>
+                    <InputPhone
+                    label="Nomor Telepon"
+                    value={phone}
+                    onChange={(value) => {
+                        setPhone(value);
+                        setErrorMessage((prev) => ({...prev, phone: validationPhone(value)}));
+                    }}
+                    errorMessage={errorMessage.phone}
+                />
+                </div>
+                <div className={"md:w-1/2 w-full"}>
+                  <InputText
+                    label="No Rekening"
+                    value={accountNumber}
+                    onChange={(value) => {
+                        setAccountNumber(value);
+                        setErrorMessage((prev) => ({...prev, accountNumber: validationText("No Rekening", value, 8)}))
+                    }}
+                    type="numerik"
+                    errorMessage={errorMessage.accountNumber}
+                />
+                </div>
+                </div>
+                <InputDate
+                        label="Tanggal Lahir"
+                        value={date}
+                        onChange={(value) => {
+                            setDate(value);
+                            setErrorMessage((prev) => ({...prev, date: validationBirth(value)}));
+                        }}
+                        max={formattedMaxDate}
+                        type="birth"
+                        errorMessage={errorMessage.date}
+                    /> 
+                 <InputText
+                    label="Alamat"
+                    value={address}
+                    onChange={(value) => {
+                        setAddress(value);
+                        setErrorMessage((prev) => ({...prev, address: validationText("Alamat", value, 50)}))
+                    }}
+                    errorMessage={errorMessage.address}
+                />
+                 <InputFile
+                        id="upload-ktp"
+                        label="Upload KTP"
+                        value={ktp}
+                        onChange={(e) => {
+                            setKtp(e);
+                        }}
+                        format="image"
+                    />
+                      <InputFile
+                        id="upload-kk"
+                        label="Upload KK"
+                        value={kk}
+                        onChange={(e) => {
+                            setKk(e);
+                        }}
+                        format="image"
+                    />
+                    <div className="w-full flex justify-end mt-8">
+                        <button
+                        className={`${isLoading ? 'bg-revampV2-neutral-400' : 'bg-revamp-secondary-500'} w-fit py-[8px] px-[46px] text-white text-[14px] font-[600] rounded-[8px]`}
+                        onClick={saveHandler}
+                    >
+                        {isLoading ? 'Loading...' : "Ubah"}
+                    </button>
+                    </div>
+                </div>
             </div>
-        <InputText
-                label="NIK"
-                value={nik}
-                onChange={(value) => {
-                    setNik(value);
-                    setErrorMessage((prev) => ({...prev, nik: validationText("NIK", value, 16, 16)}));
-                }}
-                min={16}
-                type="numerik"
-                errorMessage={errorMessage.nik}
-            />
-            <InputText
-                label="Nama"
-                value={name}
-                onChange={(value) => {
-                    setName(value);
-                    setErrorMessage((prev) => ({...prev, name: validationText("Nama", value, 2)}));
-                }}
-                errorMessage={errorMessage.name}
-            />
-            <InputDate
-                label="Tanggal Lahir"
-                value={date}
-                onChange={(value) => {
-                    setDate(value);
-                    setErrorMessage((prev) => ({...prev, date: validationBirth(value)}));
-                }}
-                max={formattedMaxDate}
-                type="birth"
-                errorMessage={errorMessage.date}
-            /> <InputPhone
-            label="Nomor Telepon"
-            value={phone}
-            onChange={(value) => {
-                setPhone(value);
-                setErrorMessage((prev) => ({...prev, phone: validationPhone(value)}));
-            }}
-            errorMessage={errorMessage.phone}
-        />
-          <InputText
-            label="No Rekening"
-            value={accountNumber}
-            onChange={(value) => {
-                setAccountNumber(value);
-                setErrorMessage((prev) => ({...prev, accountNumber: validationText("No Rekening", value, 8)}))
-            }}
-            type="numerik"
-            errorMessage={errorMessage.accountNumber}
-        />
-         <InputText
-            label="Alamat"
-            value={address}
-            onChange={(value) => {
-                setAddress(value);
-                setErrorMessage((prev) => ({...prev, address: validationText("Alamat", value, 50)}))
-            }}
-            errorMessage={errorMessage.address}
-        />
-         <InputFile
-                id="upload-ktp"
-                label="Upload KTP"
-                value={ktp}
-                onChange={(e) => {
-                    setKtp(e);
-                }}
-                format="image"
-            />
-              <InputFile
-                id="upload-kk"
-                label="Upload KK"
-                value={kk}
-                onChange={(e) => {
-                    setKk(e);
-                }}
-                format="image"
-            />
-                <button
-                className={`${isLoading ? 'bg-revampV2-neutral-400' : 'bg-revamp-secondary-500'} w-full py-[8px] px-[46px] text-white text-[14px] font-[600] rounded-[15px]`}
-                onClick={saveHandler}
-            >
-                {isLoading ? 'Loading...' : "Ubah"}
-            </button>
-        </div>
-      </div>
+        </>
     );
   }

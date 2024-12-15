@@ -7,7 +7,7 @@ import FooterBar from '../components/Register/FooterBar';
 import { verifyOtp, sendOtp } from "../services";
 import { useLocation } from "react-router-dom";
 import ValidateText from "../utils/ValidationText.js";
-import Swal from "sweetalert2";
+import ModalSuccess from "../components/Modal/ModalSuccess/index.jsx";
 
 export default function PageName() {
     const location = useLocation();
@@ -17,6 +17,7 @@ export default function PageName() {
     const [isLoadingOtp, setIsLoadingOtp] = useState(false);
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(null);
+    const [modalItem, setModalItem] = useState({});
     const [countdown, setCountdown] = useState(0);
     const [errorMessage, setErrorMessage] = useState({
         otp: "",
@@ -65,25 +66,9 @@ export default function PageName() {
             if (response.status === 200) {
                 setError(null);
                 if( location.pathname.split('/')[1] === 'register'){
-                Swal.fire({
-                    title: "Berhasil",
-                    text: "Akun berhasil dibuat.",
-                    icon: "success",
-                    confirmButtonColor: "#7066e0",
-                    willClose: () => {
-                        window.location.href = "/login";
-                    }
-                  });
-                }else{
-                    Swal.fire({
-                        title: "Berhasil",
-                        text: "Akun berhasil terverifikasi.",
-                        icon: "success",
-                        confirmButtonColor: "#7066e0",
-                        willClose: () => {
-                            window.location.href = "/forgot/change-password?token=" + response.data.token;
-                        }
-                      });
+                    setModalItem({ isOpen: true, title: "Berhasil", description: "Akun berhasil dibuat.", to: "/login"});
+                } else {
+                    setModalItem({ isOpen: true, title: "Berhasil", description: "Akun berhasil terverifikasi.", to: "/forgot/change-password?token=" + response.data.token });
                 }
             } else {
                 setErrorMessage((prev) => ({
@@ -129,6 +114,7 @@ export default function PageName() {
 
     return (
         <div className="h-[100dvh] px-[8px] md:p-[100px] flex justify-center items-center">
+            <ModalSuccess isOpen={modalItem?.isOpen} setIsOpen={setModalItem} title={modalItem?.title} description={modalItem?.description} to={modalItem?.to} label={"Oke"}/>
             <div className="w-1/2 md:p-[10px] lg:p-[52px] hidden lg:block">
                 <div className="text-start mb-[24px]">
                     <a href="/login" className="text-[14px] font-[500] text-revamp-neutral-9 flex gap-2 items-center">
