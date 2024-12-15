@@ -35,8 +35,7 @@ export default function ProfilePage() {
             } else {
                 setModalItem({ isOpen: true, title: "Error", description: response.response.message || "Terjadi kesalahan." });
             }
-        } catch(error) {
-            console.log(error)
+        } catch {
             setModalItem({ isOpen: true, title: "Error", description: "Password lama tidak sesuai!" });
         } finally {
             setIsLoading(false);
