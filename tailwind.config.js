@@ -146,9 +146,5 @@ export default {
       },
     },
   },
-  plugins: [
-    // eslint-disable-next-line no-undef
-    require('flowbite/plugin')
-  ]
 };
 
