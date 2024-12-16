@@ -146,5 +146,7 @@ export default {
       },
     },
   },
+  plugins: [
+  ]
 };
 
