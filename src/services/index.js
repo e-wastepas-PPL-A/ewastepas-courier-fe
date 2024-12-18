@@ -2,8 +2,8 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-const BASE_URL = import.meta.env.VITE_PUBLIC_URL;
-// const BASE_URL = "http://localhost:3000/api";
+// const BASE_URL = import.meta.env.VITE_PUBLIC_URL;
+const BASE_URL = "http://localhost:3000/api";
 
 export async function login(payload) {
   return await axios.post(`${BASE_URL}/auth/login`, payload).catch((error) => {
@@ -157,3 +157,11 @@ export async function patchCancelPickup(pickupId, courierId) {
       return error;
     });
 };
+
+export async function patchCompletePickup(pickupId) {
+  return await axios
+    .patch(`${BASE_URL}/pickup/${pickupId}/complete`)
+    .catch((error) => {
+      return error;
+    });
+}

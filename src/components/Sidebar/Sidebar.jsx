@@ -152,7 +152,14 @@ const Sidebar = () => {
                       <ChevronUp size={20} />
                     ))}
                 </Link>
-                {item.name === "Pickup" && isPickupOpen && item.subMenu}
+                {item.name === "Pickup" && (
+                  <div
+                    className={`transition-all duration-300 ease-in-out overflow-hidden ${
+                      isPickupOpen ? "max-h-40" : "max-h-0"
+                    }`}>
+                    {item.subMenu}
+                  </div>
+                )}
               </div>
             ))}
           </nav>

@@ -1,17 +1,26 @@
-import { useEffect, useState } from "react";
 import Table from "../../components/Tables/DataTable";
-import { getAllPickup } from "../../services";
 import { formatDate } from "../../utils/date";
 import { EyeIcon, XIcon } from "lucide-react";
 import { useCourier } from "../../stores/courier";
 import CancelPickup from "../../components/Modal/CancelPickup";
+import useHandleModal from "../../hooks/useHandleModal";
+import { useMemo } from "react";
+import DetailCompletePickupModal from "../../components/Modal/DetailCompletePickup";
 
 export default function AcceptPickupPage() {
   const users = useCourier((state) => state.userDummy);
-  const [pickup, setPickup] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [selectedRowId, setSelectedRowId] = useState(null);
-  const [isCancelled, setIsCancelled] = useState(false);
+  const {
+    pickup,
+    selectedRow,
+    selectedRowId,
+    isLoading,
+    isDetailOpen,
+    isModal: isCancelled,
+    handleOpen,
+    handleClose,
+    handleAction,
+    setPickup,
+  } = useHandleModal();
 
   const columns = [
     {
@@ -27,12 +36,12 @@ export default function AcceptPickupPage() {
       selector: (row) => row.pickup_address,
     },
     {
-      name: "Total Sampah",
-      selector: (row) => row.wasteDetails[0]?.quantity,
+      name: "Kategori",
+      selector: (row) => row.wasteDetails[0]?.wasteName ?? "-",
     },
     {
-      name: "Kategori",
-      selector: (row) => row.wasteDetails[0]?.wasteName,
+      name: "Total Sampah",
+      selector: (row) => row.wasteDetails[0]?.quantity ?? "-",
     },
     {
       name: "Status",
@@ -47,7 +56,7 @@ export default function AcceptPickupPage() {
           </button>
           <button
             className="text-xl cursor-pointer"
-            onClick={() => alert(row.pickup_id)}>
+            onClick={() => handleOpen(row)}>
             <EyeIcon color="#005b96" />
           </button>
         </div>
@@ -55,53 +64,51 @@ export default function AcceptPickupPage() {
     },
   ];
 
-  useEffect(() => {
-    const fetchPickup = async () => {
-      try {
-        const response = await getAllPickup();
-        const data = response.data.data;
-        setPickup(data);
-        setIsLoading(false);
-      } catch (e) {
-        console.log(e);
-      }
+  const filterMemo = useMemo(() => {
+    const handleFilter = (data) => {
+      return data.filter(
+        (p) => p.pickup_status === "accepted" && p.courier?.name === users.name
+      );
     };
-    fetchPickup();
-  }, []);
+    return handleFilter(pickup);
+  }, [pickup, users.name]);
+
+  const handleStateRow = (rowId) => {
+    return setPickup((prevPickup) =>
+      prevPickup.filter((row) => row.pickup_id !== rowId)
+    );
+  };
 
   if (isLoading) {
     return <div className="loader mx-auto items-center mt-5"></div>;
   }
 
-  const handleFilter = (data) => {
-    return data.filter(
-      (p) => p.pickup_status === "accepted" && p.courier?.name === users.name
-    );
-  };
-
-  const handleAction = (id) => {
-    setSelectedRowId(id);
-    setIsCancelled(!isCancelled);
-  };
-
-  const handleClose = () => {
-    setIsCancelled(false);
-  };
-
   return (
     <>
+      {isDetailOpen && (
+        <DetailCompletePickupModal
+          selectedRow={selectedRow}
+          handleClose={handleClose}
+          handleState={handleStateRow}
+        />
+      )}
       <div className="container mx-auto p-4">
-        <h1 className="text-2xl text-revamp-neutral-8 font-medium">
+        <h1 className="text-2xl text-revamp-neutral-11 font-bold">
           Detail Penerimaan Penjemputan Sampah
         </h1>
+        <p className="text-revamp-neutral-8 mt-1">
+          Berikut adalah detail penjemputan sampah yang telah diterima oleh
+          kurir.
+        </p>
         <div className="mt-4 rounded-md border p-4 border-revamp-neutral-6">
-          <Table columns={columns} data={handleFilter(pickup)} />
+          <Table columns={columns} data={filterMemo} />
         </div>
         {isCancelled && (
           <CancelPickup
             pickupId={selectedRowId}
             courierId={users.courier_id}
             handleClose={handleClose}
+            handleStateRow={handleStateRow}
           />
         )}
       </div>

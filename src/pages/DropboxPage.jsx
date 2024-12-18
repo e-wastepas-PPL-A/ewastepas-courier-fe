@@ -79,9 +79,12 @@ export default function HistoryPage() {
         <ModalDropbox selectedRow={selectedRow} handleClose={handleClose} />
       )}
       <div className="container mx-auto p-4">
-        <h1 className="text-2xl text-revamp-neutral-8 font-medium">
+        <h1 className="text-2xl text-revamp-neutral-11 font-bold">
           Detail Lokasi Dropbox
         </h1>
+        <p className="text-revamp-neutral-8 mt-1">
+          Berikut adalah daftar lokasi dropbox yang tersedia di sistem kami.
+        </p>
         <div className="mt-4 rounded-md border p-4 border-revamp-neutral-6">
           <Table
             columns={columns}

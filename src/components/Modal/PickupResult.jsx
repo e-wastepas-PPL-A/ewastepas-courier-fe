@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-const PickupResult = ({ img, heading, subHeading, handleRefresh }) => {
+const PickupResult = ({ img, heading, subHeading, handleClose }) => {
   return (
     <div className="flex flex-col items-center justify-centen">
       <div className="bg-green-500 rounded-full p-6">
@@ -9,7 +9,7 @@ const PickupResult = ({ img, heading, subHeading, handleRefresh }) => {
       <p className="text-gray-600 font-medium mt-2">{subHeading}</p>
       <button
         className="bg-revamp-secondary-500 rounded-2xl text-white px-4 py-2 mt-4"
-        onClick={handleRefresh}>
+        onClick={handleClose}>
         Back to menu
       </button>
     </div>

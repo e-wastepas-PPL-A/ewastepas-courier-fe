@@ -1,15 +1,17 @@
 import { formatDate } from "../../../utils/date";
+import phoneIcon from "../../../assets/phone-icon.svg";
 
 /* eslint-disable react/prop-types */
-const RequestPickupModal = ({ selectedRow, handleClose }) => {
+const DetailPickupModal = ({ selectedRow, handleClose, children }) => {
   if (!selectedRow) return null;
+
   return (
     <div className="fixed left-0 right-0 top-0 h-[100dvh] z-[99] flex justify-center items-center">
       {/* background */}
       <div
         className="w-full h-[100dvh] bg-black-100/80 opacity-[0.8]"
         onClick={handleClose}></div>
-      <div className="fixed p-[12px] flex-col bg-white rounded-md justify-center items-center h-max-[500px] w-[400px] overflow-x-auto">
+      <div className="fixed p-[12px] flex-col bg-white rounded-md justify-center items-center h-max-[500px] w-[450px] overflow-x-auto">
         {/* content */}
         <div className="h-full">
           <h1 className="font-bold text-2xl">Informasi Detail Penjemputan</h1>
@@ -40,6 +42,18 @@ const RequestPickupModal = ({ selectedRow, handleClose }) => {
                 </td>
               </tr>
               <tr>
+                <td>‎</td>
+                <td>‎</td>
+                <td className="mt-2">
+                  <a
+                    href={`https://wa.me/${selectedRow.community.phone}`}
+                    className="bg-revamp-secondary-500 text-white flex flex-row items-center px-4 py-1 rounded">
+                    <img src={phoneIcon} alt="Phone" className="mr-2" />
+                    Hubungi
+                  </a>
+                </td>
+              </tr>
+              <tr>
                 <td className="font-semibold">Tanggal Permintaan</td>
                 <td className="font-semibold px-3">:</td>
                 <td className="pl-5 text-md font-medium">
@@ -58,17 +72,11 @@ const RequestPickupModal = ({ selectedRow, handleClose }) => {
               </tr>
             </tbody>
           </table>
-          <div className="flex justify-center mt-2">
-            <button
-              className="border border-revamp-secondary-400 text-revamp-secondary-400 px-4 py-2 rounded-md"
-              onClick={handleClose}>
-              Tutup
-            </button>
-          </div>
+          <div className="flex justify-center mt-2">{children}</div>
         </div>
       </div>
     </div>
   );
 };
 
-export default RequestPickupModal;
+export default DetailPickupModal;

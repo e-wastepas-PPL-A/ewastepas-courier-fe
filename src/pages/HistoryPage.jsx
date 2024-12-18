@@ -42,13 +42,11 @@ export default function HistoryPage() {
     },
     {
       name: "Kategori",
-      selector: (row) => row.kategori, // kosong
-      sortable: true,
+      selector: (row) => row.wasteDetails[0]?.wasteName ?? "-",
     },
     {
       name: "Total Sampah",
-      selector: (row) => row.totalSampah, // kosong
-      sortable: true,
+      selector: (row) => row.wasteDetails[0]?.quantity ?? "-",
     },
     {
       name: "Drop Box",
@@ -70,9 +68,21 @@ export default function HistoryPage() {
   return (
     <>
       <div className="container mx-auto p-4">
-        <h1 className="text-2xl text-revamp-neutral-8 font-medium">
+        <h1 className="text-2xl text-revamp-neutral-11 font-bold">
           Detail History Penjemputan Sampah
         </h1>
+        <p className="text-revamp-neutral-8 mt-1">
+          Berikut adalah list riwayat penjemputan sampah yang telah dilakukan
+          oleh kurir.
+        </p>
+        <div className="mt-4 border rounded-md border-revamp-neutral-6">
+          <input
+            type="text"
+            placeholder="Cari berdasarkan nama customer"
+            className="border-0 rounded-md p-2 w-full"
+            onChange={() => {}}
+          />
+        </div>
         <div className="mt-4 rounded-md border p-4 border-revamp-neutral-6">
           <Table columns={columns} data={history} highlightOnHover pagination />
         </div>

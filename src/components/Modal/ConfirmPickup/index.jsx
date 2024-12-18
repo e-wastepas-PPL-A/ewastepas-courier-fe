@@ -5,7 +5,12 @@ import SuccessIcon from "../../../assets/success.png";
 import failedIcon from "../../../assets/failed.png";
 
 /* eslint-disable react/prop-types */
-const ConfirmPickup = ({ pickupId, courierId, handleClose }) => {
+const ConfirmPickup = ({
+  pickupId,
+  courierId,
+  handleClose,
+  acceptedPickupRow,
+}) => {
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(null);
 
@@ -16,6 +21,7 @@ const ConfirmPickup = ({ pickupId, courierId, handleClose }) => {
         try {
           const response = await patchAcceptPickup(pickupId, courierId);
           resolve(response);
+          acceptedPickupRow(pickupId);
         } catch (error) {
           reject(error);
         }
@@ -33,20 +39,12 @@ const ConfirmPickup = ({ pickupId, courierId, handleClose }) => {
       });
   };
 
-  const handleRefresh = () => {
-    if (status === "success") {
-      window.location.reload();
-    } else {
-      handleClose();
-    }
-  };
-
   return (
     <div className="fixed left-0 right-0 top-0 h-[100dvh] z-[99] flex justify-center items-center">
       {/* background */}
       <div
         className="w-full h-[100dvh] bg-black-100/80 opacity-[0.8]"
-        onClick={handleRefresh}></div>
+        onClick={handleClose}></div>
       <div className="fixed p-[12px] flex-col bg-white rounded-md justify-center items-center h-max-[500px] w-[400px] overflow-x-auto">
         {/* content */}
         <div className="h-full flex flex-col justify-center items-center">
@@ -54,7 +52,7 @@ const ConfirmPickup = ({ pickupId, courierId, handleClose }) => {
             <h1 className="font-bold text-xl text-center text-green-500">
               <PickupResult
                 img={SuccessIcon}
-                handleRefresh={handleRefresh}
+                handleClose={handleClose}
                 heading="Berhasil Ditambahkan"
                 subHeading="Permintaan berhasil diterima!"
               />
@@ -63,7 +61,7 @@ const ConfirmPickup = ({ pickupId, courierId, handleClose }) => {
             <h1 className="font-bold text-xl text-center text-red-500">
               <PickupResult
                 img={failedIcon}
-                handleRefresh={handleRefresh}
+                handleClose={handleClose}
                 heading="Gagal menambahkan"
                 subHeading="Permintaan gagal Ditambahkan"
               />

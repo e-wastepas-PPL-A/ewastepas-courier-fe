@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+/* eslint-disable react/prop-types */
+import { useState, useEffect, useMemo } from "react";
 import CardComponent from "../ProductCard/ProductCard";
 import { getWasteLists, getWasteType } from "../../services";
 
-const ElectronicDevices = (searchInput) => {
+const ElectronicDevices = ({ searchInput }) => {
   const [activeFilter, setActiveFilter] = useState(0);
   const [wasteLists, setWasteLists] = useState([]);
   const [pagination, setPagination] = useState({});
@@ -12,6 +13,9 @@ const ElectronicDevices = (searchInput) => {
 
   useEffect(() => {
     document.title = "Ewhale Courier | Electronic Devices";
+  }, []);
+
+  useEffect(() => {
     const fetchData = async () => {
       try {
         const [wasteListResponse, wasteTypeResponse] = await Promise.all([
@@ -33,16 +37,17 @@ const ElectronicDevices = (searchInput) => {
   }, [pageNumber]);
 
   useEffect(() => {
-    if (searchInput.searchInput) return setActiveFilter(0); // Reset active filter jika search input diisi
-  }, [searchInput.searchInput]);
+    if (searchInput) return setActiveFilter(0); // Reset active filter jika search input diisi
+  }, [searchInput]);
 
-  const filterWaste = (category) => {
+  // Filter waste berdasarkan filter yang active dipilih user atau search input
+  const filterWaste = useMemo(() => {
     let filteredWaste = wasteLists;
-    let search = searchInput.searchInput;
+    let search = searchInput;
 
-    if (category !== 0) {
+    if (activeFilter !== 0) {
       filteredWaste = filteredWaste.filter(
-        (w) => w.waste_type_id === parseInt(category)
+        (w) => w.waste_type_id === parseInt(activeFilter)
       );
     }
     if (search) {
@@ -51,7 +56,7 @@ const ElectronicDevices = (searchInput) => {
       );
     }
     return filteredWaste;
-  };
+  }, [wasteLists, activeFilter, searchInput]);
 
   const handlePagination = (page) => {
     setPageNumber(page);
@@ -93,14 +98,14 @@ const ElectronicDevices = (searchInput) => {
 
             {/* Card Section */}
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 grid-rows-2 gap-4">
-              {filterWaste(activeFilter).map((waste) => (
+              {filterWaste.map((waste) => (
                 <CardComponent
                   key={waste.waste_id}
                   name={waste.waste_name}
                   image={waste.image}
                 />
               ))}
-              {filterWaste(activeFilter).length === 0 && (
+              {filterWaste.length === 0 && (
                 <div className="col-span-full text-center text-revamp-neutral-8">
                   Tidak ada sampah elektronik ditemukan
                 </div>
@@ -108,7 +113,7 @@ const ElectronicDevices = (searchInput) => {
 
               {/* Pagination */}
               <div className="col-span-full h-[40px] flex justify-center">
-                {!searchInput.searchInput &&
+                {!searchInput &&
                   [...Array(pagination.totalPages)].map((_, index) => {
                     const pageCount = index + 1;
 
