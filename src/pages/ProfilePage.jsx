@@ -114,9 +114,12 @@ export default function ProfileChangePassword() {
                 label={"Oke"}
             />
             <div className="container-sm w-full max-w-[800px] min-w-[400px] mx-auto p-4">
-                <h1 className="text-2xl text-revamp-neutral-8 font-medium">
-                    Edit Profile
+                <div>
+                <h1 className="text-[40px] text-revamp-neutral-11 font-[600]">
+                    Profile
                 </h1>
+                <span className="font-[400] text-[16px] text-revamp-neutral-7">Anda bisa merubah data diri kurir sebagai berikut.</span>
+                </div>
                 <div className="mt-4 rounded-md border p-4 border-revamp-neutral-6">
                     <div className="mb-10 flex items-center gap-2">
                         <InputProfile      
@@ -146,6 +149,7 @@ export default function ProfileChangePassword() {
                             min={16}
                             type="numerik"
                             errorMessage={errorMessage.nik}
+                            disabled={true}
                             
                         />
                         </div>
@@ -214,6 +218,7 @@ export default function ProfileChangePassword() {
                             setKtp(e);
                         }}
                         format="image"
+                        disabled={true}
                     />
                       <InputFile
                         id="upload-kk"
@@ -223,6 +228,7 @@ export default function ProfileChangePassword() {
                             setKk(e);
                         }}
                         format="image"
+                        disabled={true}
                     />
                     <div className="w-full flex justify-end mt-8">
                         <button

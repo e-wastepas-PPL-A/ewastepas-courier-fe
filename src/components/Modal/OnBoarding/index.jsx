@@ -251,7 +251,7 @@ export default function OnBoarding() {
                 to={modalItem?.to} 
                 label={"Oke"}
             />
-            <div className="w-full h-[100dvh] !bg-black opacity-[0.8]"></div>
+            <div className="w-full h-[100dvh] !bg-black opacity-[0.8]" style={{ background: "black" }}></div>
         <div className="fixed p-[24px] flex-col bg-white rounded-md justify-center items-between h-max-[500px] h-[500px] max-w-[600px] min-w-[300px] w-full overflow-x-auto">
                  {step !== 6 && (
                   <div className="mb-[32px] flex items-center justify-center gap-2">

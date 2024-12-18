@@ -13,6 +13,7 @@ const FileUploader = ({
   format = "all", // Can be 'image', 'file', or 'all'
   required = false,
   onChange,
+  disabled= false
 }) => {
   const [file, setFile] = useState(value);
   const [isDragging, setIsDragging] = useState(false);
@@ -157,12 +158,14 @@ const FileUploader = ({
           />
           )}
           <span className="flex-grow text-sm truncate">{file[0].name}</span>
+          {!disabled &&(
           <button
             onClick={handleRemoveFile}
             className="text-red-500 text-xl font-bold"
           >
             ×
           </button>
+          )}
         </div>
       ) : (
         <label
