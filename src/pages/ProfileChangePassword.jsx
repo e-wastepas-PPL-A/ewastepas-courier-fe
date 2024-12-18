@@ -6,7 +6,6 @@ import handleLogout from "../utils/HandleLogout";
 import validatePassword from "../utils/ValidationPassword";
 import validateConfrimPassword from "../utils/ValidationConfirmPassword";
 import ModalSuccess from '../components/Modal/ModalSuccess';
-import ModalError from "../components/Modal/ModalError";
 
 export default function ProfilePage() {
     const [token, setToken] = useState('');
@@ -17,6 +16,7 @@ export default function ProfilePage() {
     const [errorMessage, setErrorMessage] = useState({
         newPassword: "",
         confirmPassword: "",
+        oldPassword: ""
     });
     const [modalItem, setModalItem] = useState({});
 
@@ -33,10 +33,16 @@ export default function ProfilePage() {
             if (response.status === 201 || response.status === 200) {
                 setModalItem({ isOpen: true, title: "Berhasil", description: "Data berhasil terkirim." });
             } else {
-                setModalItem({ isOpen: true, title: "Error", description: response.response.message || "Terjadi kesalahan." });
+                setErrorMessage((prev) => ({
+                    ...prev,
+                    oldPassword: "Kata sandi lama tidak sesuai!"
+                }));
             }
         } catch {
-            setModalItem({ isOpen: true, title: "Error", description: "Password lama tidak sesuai!" });
+            setErrorMessage((prev) => ({
+                ...prev,
+                oldPassword: "Kata sandi lama tidak sesuai!"
+            }));
         } finally {
             setIsLoading(false);
         }
@@ -57,13 +63,6 @@ export default function ProfilePage() {
                 description={modalItem?.description} 
                 label={"Oke"}
             />
-            <ModalError 
-                isOpen={modalItem?.isOpen && modalItem?.title === "Error"} 
-                setIsOpen={setModalItem} 
-                title={modalItem?.title} 
-                description={modalItem?.description} 
-                label={"Oke"}
-            />
             <div className="container-sm w-full max-w-[800px] min-w-[400px] mx-auto p-4">
             <div>
                 <h1 className="text-[40px] text-revamp-neutral-11 font-[600]">
@@ -78,7 +77,7 @@ export default function ProfilePage() {
                         onChange={(value) => {
                             setOldPassword(value);
                         }}
-                        errorMessage={errorMessage.password}
+                        errorMessage={errorMessage.oldPassword}
                         isValidateCheck={false}
                     />
                     <InputPassword
