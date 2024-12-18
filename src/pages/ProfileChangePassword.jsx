@@ -35,13 +35,13 @@ export default function ProfilePage() {
             } else {
                 setErrorMessage((prev) => ({
                     ...prev,
-                    oldPassword: "Password lama tidak sesuai!"
+                    oldPassword: "Kata sandi lama tidak sesuai!"
                 }));
             }
         } catch {
             setErrorMessage((prev) => ({
                 ...prev,
-                oldPassword: "Password lama tidak sesuai!"
+                oldPassword: "Kata sandi lama tidak sesuai!"
             }));
         } finally {
             setIsLoading(false);
