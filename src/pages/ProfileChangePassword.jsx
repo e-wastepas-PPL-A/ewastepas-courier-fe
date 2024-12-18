@@ -65,9 +65,12 @@ export default function ProfilePage() {
                 label={"Oke"}
             />
             <div className="container-sm w-full max-w-[800px] min-w-[400px] mx-auto p-4">
-                <h1 className="text-2xl text-revamp-neutral-8 font-medium">
+            <div>
+                <h1 className="text-[40px] text-revamp-neutral-11 font-[600]">
                     Ubah Kata Sandi
                 </h1>
+                <span className="font-[400] text-[16px] text-revamp-neutral-7">Demi alasan keamanan, harap perbarui kata sandi untuk melindungi akun Anda.</span>
+                </div>
                 <div className="mt-4 rounded-md border p-4 border-revamp-neutral-6">
                     <InputPassword
                         label={'Kata Sandi Lama'}
