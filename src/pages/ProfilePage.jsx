@@ -118,7 +118,7 @@ export default function ProfileChangePassword() {
                     Edit Profile
                 </h1>
                 <div className="mt-4 rounded-md border p-4 border-revamp-neutral-6">
-                    <div className="mb-10 flex">
+                    <div className="mb-10 flex items-center gap-2">
                         <InputProfile      
                         id="profile-picture"
                         value={photo}
@@ -127,6 +127,12 @@ export default function ProfileChangePassword() {
                         }}
                         format="image" 
                         />
+                        <div>
+                        <h2 className="text-md text-revamp-neutral-11 font-[500]">
+                             {name}
+                        </h2>
+                        <span className="text-sm text-revamp-neutral-7 font-[400]">{user.email}</span>
+                        </div>
                     </div>
                     <div className="md:flex justify-between w-full gap-2">
                         <div className={"md:w-1/2 w-full"}>
