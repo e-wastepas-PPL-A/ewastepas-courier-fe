@@ -3,7 +3,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 
-const BASE_URL = "http://34.16.66.175:8021/api";
+const BASE_URL = "https://ewastepas-courier-be-221967358257.asia-southeast2.run.app/api";
 
 export async function login(payload) {
   return await axios.post(`${BASE_URL}/auth/login`, payload).catch((error) => {
