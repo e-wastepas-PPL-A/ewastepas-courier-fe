@@ -9,7 +9,7 @@ import { useCourier } from "../stores/courier";
 
 export default function HomePage() {
   const user = useCourier((state) => state.user);
-  const isPending = user.status.toLowerCase() === "pending";
+  const isPending = user?.status?.toLowerCase() === "pending";
   const [isWaiting, setIsWaiting] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
 
