@@ -13,13 +13,14 @@ const CancelPickup = ({
 }) => {
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(null);
+  const [reason, setReason] = useState("");
 
   const handleRequest = () => {
     setLoading(true);
     new Promise((resolve, reject) => {
       async function fetchData(pickupId, courierId) {
         try {
-          const response = await patchCancelPickup(pickupId, courierId);
+          const response = await patchCancelPickup(pickupId, courierId, reason);
           resolve(response);
           cancelledPickupRow(pickupId);
         } catch (error) {
@@ -52,6 +53,7 @@ const CancelPickup = ({
             <h1 className="font-bold text-xl text-center text-green-500">
               <PickupResult
                 img={SuccessIcon}
+                handleClose={handleClose}
                 heading="Berhasil Ditolak"
                 subHeading="Anda telah menolak penerimaan ini"
               />
@@ -69,11 +71,13 @@ const CancelPickup = ({
               <h1 className="font-bold text-xl text-center">
                 Apakah anda yakin ingin menolak permintaan ini?
               </h1>
-              <div className="text-center w-full">
-                <div>
-                  <div className="mb-[24px]"></div>
-                </div>
-              </div>
+              <textarea
+                className="border border-revamp-neutral-7 rounded-md p-2 mt-2 w-full"
+                placeholder="Alasan penolakan"
+                rows="3"
+                onChange={(e) => setReason(e.target.value)}
+                disabled={loading}
+              />
               <div className="flex justify-center mt-2 gap-2">
                 <button
                   className="border bg-revamp-secondary-400 text-white px-4 py-2 rounded-md"

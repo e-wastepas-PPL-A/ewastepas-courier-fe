@@ -150,9 +150,11 @@ export async function patchAcceptPickup(pickupId, courierId) {
     });
 };
 
-export async function patchCancelPickup(pickupId, courierId) {
+export async function patchCancelPickup(pickupId, courierId, reason) {
   return await axios
-    .patch(`${BASE_URL}/pickup/${pickupId}/cancel?courierId=${courierId}`)
+    .patch(`${BASE_URL}/pickup/${pickupId}/cancel?courierId=${courierId}`, {
+      reason: reason,
+    })
     .catch((error) => {
       return error;
     });
