@@ -30,6 +30,8 @@ export default function AcceptPickupPage() {
     {
       name: "Tanggal",
       selector: (row) => formatDate(row.pickup_date),
+      sortable: true,
+      sortFunction: (a, b) => new Date(a.pickup_date) - new Date(b.pickup_date),
     },
     {
       name: "Alamat",
