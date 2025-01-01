@@ -125,8 +125,8 @@ const FileUploader = ({
   return (
     <div className="my-2">
       <div className="flex flex-col">
-        <label className="text-sm text-start capitalize font-[600]">
-          {label?.replace(/_/g, " ")} {required && <span>*</span>}
+        <label className="text-sm text-start capitalize font-[400]">
+          {label?.replace(/_/g, " ")} {required && <span className="text-revamp-error-500">*</span>}
         </label>
         {subLabel && (
           <label

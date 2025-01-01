@@ -216,6 +216,7 @@ export default function OnBoarding() {
                     setKtp(e);
                 }}
                 format="image"
+                required={true}
             />
         </div>
     );
@@ -229,6 +230,7 @@ export default function OnBoarding() {
                     setKk(e);
                 }}
                 format="image"
+                required={true}
             />
         </div>
     );

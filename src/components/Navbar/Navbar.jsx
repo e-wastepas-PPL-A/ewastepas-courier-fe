@@ -73,7 +73,6 @@ const Navbar = () => {
                     </svg>
                   </button>
                 </div>
-
                 <div
                   className={`${
                     !isOpen && "hidden"
@@ -88,6 +87,7 @@ const Navbar = () => {
                       Ubah Profile
                     </a>
                   </div>
+                  {user?.password !== null &&(
                   <div className="p-2 inline-flex items-center text-revamp-error-500 w-full hover:bg-revamp-secondary-700">
                     <img src={IcLock} className="w-[20px]"/>
                     <a
@@ -97,6 +97,7 @@ const Navbar = () => {
                       Ubah Kata Sandi
                     </a>
                   </div>
+                  )}
                   <div className="p-2 inline-flex items-center text-revamp-error-500 w-full hover:bg-revamp-secondary-700">
                   <LogOut size={20} className="text-white" />
                     <a

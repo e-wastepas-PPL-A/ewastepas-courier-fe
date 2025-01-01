@@ -3,6 +3,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 
+// const BASE_URL = "http://localhost:3000/api";
 const BASE_URL = "https://ewastepas-courier-be-221967358257.asia-southeast2.run.app/api";
 
 export async function login(payload) {

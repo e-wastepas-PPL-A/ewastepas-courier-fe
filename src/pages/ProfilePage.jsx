@@ -219,6 +219,7 @@ export default function ProfileChangePassword() {
                         }}
                         format="image"
                         disabled={true}
+                        required={true}
                     />
                       <InputFile
                         id="upload-kk"
@@ -229,6 +230,7 @@ export default function ProfileChangePassword() {
                         }}
                         format="image"
                         disabled={true}
+                        required={true}
                     />
                     <div className="w-full flex justify-end mt-8">
                         <button
