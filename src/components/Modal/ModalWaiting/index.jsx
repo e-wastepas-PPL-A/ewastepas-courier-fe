@@ -8,7 +8,7 @@ export default function ModalWaiting({ setIsWaiting }) {
 
   return (
     <div className="fixed left-0 right-0 top-0 h-[100dvh] z-[99] flex justify-center items-center">
-      <div className="w-full h-[100dvh] bg-black opacity-[0.8]"></div>
+      <div className="!w-full !h-[100dvh] !bg-black opacity-[0.8]" style={{ backgroundColor: "black" }}></div>
       <div className="fixed px-[12px] py-[26px] flex-col bg-white rounded-md justify-center items-center h-max-[500px] max-w-[600px] min-w-[300px] w-[600px] overflow-x-auto">
         <h1 className="text-2xl font-semibold text-center mb-8">
           Menunggu Konfirmasi dari Admin
