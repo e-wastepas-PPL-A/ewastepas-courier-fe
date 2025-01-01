@@ -6,6 +6,7 @@ import { getHistoryCourier } from "../services";
 export default function HistoryPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [history, setHistory] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const fetchHistory = async () => {
@@ -66,6 +67,10 @@ export default function HistoryPage() {
     },
   ];
 
+  const filteredHistory = history.filter((item) =>
+    item.community.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <>
       <div className="container mx-auto p-4">
@@ -81,11 +86,16 @@ export default function HistoryPage() {
             type="text"
             placeholder="Cari berdasarkan nama customer"
             className="border-0 rounded-md p-2 w-full"
-            onChange={() => {}}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
         <div className="mt-4 rounded-md border p-4 border-revamp-neutral-6">
-          <Table columns={columns} data={history} highlightOnHover pagination />
+          <Table
+            columns={columns}
+            data={filteredHistory}
+            highlightOnHover
+            pagination
+          />
         </div>
       </div>
     </>
