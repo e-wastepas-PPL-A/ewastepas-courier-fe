@@ -110,7 +110,7 @@ export default function AcceptPickupPage() {
             pickupId={selectedRowId}
             courierId={users.courier_id}
             handleClose={handleClose}
-            handleStateRow={handleStateRow}
+            handleState={handleStateRow}
           />
         )}
       </div>

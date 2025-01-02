@@ -9,6 +9,7 @@ const CancelPickup = ({
   pickupId,
   courierId,
   handleClose,
+  handleState,
   cancelledPickupRow,
 }) => {
   const [loading, setLoading] = useState(false);
@@ -21,6 +22,7 @@ const CancelPickup = ({
       async function fetchData(pickupId, courierId) {
         try {
           const response = await patchCancelPickup(pickupId, courierId, reason);
+          handleState(pickupId);
           resolve(response);
           cancelledPickupRow(pickupId);
         } catch (error) {
