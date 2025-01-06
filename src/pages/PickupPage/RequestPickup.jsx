@@ -6,6 +6,7 @@ import ConfirmPickup from "../../components/Modal/ConfirmPickup";
 import { useCourier } from "../../stores/courier";
 import useHandleModal from "../../hooks/useHandleModal";
 import { useMemo } from "react";
+import ErrorPage from "../Error/Error";
 
 export default function RequestPickupPage() {
   const users = useCourier((state) => state.userDummy);
@@ -16,6 +17,7 @@ export default function RequestPickupPage() {
     isLoading,
     isDetailOpen: isOpen,
     isModal: isAccepted,
+    error,
     handleOpen,
     handleClose,
     handleAction,
@@ -80,6 +82,10 @@ export default function RequestPickupPage() {
 
   if (isLoading) {
     return <div className="loader mx-auto items-center mt-5"></div>;
+  }
+
+  if (error) {
+    return <ErrorPage>{error.message}</ErrorPage>;
   }
 
   return (

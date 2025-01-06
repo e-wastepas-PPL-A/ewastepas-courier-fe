@@ -22,6 +22,9 @@ const DetailCompletePickupModal = ({
       async function fetchData(pickupId) {
         try {
           const response = await patchCompletePickup(pickupId);
+          if (response.success === false) {
+            reject("Failed to complete pickup");
+          }
           resolve(response);
           handleState(pickupId);
         } catch (error) {

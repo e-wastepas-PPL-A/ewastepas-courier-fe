@@ -2,20 +2,27 @@ import { useEffect, useState } from "react";
 import Table from "../components/Tables/DataTable";
 import { formatDate } from "../utils/date";
 import { getHistoryCourier } from "../services";
+import ErrorPage from "./Error/Error";
 
 export default function HistoryPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [history, setHistory] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchHistory = async () => {
       try {
         const response = await getHistoryCourier();
+        if (response.status !== 200) {
+          console.error(response.response.data.error);
+          throw new Error(`${response.message}, see details in console`);
+        }
         setHistory(response.data.data);
+      } catch (error) {
+        setError(error);
+      } finally {
         setIsLoading(false);
-      } catch (e) {
-        console.log(e);
       }
     };
     fetchHistory();
@@ -70,6 +77,10 @@ export default function HistoryPage() {
   const filteredHistory = history.filter((item) =>
     item.community.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  if (error) {
+    return <ErrorPage>{error.message}</ErrorPage>;
+  }
 
   return (
     <>

@@ -3,23 +3,32 @@ import Table from "../components/Tables/DataTable";
 import { getDropbox } from "../services";
 import { EyeIcon } from "lucide-react";
 import ModalDropbox from "../components/Modal/Dropbox";
+import ErrorPage from "./Error/Error";
 
 export default function HistoryPage() {
   const [dataDropbox, setDataDropbox] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await getDropbox();
-      setDataDropbox(response.data.data);
-      setIsLoading(false);
+      try {
+        const response = await getDropbox();
+        if (response.status !== 200) {
+          setIsLoading(false);
+          console.error(response.response.data.error);
+          throw new Error(`${response.message}, see details in console`);
+        }
+        setDataDropbox(response.data.data);
+        setIsLoading(false);
+      } catch (error) {
+        setError(error);
+      }
     };
     fetchData();
   }, []);
-
-  console.log(dataDropbox);
 
   const columns = [
     {
@@ -71,6 +80,14 @@ export default function HistoryPage() {
 
   if (isLoading) {
     return <div className="loader mx-auto items-center mt-5"></div>;
+  }
+
+  if (error) {
+    return (
+      <ErrorPage>
+        <div className="text-center text-red-500">{error}</div>
+      </ErrorPage>
+    );
   }
 
   return (

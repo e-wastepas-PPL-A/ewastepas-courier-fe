@@ -7,17 +7,23 @@ const useHandleModal = () => {
   const [selectedRowId, setSelectedRowId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
+  const [error, setError] = useState(null);
   const [isModal, setIsModal] = useState(false);
 
   useEffect(() => {
     const fetchPickup = async () => {
       try {
         const response = await getAllPickup();
+        if (response.status !== 200) {
+          setIsLoading(false);
+          console.error(response.response.data.error);
+          throw new Error(`${response.message}, see details in console`);
+        }
         const data = response.data.data;
         setPickup(data);
         setIsLoading(false);
       } catch (e) {
-        console.log(e);
+        setError(e);
       }
     };
     fetchPickup();
@@ -46,6 +52,7 @@ const useHandleModal = () => {
     selectedRowId,
     isDetailOpen,
     isModal,
+    error,
     setPickup,
     handleOpen,
     handleClose,

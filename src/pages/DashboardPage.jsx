@@ -4,20 +4,31 @@ import Chart from "../components/BarChart/BarChart";
 import { useEffect, useState } from "react";
 import { getTotalCourier } from "../services";
 import { useCourier } from "../stores/courier";
+import ErrorPage from "./Error/Error";
 
 export default function DashboardPage() {
   const user = useCourier((state) => state.userDummy);
   const [todayTotals, setTodayTotals] = useState([]);
   const [monthlyTotals, setMonthlyTotals] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchCourierStatistic = async () => {
-      const response = await getTotalCourier(user.courier_id);
-      const { day, month } = response.data.totals;
-      setTodayTotals(day);
-      setMonthlyTotals(month);
-      setIsLoading(false);
+      try {
+        const response = await getTotalCourier(user.courier_id);
+        if (response.status !== 200) {
+          setIsLoading(false);
+          console.error(response.response.data.error);
+          throw new Error(`${response.message}, see details in console`);
+        }
+        const { day, month } = response.data.totals;
+        setTodayTotals(day);
+        setMonthlyTotals(month);
+        setIsLoading(false);
+      } catch (error) {
+        setError(error);
+      }
     };
     fetchCourierStatistic();
   }, [user]);
@@ -27,6 +38,10 @@ export default function DashboardPage() {
 
   if (isLoading) {
     return <div className="loader mx-auto items-center mt-5"></div>;
+  }
+
+  if (error) {
+    return <ErrorPage>{error.message}</ErrorPage>;
   }
 
   return (

@@ -10,6 +10,7 @@ const ElectronicDevices = ({ searchInput }) => {
   const [wasteType, setWasteType] = useState([]);
   const [pageNumber, setPageNumber] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     document.title = "Ewhale Courier | Electronic Devices";
@@ -23,13 +24,20 @@ const ElectronicDevices = ({ searchInput }) => {
           getWasteType(),
         ]);
 
+        if (wasteListResponse.status !== 200) {
+          setIsLoading(false);
+          console.error(wasteListResponse.response.data.message);
+          throw new Error(
+            `${wasteListResponse.message}, see details in console`
+          );
+        }
+
         setWasteLists(wasteListResponse.data.data.items);
         setWasteType(wasteTypeResponse.data.data);
         setPagination(wasteListResponse.data.data.pagination);
         setIsLoading(false);
       } catch (error) {
-        console.error("Error fetching data:", error);
-        // setError(error);
+        setError(error);
       }
     };
 
@@ -66,6 +74,8 @@ const ElectronicDevices = ({ searchInput }) => {
     <>
       {isLoading ? (
         <div className="loader mx-auto items-center"></div>
+      ) : error ? (
+        <p className="text-center">{error.message}</p>
       ) : (
         <div className="min-h-fit mb-8 max-w-4xl mx-auto">
           <div className="flex flex-col sm:flex-row max-w-6xl mx-auto">

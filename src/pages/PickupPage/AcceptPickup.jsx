@@ -6,6 +6,7 @@ import CancelPickup from "../../components/Modal/CancelPickup";
 import useHandleModal from "../../hooks/useHandleModal";
 import { useMemo } from "react";
 import DetailCompletePickupModal from "../../components/Modal/DetailCompletePickup";
+import ErrorPage from "../Error/Error";
 
 export default function AcceptPickupPage() {
   const users = useCourier((state) => state.userDummy);
@@ -16,6 +17,7 @@ export default function AcceptPickupPage() {
     isLoading,
     isDetailOpen,
     isModal: isCancelled,
+    error,
     handleOpen,
     handleClose,
     handleAction,
@@ -85,6 +87,10 @@ export default function AcceptPickupPage() {
     return <div className="loader mx-auto items-center mt-5"></div>;
   }
 
+  if (error) {
+    return <ErrorPage>{error.message}</ErrorPage>;
+  }
+
   return (
     <>
       {isDetailOpen && (
@@ -104,15 +110,15 @@ export default function AcceptPickupPage() {
         </p>
         <div className="mt-4 rounded-md border p-4 border-revamp-neutral-6">
           <Table columns={columns} data={filterMemo} />
+          {isCancelled && (
+            <CancelPickup
+              pickupId={selectedRowId}
+              courierId={users.courier_id}
+              handleClose={handleClose}
+              handleState={handleStateRow}
+            />
+          )}
         </div>
-        {isCancelled && (
-          <CancelPickup
-            pickupId={selectedRowId}
-            courierId={users.courier_id}
-            handleClose={handleClose}
-            handleState={handleStateRow}
-          />
-        )}
       </div>
     </>
   );

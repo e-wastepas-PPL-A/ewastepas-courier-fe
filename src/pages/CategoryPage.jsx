@@ -10,7 +10,6 @@ export default function CategoryPage() {
   //   setSearchInput(search);
   //   console.log("skaodksd");
   // };
-
   return (
     <>
       <div className="container-sm min-h-screen lg:max-w-[1000px] mx-auto px-4 sm:w-screen">
