@@ -3,6 +3,7 @@ import Table from "../components/Tables/DataTable";
 import { formatDate } from "../utils/date";
 import { getHistoryCourier } from "../services";
 import ErrorPage from "./Error/Error";
+import { statusPickup } from "../utils/status";
 
 export default function HistoryPage() {
   const [isLoading, setIsLoading] = useState(true);
@@ -67,7 +68,7 @@ export default function HistoryPage() {
       selector: (row) => row.status,
       cell: (row) => (
         <span className="font-bold bg-revamp-neutral-5 px-6 py-1 rounded-md">
-          {row.pickup_status}
+          {statusPickup(row.pickup_status)}
         </span>
       ),
       sortable: true,

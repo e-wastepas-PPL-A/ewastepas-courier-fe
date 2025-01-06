@@ -7,6 +7,7 @@ import useHandleModal from "../../hooks/useHandleModal";
 import { useMemo } from "react";
 import DetailCompletePickupModal from "../../components/Modal/DetailCompletePickup";
 import ErrorPage from "../Error/Error";
+import { statusPickup } from "../../utils/status";
 
 export default function AcceptPickupPage() {
   const users = useCourier((state) => state.userDummy);
@@ -49,7 +50,7 @@ export default function AcceptPickupPage() {
     },
     {
       name: "Status",
-      selector: (row) => row.pickup_status,
+      selector: (row) => statusPickup(row.pickup_status),
     },
     {
       name: "Action",
@@ -71,7 +72,9 @@ export default function AcceptPickupPage() {
   const filterMemo = useMemo(() => {
     const handleFilter = (data) => {
       return data.filter(
-        (p) => p.pickup_status === "accepted" && p.courier?.name === users.name
+        (p) =>
+          p.pickup_status === "Dalam_Perjalanan" &&
+          p.courier?.name === users.name
       );
     };
     return handleFilter(pickup);

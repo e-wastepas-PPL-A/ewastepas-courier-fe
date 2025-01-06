@@ -4,6 +4,7 @@ import { getDropbox } from "../services";
 import { EyeIcon } from "lucide-react";
 import ModalDropbox from "../components/Modal/Dropbox";
 import ErrorPage from "./Error/Error";
+import { statusPickup } from "../utils/status";
 
 export default function HistoryPage() {
   const [dataDropbox, setDataDropbox] = useState([]);
@@ -51,7 +52,7 @@ export default function HistoryPage() {
       selector: (row) => row.status,
       cell: (row) => (
         <span className="px-2 py-1 font-bold rounded-md border">
-          {row.status}
+          {statusPickup(row.status)}
         </span>
       ),
       sortable: true,
