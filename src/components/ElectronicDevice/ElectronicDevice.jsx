@@ -1,7 +1,12 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect, useMemo } from "react";
 import CardComponent from "../ProductCard/ProductCard";
-import { getWasteLists, getWasteType } from "../../services";
+import {
+  getWasteById,
+  getWasteLists,
+  getWasteType,
+  searchWaste,
+} from "../../services";
 
 const ElectronicDevices = ({ searchInput }) => {
   const [activeFilter, setActiveFilter] = useState(0);
@@ -9,7 +14,10 @@ const ElectronicDevices = ({ searchInput }) => {
   const [pagination, setPagination] = useState({});
   const [wasteType, setWasteType] = useState([]);
   const [pageNumber, setPageNumber] = useState(1);
+  const [filterCategory, setFilterCategory] = useState(null);
+  const [searchResult, setSearchResult] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -44,45 +52,104 @@ const ElectronicDevices = ({ searchInput }) => {
     fetchData();
   }, [pageNumber]);
 
+  const searchInputWaste = async (search) => {
+    try {
+      const response = await searchWaste(search);
+      if (response.success === false) {
+        console.error(response.response.data.message);
+        throw new Error(`${response.message}, see details in console`);
+      }
+      setSearchResult(response.data.data);
+    } catch (error) {
+      setError(error);
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    if (searchInput) return setActiveFilter(0); // Reset active filter jika search input diisi
+    setLoading(true);
+    // Debounce untuk menghindari request yang berlebihan
+    // Debounce menggunakan async agar proses bisa berhenti jika ada input baru
+    const delayDebounceFn = setTimeout(async () => {
+      // Jika search input tidak kosong, lakukan search
+      if (searchInput.length > 0) {
+        await searchInputWaste(searchInput);
+      } else {
+        // Jika search input kosong, reset dengan array kosong
+        setSearchResult([]);
+      }
+      setLoading(false);
+    }, 600);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchInput]);
+
+  useEffect(() => {
+    if (searchInput) setActiveFilter(0);
   }, [searchInput]);
 
   // Filter waste berdasarkan filter yang active dipilih user atau search input
   const filterWaste = useMemo(() => {
-    let filteredWaste = wasteLists;
-    let search = searchInput;
+    // Jika sedang loading, return undefined
+    if (loading) {
+      return undefined;
+    }
 
-    if (activeFilter !== 0) {
-      filteredWaste = filteredWaste.filter(
-        (w) => w.waste_type_id === parseInt(activeFilter)
-      );
+    // Jika ada search input dan hasil search
+    if (searchInput.length > 0) {
+      return searchResult;
     }
-    if (search) {
-      filteredWaste = filteredWaste.filter((w) =>
-        w.waste_name.toLowerCase().includes(search.toLowerCase())
-      );
+
+    // Jika tidak ada search, gunakan filter biasa
+    if (activeFilter === 0) {
+      return wasteLists;
     }
-    return filteredWaste;
-  }, [wasteLists, activeFilter, searchInput]);
+
+    // Jika filter dipilih, gunakan filter berdasarkan kategori
+    if (filterCategory) return filterCategory;
+  }, [
+    wasteLists,
+    activeFilter,
+    searchInput,
+    filterCategory,
+    searchResult,
+    loading,
+  ]);
+
+  const categoryWaste = async (a) => {
+    try {
+      setLoading(true);
+      const response = await getWasteById(a);
+      if (response.status !== 200) {
+        console.error(response.response.data.message);
+        throw new Error(`${response.message}, see details in console`);
+      }
+      setFilterCategory(response.data.data);
+    } catch (error) {
+      setError(error);
+      setLoading(false);
+    }
+  };
 
   const handlePagination = (page) => {
     setPageNumber(page);
   };
 
+  if (error) {
+    <p className="text-center">{error.message}</p>;
+  }
+
   return (
     <>
       {isLoading ? (
-        <div className="loader mx-auto items-center"></div>
-      ) : error ? (
-        <p className="text-center">{error.message}</p>
+        <div className="loader mx-auto flex items-center justify-center"></div>
       ) : (
         <div className="min-h-fit mb-8 max-w-4xl mx-auto">
           <div className="flex flex-col sm:flex-row max-w-6xl mx-auto">
             {/* Filter Section */}
-            <div className="flex flex-col gap-2 bg-white rounded-lg w-[300px] px-4">
+            <div className="flex flex-col gap-2 bg-white rounded-lg w-full md:w-[300px] px-4 pb-4">
               <h2 className="text-black-100 font-medium">Filter by:</h2>
-              <div className="space-y-2 w-[220px]">
+              <div className="space-y-2 w-full md:w-[220px]">
                 <button
                   onClick={() => setActiveFilter(0)}
                   className={`${
@@ -94,7 +161,10 @@ const ElectronicDevices = ({ searchInput }) => {
                 {wasteType.map((typeSelect, index) => (
                   <button
                     key={index}
-                    onClick={() => setActiveFilter(typeSelect.waste_type_id)}
+                    onClick={() => {
+                      setActiveFilter(typeSelect.waste_type_id);
+                      categoryWaste(typeSelect.waste_type_id);
+                    }}
                     className={`${
                       activeFilter === typeSelect.waste_type_id
                         ? "bg-revamp-secondary-400 text-revamp-neutral-2"
@@ -107,23 +177,31 @@ const ElectronicDevices = ({ searchInput }) => {
             </div>
 
             {/* Card Section */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 grid-rows-2 gap-4">
-              {filterWaste.map((waste) => (
-                <CardComponent
-                  key={waste.waste_id}
-                  name={waste.waste_name}
-                  image={waste.image}
-                />
-              ))}
-              {filterWaste.length === 0 && (
-                <div className="col-span-full text-center text-revamp-neutral-8">
-                  Tidak ada sampah elektronik ditemukan
+            <div className="flex flex-col mx-auto">
+              {loading ? (
+                <div className="loader mx-auto flex items-center justify-center m-4"></div>
+              ) : (
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 grid-rows-2 gap-4">
+                  {filterWaste.map((waste) => (
+                    <CardComponent
+                      key={waste.waste_id}
+                      name={waste.waste_name}
+                      image={waste.image}
+                    />
+                  ))}
+
+                  {filterWaste.length === 0 && (
+                    <div className="col-span-full text-center text-revamp-neutral-8">
+                      Tidak ada sampah elektronik
+                    </div>
+                  )}
                 </div>
               )}
 
               {/* Pagination */}
-              <div className="col-span-full h-[40px] flex justify-center">
+              <div className="col-span-full h-[40px] flex justify-center mt-4">
                 {!searchInput &&
+                  activeFilter === 0 &&
                   [...Array(pagination.totalPages)].map((_, index) => {
                     const pageCount = index + 1;
 

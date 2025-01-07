@@ -143,6 +143,12 @@ export async function getHistoryCourier() {
     });
 }
 
+export async function getWasteById(id) {
+  return await axios.get(`${BASE_URL}/waste/${id}`).catch((error) => {
+    return error;
+  });
+}
+
 export async function patchAcceptPickup(pickupId, courierId) {
   return await axios
     .patch(`${BASE_URL}/pickup/${pickupId}/accept?courierId=${courierId}`)

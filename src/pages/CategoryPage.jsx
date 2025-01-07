@@ -5,11 +5,14 @@ import { useState } from "react";
 
 export default function CategoryPage() {
   const [searchInput, setSearchInput] = useState("");
+  const [submittedInput, setSubmittedInput] = useState("");
 
-  // const handleSearch = (search) => {
-  //   setSearchInput(search);
-  //   console.log("skaodksd");
-  // };
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    setSearchInput(value);
+    setSubmittedInput(value);
+  };
+
   return (
     <>
       <div className="container-sm min-h-screen lg:max-w-[1000px] mx-auto px-4 sm:w-screen">
@@ -31,19 +34,27 @@ export default function CategoryPage() {
 
               {/* Search Bar */}
               <div className="relative max-w-xl">
-                <form
-                  action=""
-                  className="relative"
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                  }}>
+                <form action="" className="relative">
                   <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-revamp-neutral-10 w-5 h-5" />
                   <input
                     type="text"
+                    name="search"
+                    value={searchInput}
+                    onChange={handleInputChange}
                     placeholder="Search here..."
                     className="w-full px-4 py-3 pl-12 rounded-lg  text-revamp-neutral-10 border-revamp-neutral-10 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20"
-                    onChange={(e) => setSearchInput(e.target.value)}
                   />
+                  {searchInput.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSearchInput("");
+                        setSubmittedInput("");
+                      }}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-revamp-neutral-10 w-5 h-5">
+                      X
+                    </button>
+                  )}
                 </form>
               </div>
             </div>
@@ -58,7 +69,7 @@ export default function CategoryPage() {
             Sampah Elektronik
           </h3>
           <hr className="border border-revamp-neutral-7/20 my-4" />
-          <ElectronicDevices searchInput={searchInput} />
+          <ElectronicDevices searchInput={submittedInput} />
         </div>
       </div>
     </>
