@@ -125,6 +125,7 @@ const ElectronicDevices = ({ searchInput }) => {
         throw new Error(`${response.message}, see details in console`);
       }
       setFilterCategory(response.data.data);
+      setLoading(false);
     } catch (error) {
       setError(error);
       setLoading(false);
