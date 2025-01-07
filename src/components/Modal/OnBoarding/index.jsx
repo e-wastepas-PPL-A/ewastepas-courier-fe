@@ -279,12 +279,21 @@ export default function OnBoarding() {
                 {StepFour()}
                 {StepFive()}
                     <div className="mb-[24px]">
+                    {step > 1 && (
                         <button
-                            className={`${isLoading ? 'bg-revampV2-neutral-400' : 'bg-revamp-secondary-500'} py-[8px] px-[46px] text-white text-[14px] font-[600] rounded-[15px]`}
+                            className={`bg-white border border-revamp-secondary-500  py-[8px] px-[46px] text-revamp-secondary-500 text-[14px] font-[600] rounded-[15px] mr-2`}
+                            onClick={()=>setStep(step - 1)}
+                            disabled={!canProceed}
+                        >
+                           Kembali
+                        </button>
+                        )}
+                        <button
+                            className={`${isLoading ? 'bg-revampV2-neutral-400 border-evampV2-neutral-400' : 'bg-revamp-secondary-500 border-revamp-secondary-500'} border py-[8px] px-[46px] text-white text-[14px] font-[600] rounded-[15px]`}
                             onClick={stepHandler}
                             disabled={!canProceed}
                         >
-                            {isLoading ? 'Loading...' : step === 1 ? 'Lengkapi Profile' : step < 5 ? "Lanjut" : "Kirim"}
+                            {isLoading ? 'Loading...' : step === 1 ? 'Lengkapi Profile' : step < 5 ? "Selanjutnya" : "Kirim"}
                         </button>
                         <div className="flex justify-center items-center mt-[80px]">
                             <span className="text-revamp-neutral-10 font-[400] text-[14px]">Anda mau ganti akun? <a href="#" onClick={handleLogout} className="text-revamp-error-300 cursor-pointer">Logout</a></span>
