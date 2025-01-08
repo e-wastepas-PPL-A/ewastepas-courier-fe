@@ -21,7 +21,6 @@ const ConfirmPickup = ({
         try {
           const response = await patchAcceptPickup(pickupId, courierId);
           resolve(response);
-          acceptedPickupRow(pickupId);
         } catch (error) {
           reject(error);
         }
@@ -30,6 +29,7 @@ const ConfirmPickup = ({
     })
       .then(() => {
         setStatus("success");
+        acceptedPickupRow(pickupId);
       })
       .catch(() => {
         setStatus("failed");

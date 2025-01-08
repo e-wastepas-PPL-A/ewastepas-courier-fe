@@ -27,7 +27,7 @@ export default function RequestPickupPage() {
   const columns = [
     {
       name: "Nama Customer",
-      selector: (row) => row.community.name,
+      selector: (row) => row.community?.name ?? "-",
     },
     {
       name: "Tanggal",
@@ -66,7 +66,7 @@ export default function RequestPickupPage() {
 
   const handleFilter = (data) => {
     return data.filter(
-      (p) => p.pickup_status === "Dalam_Perjalanan" && p.courier === null
+      (p) => p.pickup_status === "Menunggu_Penjemputan" && p.courier === null
     );
   };
 

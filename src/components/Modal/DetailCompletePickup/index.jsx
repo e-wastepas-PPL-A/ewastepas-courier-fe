@@ -26,14 +26,14 @@ const DetailCompletePickupModal = ({
             reject("Failed to complete pickup");
           }
           resolve(response);
-          handleState(pickupId);
         } catch (error) {
           reject(error);
         }
       }
       fetchData(pickupId);
     })
-      .then(() => {
+    .then(() => {
+        handleState(pickupId);
         setStatus("success");
       })
       .catch(() => {

@@ -22,7 +22,6 @@ const CancelPickup = ({
       async function fetchData(pickupId, courierId) {
         try {
           const response = await patchCancelPickup(pickupId, courierId, reason);
-          handleState(pickupId);
           resolve(response);
           cancelledPickupRow(pickupId);
         } catch (error) {
@@ -31,7 +30,8 @@ const CancelPickup = ({
       }
       fetchData(pickupId, courierId);
     })
-      .then(() => {
+    .then(() => {
+        handleState(pickupId);
         setStatus("success");
       })
       .catch(() => {
