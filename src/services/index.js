@@ -94,11 +94,9 @@ export async function getUsers() {
 }
 
 export async function getWasteLists(pageNumber) {
-  return await axios
-    .get(`${BASE_URL}/waste?page=${pageNumber}`)
-    .catch((error) => {
-      return error;
-    });
+  return await axios.get().catch((error) => {
+    return error;
+  });
 }
 
 export async function getWasteType() {
