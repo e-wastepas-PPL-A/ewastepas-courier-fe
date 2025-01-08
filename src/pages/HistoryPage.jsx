@@ -36,7 +36,7 @@ export default function HistoryPage() {
   const columns = [
     {
       name: "Nama Customer",
-      selector: (row) => row.community.name,
+      selector: (row) => row.community?.name ?? "-",
       sortable: true,
     },
     {
@@ -64,6 +64,11 @@ export default function HistoryPage() {
       sortable: true,
     },
     {
+      name: "Courier",
+      selector: (row) => row.courier.name,
+      sortable: true,
+    },
+    {
       name: "Status",
       selector: (row) => row.status,
       cell: (row) => (
@@ -75,8 +80,11 @@ export default function HistoryPage() {
     },
   ];
 
-  const filteredHistory = history.filter((item) =>
-    item.community.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredHistory = history.filter(
+    (item) =>
+      item.community?.name?.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      (item.pickup_status === "Sampah_telah_dijemput" ||
+        item.pickup_status === "Penjemputan_Gagal")
   );
 
   if (error) {

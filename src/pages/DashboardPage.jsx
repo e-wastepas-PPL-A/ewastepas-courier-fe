@@ -1,5 +1,4 @@
 import StatisticWrapper from "../components/StatisticWrapper/StatisticWrapper";
-import { ChevronDown } from "lucide-react";
 import Chart from "../components/BarChart/BarChart";
 import { useEffect, useState } from "react";
 import { getTotalCourier } from "../services";
@@ -10,6 +9,8 @@ export default function DashboardPage() {
   const user = useCourier((state) => state.userDummy);
   const [todayTotals, setTodayTotals] = useState([]);
   const [monthlyTotals, setMonthlyTotals] = useState([]);
+  const [weeklyTotals, setWeeklyTotals] = useState([]);
+  const [yearlyTotals, setYearlyTotals] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -22,9 +23,11 @@ export default function DashboardPage() {
           console.error(response.response.data.error);
           throw new Error(`${response.message}, see details in console`);
         }
-        const { day, month } = response.data.totals;
+        const { day, month, week, year } = response.data.totals;
         setTodayTotals(day);
         setMonthlyTotals(month);
+        setWeeklyTotals(week);
+        setYearlyTotals(year);
         setIsLoading(false);
       } catch (error) {
         setError(error);
@@ -53,19 +56,15 @@ export default function DashboardPage() {
 
         {/* Barchart Section */}
         <div className="border border-revamp-neutral-10/20 rounded-lg  max-w-[1000px] px-2 py-6 mx-auto mb-8">
-          <div className="flex flex-row justify-between items-center py-2 mx-14">
-            <span className="text-md font-bold text-revamp-neutral-10">
-              Analysis Total Delivery
-            </span>
-            <div className="flex flex-row gap-x-2">
-              <button className="flex flex-row gap-x-2 bg-revamp-secondary-400 text-white p-2 rounded-md text-sm">
-                This year
-                <ChevronDown size={20} />
-              </button>
-            </div>
-          </div>
           {/* data chart belum sesuai */}
-          <Chart data={monthlyTotals} />
+          <Chart
+            data={{
+              day: todayTotals,
+              month: monthlyTotals,
+              week: weeklyTotals,
+              year: yearlyTotals,
+            }}
+          />
         </div>
       </div>
     </>
