@@ -108,15 +108,6 @@ const Chart = ({ data }) => {
               dataKey="value"
               stroke="#3B82F6"
               strokeWidth={2}
-              dot={({ payload }) => (
-                <circle
-                  cx={0}
-                  cy={0}
-                  r={6}
-                  fill={payload.color}
-                  stroke={payload.color}
-                />
-              )}
               activeDot={{ r: 8 }}
             />
           </LineChart>
