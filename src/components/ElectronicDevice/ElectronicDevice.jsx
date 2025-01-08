@@ -85,11 +85,6 @@ const ElectronicDevices = ({ searchInput, clearInput }) => {
 
   // Filter waste berdasarkan filter yang active dipilih user atau search input
   const filterWaste = useMemo(() => {
-    // Jika sedang loading, return undefined
-    if (loading) {
-      return undefined;
-    }
-
     // Jika ada search input dan hasil search
     if (searchInput.length > 0) {
       return searchResult;
@@ -102,14 +97,7 @@ const ElectronicDevices = ({ searchInput, clearInput }) => {
 
     // Jika filter dipilih, gunakan filter berdasarkan kategori
     if (filterCategory) return filterCategory;
-  }, [
-    wasteLists,
-    activeFilter,
-    searchInput,
-    filterCategory,
-    searchResult,
-    loading,
-  ]);
+  }, [wasteLists, activeFilter, searchInput, filterCategory, searchResult]);
 
   const categoryWaste = async (a) => {
     try {
