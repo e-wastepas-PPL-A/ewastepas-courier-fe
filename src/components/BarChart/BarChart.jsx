@@ -10,13 +10,10 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import { formatDate } from "../../utils/date";
 
 const Chart = ({ data }) => {
   const [timeFrame, setTimeFrame] = useState("day");
-
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString();
-  };
 
   const chartData =
     data && data[timeFrame]
