@@ -1,8 +1,9 @@
 /* eslint-disable react/prop-types */
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Swal from "sweetalert2";
-import IcEmptyFile from "../../assets/empty-file.svg"
-import IcImages from "../../assets/ic-images.svg"
+import IcEmptyFile from "../../assets/empty-file.svg";
+import IcImages from "../../assets/ic-images.svg";
+import ImageWithFallback from "../TagImage/ImageWithFallback";
 
 const FileUploader = ({
   id,
@@ -12,10 +13,17 @@ const FileUploader = ({
   format = "all", // Can be 'image', 'file', or 'all'
   required = false,
   onChange,
+  disabled = false,
 }) => {
   const [file, setFile] = useState(value);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef(null);
+
+  useEffect(() => {
+    if (value.length > 0) {
+      setFile(value);
+    }
+  }, [value]);
 
   const acceptedFormats = {
     image: "image/png, image/jpg, image/jpeg",
@@ -43,7 +51,7 @@ const FileUploader = ({
       return;
     }
 
-    if (incomingFiles.length > 1 || file.length === 1) {
+    if (incomingFiles?.length > 1 || file?.length === 1) {
       Swal.fire({
         title: "Upload File",
         text: "Only 1 file can be uploaded at a time.",
@@ -53,11 +61,8 @@ const FileUploader = ({
       return;
     }
 
-    const fileExists = file.some(
-      (r) =>
-        incomingFiles.some(
-          (f) => f.name === r.name && f.size === r.size
-        )
+    const fileExists = file.some((r) =>
+      incomingFiles.some((f) => f.name === r.name && f.size === r.size)
     );
 
     if (fileExists) {
@@ -99,20 +104,26 @@ const FileUploader = ({
 
   const handleRemoveFile = () => {
     setFile([]);
-    onChange?.(null);
+    onChange?.([]);
   };
 
   const generateURL = (file) => {
-    const fileSrc = URL.createObjectURL(file);
-    setTimeout(() => URL.revokeObjectURL(fileSrc), 1000);
+    let fileSrc;
+    if (!file?.url) {
+      fileSrc = URL.createObjectURL(file);
+      setTimeout(() => URL.revokeObjectURL(fileSrc), 1000);
+    } else {
+      fileSrc = file?.url;
+    }
     return fileSrc;
   };
 
   return (
     <div className="my-2">
       <div className="flex flex-col">
-        <label className="text-sm text-start capitalize font-[600]">
-          {label?.replace(/_/g, " ")} {required && <span>*</span>}
+        <label className="text-sm text-start capitalize font-[400]">
+          {label?.replace(/_/g, " ")}{" "}
+          {required && <span className="text-revamp-error-500">*</span>}
         </label>
         {subLabel && (
           <label
@@ -122,32 +133,34 @@ const FileUploader = ({
                 /\[([^\]]+)\]\(([^)]+)\)/g,
                 `<a href="$2" target="_blank" class="text-blue-500">$1</a>`
               ),
-            }}
-          ></label>
+            }}></label>
         )}
       </div>
-      {file.length > 0 ? (
+      {file?.length > 0 ? (
         <div className="flex items-center gap-2 mt-2 w-full h-[80px] border border-gray-400 border-dashed rounded-[8px] p-2">
-          {file[0].type.startsWith("image") ? (
-            <img
+          {file[0]?.type?.startsWith("image") || file[0]?.url ? (
+            <ImageWithFallback
               src={generateURL(file[0])}
               alt="Preview"
+              fallbackSrc={IcEmptyFile}
               className="w-[50px] h-[50px] object-cover"
             />
           ) : (
-            <img
+            <ImageWithFallback
               src={IcEmptyFile}
               alt="Preview"
+              fallbackSrc={IcEmptyFile}
               className="w-[50px] h-[50px] object-cover"
             />
           )}
           <span className="flex-grow text-sm truncate">{file[0].name}</span>
-          <button
-            onClick={handleRemoveFile}
-            className="text-red-500 text-xl font-bold"
-          >
-            ×
-          </button>
+          {!disabled && (
+            <button
+              onClick={handleRemoveFile}
+              className="text-red-500 text-xl font-bold">
+              ×
+            </button>
+          )}
         </div>
       ) : (
         <label
@@ -157,8 +170,7 @@ const FileUploader = ({
           onDrop={handleDrop}
           className={`cursor-pointer hover:opacity-[0.8] ${
             isDragging ? "opacity-[0.8]" : ""
-          }`}
-        >
+          }`}>
           <div className="mt-1 w-full h-[120px] border border-gray-400 border-dashed rounded-[8px] flex justify-center items-center">
             <div className="text-center">
               <p className="text-gray-600 text-[14px] flex items-center gap-2 font-[600] justify-center">
@@ -174,7 +186,9 @@ const FileUploader = ({
               <p className="text-revamp-neutral-8 text-[8px]">
                 Support: {acceptedFormatsText} files
               </p>
-              <p className="text-revamp-neutral-8 text-[8px]">Size limit: 5 MB</p>
+              <p className="text-revamp-neutral-8 text-[8px]">
+                Size limit: 5 MB
+              </p>
             </div>
           </div>
         </label>

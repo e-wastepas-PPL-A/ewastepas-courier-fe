@@ -16,9 +16,10 @@ import HistoryPage from "./pages/HistoryPage.jsx";
 // import PublicRoute from "./PublicRoute.jsx"; // Import the PublicRoute component
 import "./styles/index.css";
 import RequestPickupPage from "./pages/PickupPage/RequestPickup.jsx";
-import AccountPAge from "./pages/ProfilePage/AccountPage.jsx";
 import AcceptPickupPage from "./pages/PickupPage/AcceptPickup.jsx";
 import DropboxPage from "./pages/DropboxPage.jsx";
+import ProfilePage from "./pages/ProfilePage.jsx";
+import ProfileChangePassword from "./pages/ProfileChangePassword.jsx";
 
 const router = createBrowserRouter([
   {
@@ -43,7 +44,11 @@ const router = createBrowserRouter([
       },
       {
         path: "profile",
-        element: <AccountPAge />,
+        element: <ProfilePage />,
+      },
+      {
+        path: "change-password",
+        element: <ProfileChangePassword />,
       },
       {
         path: "pickup/ongoing",

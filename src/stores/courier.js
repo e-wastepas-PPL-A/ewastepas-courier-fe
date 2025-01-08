@@ -25,7 +25,7 @@ export const useCourier = create((set) => ({
     otp_expiry: null,
     created_at: "2024-11-05T15:02:33.000Z",
     updated_at: "2024-11-05T15:02:33.000Z",
-  },
+  }, // Data pengguna dummy
   loading: false, // Status loading
 
   // actions

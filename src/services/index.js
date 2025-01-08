@@ -2,9 +2,9 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-const BASE_URL =
-  "https://ewastepas-courier-be-221967358257.asia-southeast2.run.app/api";
+
 // const BASE_URL = "http://localhost:3000/api";
+const BASE_URL = "https://ewastepas-courier-be-221967358257.asia-southeast2.run.app/api";
 
 export async function login(payload) {
   return await axios.post(`${BASE_URL}/auth/login`, payload).catch((error) => {
@@ -36,7 +36,7 @@ export async function sendOtp(payload) {
     });
 }
 
-export async function changePassword(payload, token) {
+export async function changeForgot(payload, token) {
   try {
     const response = await axios.patch(
       `${BASE_URL}/auth/forgot-password`,
@@ -53,6 +53,39 @@ export async function changePassword(payload, token) {
       "Error in changePassword:",
       error.response ? error.response.data : error.message
     );
+    return error.response || error;
+  }
+}
+
+export async function changePassword(payload, token) {
+  try {
+    const response = await axios.patch(`${BASE_URL}/users/change-password`, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    return response;
+  } catch (error) {
+    console.error("Error in changePassword:", error.response ? error.response.data : error.message);
+    return error.response || error;
+  }
+}
+
+export async function updateUser(payload, token) {
+  try {
+    const formData = new FormData();
+    Object.keys(payload).forEach(key => {
+      formData.append(key, payload[key]);
+    });
+    const response = await axios.patch(`${BASE_URL}/users`, formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+    return response;
+  } catch (error) {
+    console.error("Error in updateUser:", error.response ? error.response.data : error.message);
     return error.response || error;
   }
 }
