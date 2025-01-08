@@ -42,7 +42,7 @@ export default function HistoryPage() {
       sortable: true,
     },
     {
-      name: "Kapasitas",
+      name: "Total Sampah",
       selector: (row) => row.capacity,
       sortable: true,
     },
@@ -106,6 +106,7 @@ export default function HistoryPage() {
           <Table
             columns={columns}
             data={dataDropbox}
+            emptyData={"Tidak ada Data Lokasi Dropbox"}
             highlightOnHover
             pagination
           />

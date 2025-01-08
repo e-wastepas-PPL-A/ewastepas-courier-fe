@@ -53,6 +53,7 @@ export default function HistoryPage() {
     {
       name: "Kategori",
       selector: (row) => row.wasteDetails[0]?.wasteName ?? "-",
+      sortable: true,
     },
     {
       name: "Total Sampah",
@@ -80,12 +81,17 @@ export default function HistoryPage() {
     },
   ];
 
-  const filteredHistory = history.filter(
-    (item) =>
-      item.community?.name?.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      (item.pickup_status === "Sampah_telah_dijemput" ||
-        item.pickup_status === "Penjemputan_Gagal")
-  );
+  const filteredHistory = history.filter((item) => {
+    const matchesSearchTerm =
+      item.community?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.wasteDetails[0]?.wasteName
+        ?.toLowerCase()
+        .includes(searchTerm.toLowerCase());
+    const matchesStatus =
+      item.pickup_status === "Sampah_telah_dijemput" ||
+      item.pickup_status === "Penjemputan_Gagal";
+    return matchesSearchTerm && matchesStatus;
+  });
 
   if (error) {
     return <ErrorPage>{error.message}</ErrorPage>;
@@ -113,6 +119,7 @@ export default function HistoryPage() {
           <Table
             columns={columns}
             data={filteredHistory}
+            emptyData={"Tidak ada riwayat penjemputan sampah"}
             highlightOnHover
             pagination
           />

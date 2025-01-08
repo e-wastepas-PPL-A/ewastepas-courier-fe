@@ -33,9 +33,7 @@ const ModalDropbox = ({ selectedRow, handleClose }) => {
               <tr>
                 <td className="font-semibold">Kapasitas</td>
                 <td className="font-semibold px-3">:</td>
-                <td className="pl-5 text-md font-medium">
-                  {selectedRow.capacity}
-                </td>
+                <td className="pl-5 text-md font-medium">100</td>
               </tr>
               <tr>
                 <td className="font-semibold">Status</td>
@@ -50,7 +48,7 @@ const ModalDropbox = ({ selectedRow, handleClose }) => {
                 <td className="font-semibold">Total Sampah</td>
                 <td className="font-semibold px-3">:</td>
                 <td className="pl-5 text-md font-medium">
-                  {100 - selectedRow.capacity}
+                  {selectedRow.capacity}
                 </td>
               </tr>
             </tbody>
