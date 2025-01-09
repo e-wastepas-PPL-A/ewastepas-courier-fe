@@ -334,13 +334,13 @@ export default function OnBoarding() {
             {StepFour()}
             {StepFive()}
             <div className="mb-[24px]">
-              {step > 1 && (
+              {/* {step > 1 && (
                 <button
                   className={`bg-white border border-revamp-secondary-500  py-[8px] px-[46px] text-revamp-secondary-500 text-[14px] font-[600] rounded-[15px] mr-2`}
                   onClick={() => setStep(step - 1)}>
                   Kembali
                 </button>
-              )}
+              )} */}
               <button
                 className={`${
                   isLoading
