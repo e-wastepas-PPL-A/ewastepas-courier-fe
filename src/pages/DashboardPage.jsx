@@ -6,7 +6,7 @@ import { useCourier } from "../stores/courier";
 import ErrorPage from "./Error/Error";
 
 export default function DashboardPage() {
-  const user = useCourier((state) => state.userDummy);
+  const user = useCourier((state) => state.user);
   const [todayTotals, setTodayTotals] = useState([]);
   const [monthlyTotals, setMonthlyTotals] = useState([]);
   const [weeklyTotals, setWeeklyTotals] = useState([]);

@@ -9,7 +9,7 @@ import { useMemo } from "react";
 import ErrorPage from "../Error/Error";
 
 export default function RequestPickupPage() {
-  const users = useCourier((state) => state.userDummy);
+  const users = useCourier((state) => state.user);
   const {
     pickup,
     selectedRow,

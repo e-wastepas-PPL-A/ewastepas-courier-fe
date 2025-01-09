@@ -10,7 +10,7 @@ import ErrorPage from "../Error/Error";
 import { statusPickup } from "../../utils/status";
 
 export default function AcceptPickupPage() {
-  const users = useCourier((state) => state.userDummy);
+  const users = useCourier((state) => state.user);
   const {
     pickup,
     selectedRow,

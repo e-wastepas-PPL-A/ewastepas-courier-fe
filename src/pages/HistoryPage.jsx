@@ -4,8 +4,10 @@ import { formatDate } from "../utils/date";
 import { getHistoryCourier } from "../services";
 import ErrorPage from "./Error/Error";
 import { statusPickup } from "../utils/status";
+import { useCourier } from "../stores/courier";
 
 export default function HistoryPage() {
+  const userName = useCourier((state) => state.user?.name);
   const [isLoading, setIsLoading] = useState(true);
   const [history, setHistory] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -90,7 +92,8 @@ export default function HistoryPage() {
     const matchesStatus =
       item.pickup_status === "Sampah_telah_dijemput" ||
       item.pickup_status === "Penjemputan_Gagal";
-    return matchesSearchTerm && matchesStatus;
+    const matchesUserName = item.courier?.name === userName;
+    return matchesSearchTerm && matchesStatus && matchesUserName;
   });
 
   if (error) {
