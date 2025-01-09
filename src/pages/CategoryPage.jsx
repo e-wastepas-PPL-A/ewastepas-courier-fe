@@ -4,7 +4,12 @@ import ElectronicDevices from "../components/ElectronicDevice/ElectronicDevice";
 import { useState } from "react";
 
 export default function CategoryPage() {
-  const [searchInput, setSearchInput] = useState("");
+  const [submittedInput, setSubmittedInput] = useState("");
+
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    setSubmittedInput(value);
+  };
 
   return (
     <>
@@ -27,19 +32,26 @@ export default function CategoryPage() {
 
               {/* Search Bar */}
               <div className="relative max-w-xl">
-                <form
-                  action=""
-                  className="relative"
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                  }}>
+                <form action="" className="relative">
                   <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-revamp-neutral-10 w-5 h-5" />
                   <input
                     type="text"
+                    name="search"
+                    value={submittedInput}
+                    onChange={handleInputChange}
                     placeholder="Search here..."
                     className="w-full px-4 py-3 pl-12 rounded-lg  text-revamp-neutral-10 border-revamp-neutral-10 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20"
-                    onChange={(e) => setSearchInput(e.target.value)}
                   />
+                  {submittedInput.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSubmittedInput("");
+                      }}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-revamp-neutral-10 w-5 h-5">
+                      X
+                    </button>
+                  )}
                 </form>
               </div>
             </div>
@@ -54,7 +66,10 @@ export default function CategoryPage() {
             Sampah Elektronik
           </h3>
           <hr className="border border-revamp-neutral-7/20 my-4" />
-          <ElectronicDevices searchInput={searchInput} />
+          <ElectronicDevices
+            searchInput={submittedInput}
+            clearInput={setSubmittedInput}
+          />
         </div>
       </div>
     </>

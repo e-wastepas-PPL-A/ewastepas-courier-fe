@@ -96,7 +96,7 @@ export default function RegisterPage() {
         
     return (
         <div className="h-[100dvh] p-[8px] md:p-[100px] flex justify-center md:items-center">
-        <Modal isOpen={isOpen} setIsOpen={setIsOpen} className={'bg-white p-6 rounded-lg shadow-lg w-full overflow-y-auto'}>
+             <Modal isOpen={isOpen} setIsOpen={setIsOpen} className={'bg-white p-6 rounded-lg shadow-lg w-full overflow-y-auto'}>
                 <h2 className="text-[24px] font-[700] mb-4 text-center text-[#313131] bg-white">Syarat dan Kebijakan Privasi</h2>
                 <div className="whitespace-pre-wrap text-[16px] fonr-[400] text-gray-600 mb-4">{tocValue}</div>
                 <div className="flex justify-center">

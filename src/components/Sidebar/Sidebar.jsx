@@ -65,7 +65,6 @@ const Sidebar = () => {
     {
       icon: <ClipboardList size={20} />,
       name: "Pickup",
-      route: null,
       subMenu: <PickupSubMenu />,
     },
     {
@@ -88,6 +87,7 @@ const Sidebar = () => {
     setIsPickupOpen(!isPickupOpen);
   };
 
+  // Close sidebar in mobile when location changes
   useEffect(() => {
     setIsOpen(false);
   }, [location]);
@@ -127,13 +127,20 @@ const Sidebar = () => {
             {sidebarMenu.map((item, index) => (
               <div key={index}>
                 <Link
-                  to={item.route ?? "#"}
+                  to={item.route || "#"}
                   className={`flex items-center justify-between p-3 mb-2 rounded-lg cursor-pointer transition-all duration-200 ${
                     location.pathname === item.route
                       ? "bg-white/10 shadow-sm"
                       : "hover:bg-white/10"
                   }`}
-                  onClick={item.name === "Pickup" && togglePickupSubMenu}>
+                  onClick={(e) => {
+                    if (!item.route) {
+                      e.preventDefault();
+                    }
+                    if (item.name === "Pickup") {
+                      togglePickupSubMenu();
+                    }
+                  }}>
                   <div className="flex items-center gap-3">
                     {item.icon}
                     <span className="text-sm font-medium">{item.name}</span>
@@ -145,7 +152,14 @@ const Sidebar = () => {
                       <ChevronUp size={20} />
                     ))}
                 </Link>
-                {item.name === "Pickup" && isPickupOpen && item.subMenu}
+                {item.name === "Pickup" && (
+                  <div
+                    className={`transition-all duration-300 ease-in-out overflow-hidden ${
+                      isPickupOpen ? "max-h-40" : "max-h-0"
+                    }`}>
+                    {item.subMenu}
+                  </div>
+                )}
               </div>
             ))}
           </nav>

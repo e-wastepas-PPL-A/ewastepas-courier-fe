@@ -48,3 +48,37 @@ export const totalDelivery = [
     total: 35,
   },
 ];
+
+export const totalCourierData = [
+  {
+    "totals": {
+        "day": {
+            "timeFrame": "day",
+            "totalDelivered": 0,
+            "totalOnDelivery": 0,
+            "totalCompleted": 0,
+            "totalCancelled": 0,
+            "totalPoints": 0,
+            "startDate": "2024-12-04T00:00:00.000Z"
+        },
+        "week": {
+            "timeFrame": "week",
+            "totalDelivered": 0,
+            "totalOnDelivery": 0,
+            "totalCompleted": 0,
+            "totalCancelled": 0,
+            "totalPoints": 0,
+            "startDate": "2024-12-01T00:00:00.000Z"
+        },
+        "month": {
+            "timeFrame": "month",
+            "totalDelivered": 0,
+            "totalOnDelivery": 0,
+            "totalCompleted": 0,
+            "totalCancelled": 0,
+            "totalPoints": 0,
+            "startDate": "2024-12-01T00:00:00.000Z"
+        }
+    }
+}
+];

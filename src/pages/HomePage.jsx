@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import Sidebar from "../components/Sidebar/Sidebar";
 import Navbar from "../components/Navbar/Navbar";
@@ -31,16 +31,18 @@ export default function HomePage() {
   return (
     <div className="flex w-full">
       {isWaiting && !isEditMode ? (
-        <ModalWaiting setIsWaiting={(value)=>{setIsEditMode(value);}} />
+        <ModalWaiting
+          setIsWaiting={(value) => {
+            setIsEditMode(value);
+          }}
+        />
       ) : (
         isPending && <OnBoarding />
       )}
       <Sidebar />
       <div className="flex-1">
-        <Suspense fallback={<div>Loading...</div>}>
-          <Navbar />
-          <Outlet />
-        </Suspense>
+        <Navbar />
+        <Outlet />
       </div>
     </div>
   );
