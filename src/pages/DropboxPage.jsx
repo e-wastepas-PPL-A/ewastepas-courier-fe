@@ -1,74 +1,117 @@
+import { useEffect, useState } from "react";
 import Table from "../components/Tables/DataTable";
-const columns = [
-  {
-    name: "Nama Drop Box",
-    selector: (row) => row.namaDropBox,
-    sortable: true,
-  },
-  {
-    name: "Alamat",
-    selector: (row) => row.alamat,
-    sortable: true,
-  },
-  {
-    name: "Kapasitas",
-    selector: (row) => row.kapasitas,
-    sortable: true,
-  },
-  {
-    name: "Status",
-    selector: (row) => row.status,
-    cell: (row) => (
-      <span
-        className={`px-2 py-1 rounded ${
-          row.status === "Tersedia"
-            ? "bg-green-200 text-green-800"
-            : "bg-red-200 text-red-800"
-        }`}>
-        {row.status}
-      </span>
-    ),
-    sortable: true,
-  },
-  {
-    name: "Jam Operasional",
-    selector: (row) => row.jamOperasional,
-    sortable: true,
-  },
-  {
-    name: "Action",
-    cell: () => <button className="text-xl">...</button>,
-  },
-];
-
-const data = [
-  {
-    id: 1,
-    namaDropBox: "Plaza Hijau",
-    alamat: "Jl. Raya Hijau No. 10",
-    kapasitas: 500,
-    status: <span className="font-bold">Tersedia</span>,
-    jamOperasional: "08:00-20:00",
-  },
-  {
-    id: 2,
-    namaDropBox: "Taman Digital",
-    alamat: "Jl. Teknologi No. 15",
-    kapasitas: 600,
-    status: <span className="font-bold">Penuh</span>,
-    jamOperasional: "08:00-20:00",
-  },
-];
+import { getDropbox } from "../services";
+import { EyeIcon } from "lucide-react";
+import ModalDropbox from "../components/Modal/Dropbox";
+import ErrorPage from "./Error/Error";
 
 export default function HistoryPage() {
+  const [dataDropbox, setDataDropbox] = useState([]);
+  const [selectedRow, setSelectedRow] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getDropbox();
+        if (response.status !== 200) {
+          setIsLoading(false);
+          console.error(response.response.data.error);
+          throw new Error(`${response.message}, see details in console`);
+        }
+        setDataDropbox(response.data.data);
+        setIsLoading(false);
+      } catch (error) {
+        setError(error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const columns = [
+    {
+      name: "Nama Drop Box",
+      selector: (row) => row.name,
+      sortable: true,
+    },
+    {
+      name: "Alamat",
+      selector: (row) => row.address,
+      sortable: true,
+    },
+    {
+      name: "Total Sampah",
+      selector: (row) => row.capacity,
+      sortable: true,
+    },
+    {
+      name: "Status",
+      selector: (row) => row.status,
+      cell: (row) => (
+        <span className="px-2 py-1 font-bold rounded-md border">
+          {row.status}
+        </span>
+      ),
+      sortable: true,
+    },
+    {
+      name: "Action",
+      cell: (row) => (
+        <button
+          className="text-xl cursor-pointer"
+          onClick={() => handleOpen(row)}>
+          <EyeIcon color="#005b96" />
+        </button>
+      ),
+    },
+  ];
+
+  const handleOpen = (row) => {
+    setSelectedRow(row);
+    setIsOpen(true);
+  };
+
+  const handleClose = () => {
+    setIsOpen(false);
+    setSelectedRow(null);
+  };
+
+  if (isLoading) {
+    return <div className="loader mx-auto items-center mt-5"></div>;
+  }
+
+  if (error) {
+    return (
+      <ErrorPage>
+        <div className="text-center text-red-500">{error}</div>
+      </ErrorPage>
+    );
+  }
+
   return (
-    <div className="container-sm mx-auto p-4">
-      <h1 className="text-2xl text-revamp-neutral-8 font-medium">
-        Detail Lokasi Dropbox
-      </h1>
-      <div className="mt-4 rounded-md border p-4 border-revamp-neutral-6">
-        <Table columns={columns} data={data} highlightOnHover pagination />
+    <>
+      {isOpen && (
+        <ModalDropbox selectedRow={selectedRow} handleClose={handleClose} />
+      )}
+      <div className="container mx-auto p-4">
+        <h1 className="text-2xl text-revamp-neutral-11 font-bold">
+          Detail Lokasi Dropbox
+        </h1>
+        <p className="text-revamp-neutral-8 mt-1">
+          Berikut adalah daftar lokasi dropbox yang tersedia di sistem kami.
+        </p>
+        <div className="mt-4 rounded-md border p-4 border-revamp-neutral-6">
+          <Table
+            columns={columns}
+            data={dataDropbox}
+            emptyData={"Tidak ada Data Lokasi Dropbox"}
+            highlightOnHover
+            pagination
+          />
+        </div>
       </div>
-    </div>
+    </>
   );
 }

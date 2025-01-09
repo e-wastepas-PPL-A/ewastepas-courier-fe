@@ -18,13 +18,14 @@ const customStyles = {
   },
 };
 
-const Table = ({ columns, data }) => {
+const Table = ({ columns, data, emptyData }) => {
   return (
     <DataTable
       columns={columns}
       data={data}
       customStyles={customStyles}
       pagination
+      noDataComponent={emptyData}
     />
   );
 };

@@ -79,7 +79,7 @@ const Navbar = () => {
                   } transition-all duration-200 absolute end-0 z-10 mt-2 w-56 rounded-md border-1 border-revamp-neutral-8 bg-revamp-secondary-600 shadow-lg flex flex-col`}
                   role="menu">
                   <div className="p-2 inline-flex items-center text-revamp-error-500 w-full hover:bg-revamp-secondary-700">
-                    <img src={IcProfile} className="w-[25px]"/>
+                    <img src={IcProfile} className="w-[25px]" />
                     <a
                       href="/profile"
                       className="block rounded-lg px-4 py-2 text-sm text-white w-full"
@@ -87,19 +87,19 @@ const Navbar = () => {
                       Ubah Profile
                     </a>
                   </div>
-                  {user?.password !== null &&(
-                  <div className="p-2 inline-flex items-center text-revamp-error-500 w-full hover:bg-revamp-secondary-700">
-                    <img src={IcLock} className="w-[20px]"/>
-                    <a
-                      href="/change-password"
-                      className="block rounded-lg px-4 py-2 text-sm text-white w-full"
-                      role="menuitem">
-                      Ubah Kata Sandi
-                    </a>
-                  </div>
+                  {user?.password !== null && (
+                    <div className="p-2 inline-flex items-center text-revamp-error-500 w-full hover:bg-revamp-secondary-700">
+                      <img src={IcLock} className="w-[20px]" />
+                      <a
+                        href="/change-password"
+                        className="block rounded-lg px-4 py-2 text-sm text-white w-full"
+                        role="menuitem">
+                        Ubah Kata Sandi
+                      </a>
+                    </div>
                   )}
                   <div className="p-2 inline-flex items-center text-revamp-error-500 w-full hover:bg-revamp-secondary-700">
-                  <LogOut size={20} className="text-white" />
+                    <LogOut size={20} className="text-white" />
                     <a
                       href="#"
                       onClick={handleLogout}
