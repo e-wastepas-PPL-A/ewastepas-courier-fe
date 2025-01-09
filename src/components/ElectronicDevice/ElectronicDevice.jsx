@@ -8,7 +8,7 @@ import {
   searchWaste,
 } from "../../services";
 
-const ElectronicDevices = ({ searchInput }) => {
+const ElectronicDevices = ({ searchInput, clearInput }) => {
   const [activeFilter, setActiveFilter] = useState(0);
   const [wasteLists, setWasteLists] = useState([]);
   const [pagination, setPagination] = useState({});
@@ -55,7 +55,7 @@ const ElectronicDevices = ({ searchInput }) => {
   const searchInputWaste = async (search) => {
     try {
       const response = await searchWaste(search);
-      if (response.success === false) {
+      if (response.status === 404) {
         console.error(response.response.data.message);
         throw new Error(`${response.message}, see details in console`);
       }
@@ -71,13 +71,8 @@ const ElectronicDevices = ({ searchInput }) => {
     // Debounce untuk menghindari request yang berlebihan
     // Debounce menggunakan async agar proses bisa berhenti jika ada input baru
     const delayDebounceFn = setTimeout(async () => {
-      // Jika search input tidak kosong, lakukan search
-      if (searchInput.length > 0) {
-        await searchInputWaste(searchInput);
-      } else {
-        // Jika search input kosong, reset dengan array kosong
-        setSearchResult([]);
-      }
+      setSearchResult([]);
+      await searchInputWaste(searchInput);
       setLoading(false);
     }, 600);
 
@@ -90,11 +85,6 @@ const ElectronicDevices = ({ searchInput }) => {
 
   // Filter waste berdasarkan filter yang active dipilih user atau search input
   const filterWaste = useMemo(() => {
-    // Jika sedang loading, return undefined
-    if (loading) {
-      return undefined;
-    }
-
     // Jika ada search input dan hasil search
     if (searchInput.length > 0) {
       return searchResult;
@@ -107,14 +97,7 @@ const ElectronicDevices = ({ searchInput }) => {
 
     // Jika filter dipilih, gunakan filter berdasarkan kategori
     if (filterCategory) return filterCategory;
-  }, [
-    wasteLists,
-    activeFilter,
-    searchInput,
-    filterCategory,
-    searchResult,
-    loading,
-  ]);
+  }, [wasteLists, activeFilter, searchInput, filterCategory, searchResult]);
 
   const categoryWaste = async (a) => {
     try {
@@ -149,8 +132,8 @@ const ElectronicDevices = ({ searchInput }) => {
           <div className="flex flex-col sm:flex-row max-w-6xl mx-auto">
             {/* Filter Section */}
             <div className="flex flex-col gap-2 bg-white rounded-lg w-full md:w-[300px] px-4 pb-4">
-              <h2 className="text-black-100 font-medium">Filter by:</h2>
               <div className="space-y-2 w-full md:w-[220px]">
+                <h2 className="text-black-100 font-medium">Filter by:</h2>
                 <button
                   onClick={() => setActiveFilter(0)}
                   className={`${
@@ -159,21 +142,26 @@ const ElectronicDevices = ({ searchInput }) => {
                   } w-full text-left px-3 py-2 rounded text-sm text-[#797979] transition-colors duration-200`}>
                   All
                 </button>
-                {wasteType.map((typeSelect, index) => (
-                  <button
-                    key={index}
-                    onClick={() => {
-                      setActiveFilter(typeSelect.waste_type_id);
-                      categoryWaste(typeSelect.waste_type_id);
-                    }}
-                    className={`${
-                      activeFilter === typeSelect.waste_type_id
-                        ? "bg-revamp-secondary-400 text-revamp-neutral-2"
-                        : "text-[#797979] hover:bg-[#F6F6F6]"
-                    } w-full text-left px-3 py-2 rounded text-sm transition-colors duration-200`}>
-                    {typeSelect.waste_type_name.split("_").join(" ")}
-                  </button>
-                ))}
+                {
+                  <>
+                    {wasteType.map((typeSelect, index) => (
+                      <button
+                        key={index}
+                        onClick={() => {
+                          setActiveFilter(typeSelect.waste_type_id);
+                          categoryWaste(typeSelect.waste_type_id);
+                          clearInput("");
+                        }}
+                        className={`${
+                          activeFilter === typeSelect.waste_type_id
+                            ? "bg-revamp-secondary-400 text-revamp-neutral-2"
+                            : "text-[#797979] hover:bg-[#F6F6F6]"
+                        } w-full text-left px-3 py-2 rounded text-sm transition-colors duration-200`}>
+                        {typeSelect.waste_type_name.split("_").join(" ")}
+                      </button>
+                    ))}
+                  </>
+                }
               </div>
             </div>
 

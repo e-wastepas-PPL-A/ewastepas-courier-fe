@@ -112,7 +112,11 @@ export default function AcceptPickupPage() {
           kurir.
         </p>
         <div className="mt-4 rounded-md border p-4 border-revamp-neutral-6">
-          <Table columns={columns} data={filterMemo} />
+          <Table
+            columns={columns}
+            emptyData={"Tidak ada penerimaan Penjemputan"}
+            data={filterMemo}
+          />
           {isCancelled && (
             <CancelPickup
               pickupId={selectedRowId}

@@ -155,7 +155,7 @@ export async function getDropbox() {
 }
 
 export async function getAllPickup() {
-  return await axios.get(`${BASE_URL}/pickup`).catch((error) => {
+  return await axios.get(`${BASE_URL}/pickup?limit=10000`).catch((error) => {
     return error;
   });
 }

@@ -108,7 +108,11 @@ export default function RequestPickupPage() {
           bisa memilih permintaan pickup yang ingin diambil.
         </p>
         <div className="mt-4 rounded-md border p-4 border-revamp-neutral-6">
-          <Table columns={columns} data={filterMemo} />
+          <Table
+            columns={columns}
+            emptyData={"Tidak ada Permintaan Pickup"}
+            data={filterMemo}
+          />
           {isAccepted && (
             <ConfirmPickup
               pickupId={selectedRowId}
