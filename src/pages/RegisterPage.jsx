@@ -9,6 +9,7 @@ import { registration, sendOtp } from "../services";
 import validateEmail from "../utils/ValidationEmail";
 import validatePassword from "../utils/ValidationPassword";
 import validateConfrimPassword from "../utils/ValidationConfirmPassword";
+import Modal from "../components/Modal";
 
 export default function RegisterPage() {
     const [email, setEmail] = useState('');
@@ -24,6 +25,8 @@ export default function RegisterPage() {
         confirmPassword: "",
         tnc: ""
     });
+    const [isOpen, setIsOpen] = useState(false);
+    const tocValue = '1. Pendaftaran Pengguna\nPengguna harus mendaftar dengan informasi yang akurat, termasuk email, nomor telepon, dan alamat pengambilan sampah elektronik. Informasi ini digunakan untuk memproses layanan dan komunikasi.\n\n2. Tanggung Jawab Pengguna\nPengguna bertanggung jawab memastikan barang yang akan diangkut aman dan tidak mengandung bahan berbahaya. Alamat yang diberikan juga harus lengkap dan dapat diakses oleh kurir.\n\n3. Proses Pengangkutan\nPengangkutan akan dilakukan sesuai dengan jadwal yang telah disepakati. Kurir akan memeriksa kondisi barang sebelum proses pengangkutan berlangsung.\n\n4. Pengolahan Sampah Elektronik\nSampah elektronik yang diangkut akan diproses sesuai dengan peraturan lingkungan yang berlaku, mendukung pengelolaan limbah elektronik yang ramah lingkungan.\n\n5. Hak dan Kewajiban Penyedia Layanan\nPenyedia layanan berhak menolak pengangkutan barang yang tidak memenuhi persyaratan atau tidak layak diangkut. Semua perubahan pada layanan atau biaya dapat dilakukan tanpa pemberitahuan terlebih dahulu.\n\n6. Privasi\nData pribadi pengguna akan digunakan hanya untuk keperluan layanan ini dan dilindungi sesuai dengan kebijakan privasi yang berlaku.\n\n7. Pembatasan Tanggung Jawab\nPenyedia layanan tidak bertanggung jawab atas kerusakan atau kehilangan barang selama proses pengangkutan, kecuali disebabkan oleh kelalaian dari pihak penyedia layanan.\n\n8. Perubahan Ketentuan\nPenyedia layanan berhak mengubah syarat dan ketentuan ini kapan saja, dengan informasi yang akan disampaikan melalui website.'
 
     useEffect(() => {
         document.title = "E-Wastepas | Register";
@@ -93,6 +96,18 @@ export default function RegisterPage() {
         
     return (
         <div className="h-[100dvh] p-[8px] md:p-[100px] flex justify-center md:items-center">
+        <Modal isOpen={isOpen} setIsOpen={setIsOpen} className={'bg-white p-6 rounded-lg shadow-lg w-full overflow-y-auto'}>
+                <h2 className="text-[24px] font-[700] mb-4 text-center text-[#313131] bg-white">Syarat dan Kebijakan Privasi</h2>
+                <div className="whitespace-pre-wrap text-[16px] fonr-[400] text-gray-600 mb-4">{tocValue}</div>
+                <div className="flex justify-center">
+                <button
+                className={'bg-revamp-secondary-500 border-revamp-secondary-500 border py-[4px] px-[46px] text-white text-[14px] font-[600] rounded-[15px]'}
+                onClick={() => setIsOpen(false)}
+            >
+                Kembali
+            </button>
+            </div>
+            </Modal>
             <div className="w-1/2 md:p-[10px] lg:p-[52px] hidden lg:block">
                 <img src={Slide1} className="max-h-[90vh]" alt="Slide" />
             </div>
@@ -147,7 +162,7 @@ export default function RegisterPage() {
                         />
                         <div>
                             <InputCheck
-                                label={<span>Saya menyetujui semua <a href="#" className="text-revamp-red-700 font-[500]">Syarat</a> dan <a href="#" className="text-revamp-red-700 font-[500]">Kebijakan Privasi</a></span>}
+                                label={<span>Saya menyetujui semua <span onClick={()=>setIsOpen(true)} className="text-revamp-error-400 font-[500] cursor-pointer hover:underline">Syarat</span> dan <span onClick={()=>setIsOpen(true)} className="text-revamp-error-400 font-[500] cursor-pointer hover:underline">Kebijakan Privasi</span></span>}
                                 value={agreeToTerms}
                                 onChange={(value) =>{setAgreeToTerms(value);setErrorMessage((prev) => ({...prev, tnc: ""}))}}
                                 errorMessage={errorMessage.tnc}
