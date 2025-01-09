@@ -12,8 +12,8 @@ import Verification from "./pages/VerificationPage.jsx";
 import DashboardPage from "./pages/DashboardPage.jsx";
 import CategoryPage from "./pages/CategoryPage.jsx";
 import HistoryPage from "./pages/HistoryPage.jsx";
-// import ProtectedRoute from "./ProtectedRoute.jsx"; // Import the ProtectedRoute component
-// import PublicRoute from "./PublicRoute.jsx"; // Import the PublicRoute component
+import ProtectedRoute from "./ProtectedRoute.jsx"; // Import the ProtectedRoute component
+import PublicRoute from "./PublicRoute.jsx"; // Import the PublicRoute component
 import "./styles/index.css";
 import RequestPickupPage from "./pages/PickupPage/RequestPickup.jsx";
 import AcceptPickupPage from "./pages/PickupPage/AcceptPickup.jsx";
@@ -23,7 +23,11 @@ import ProfileChangePassword from "./pages/ProfileChangePassword.jsx";
 
 const router = createBrowserRouter([
   {
-    element: <HomePage />,
+    element: (
+      <ProtectedRoute>
+        <HomePage />
+      </ProtectedRoute>
+    ),
     path: "/",
     children: [
       {
@@ -70,31 +74,59 @@ const router = createBrowserRouter([
   },
   {
     path: "/login",
-    element: <Login />,
+    element: (
+      <PublicRoute>
+        <Login />
+      </PublicRoute>
+    ),
   },
   {
     path: "/auth/google/callback",
-    element: <Oauth />,
+    element: (
+      <PublicRoute>
+        <Oauth />
+      </PublicRoute>
+    ),
   },
   {
     path: "/register",
-    element: <Register />,
+    element: (
+      <PublicRoute>
+        <Register />
+      </PublicRoute>
+    ),
   },
   {
     path: "/forgot",
-    element: <Forgot />,
+    element: (
+      <PublicRoute>
+        <Forgot />
+      </PublicRoute>
+    ),
   },
   {
     path: "/register/verification",
-    element: <Verification />,
+    element: (
+      <PublicRoute>
+        <Verification />
+      </PublicRoute>
+    ),
   },
   {
     path: "/forgot/verification",
-    element: <Verification />,
+    element: (
+      <PublicRoute>
+        <Verification />
+      </PublicRoute>
+    ),
   },
   {
     path: "/forgot/change-password",
-    element: <ChangePassword />,
+    element: (
+      <PublicRoute>
+        <ChangePassword />
+      </PublicRoute>
+    ),
   },
 ]);
 
