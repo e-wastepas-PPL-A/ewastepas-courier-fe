@@ -1,20 +1,19 @@
 /* eslint-disable no-undef */
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import { API_URL } from "../constant";
 
-
-// const BASE_URL = "http://localhost:3000/api";
-const BASE_URL = "https://ewastepas-courier-be-221967358257.asia-southeast2.run.app/api";
+// const API_URL = "https://ewastepas-courier-be-221967358257.asia-southeast2.run.app/api";
 
 export async function login(payload) {
-  return await axios.post(`${BASE_URL}/auth/login`, payload).catch((error) => {
+  return await axios.post(`${API_URL}auth/login`, payload).catch((error) => {
     return error;
   });
 }
 
 export async function registration(payload) {
   return await axios
-    .post(`${BASE_URL}/auth/registration`, payload)
+    .post(`${API_URL}auth/registration`, payload)
     .catch((error) => {
       return error;
     });
@@ -22,7 +21,7 @@ export async function registration(payload) {
 
 export async function verifyOtp(payload) {
   return await axios
-    .post(`${BASE_URL}/auth/verify-otp`, payload)
+    .post(`${API_URL}auth/verify-otp`, payload)
     .catch((error) => {
       return error;
     });
@@ -30,7 +29,7 @@ export async function verifyOtp(payload) {
 
 export async function sendOtp(payload) {
   return await axios
-    .post(`${BASE_URL}/auth/send-otp`, payload)
+    .post(`${API_URL}auth/send-otp`, payload)
     .catch((error) => {
       return error;
     });
@@ -39,7 +38,7 @@ export async function sendOtp(payload) {
 export async function changeForgot(payload, token) {
   try {
     const response = await axios.patch(
-      `${BASE_URL}/auth/forgot-password`,
+      `${API_URL}auth/forgot-password`,
       payload,
       {
         headers: {
@@ -59,7 +58,7 @@ export async function changeForgot(payload, token) {
 
 export async function changePassword(payload, token) {
   try {
-    const response = await axios.patch(`${BASE_URL}/users/change-password`, payload, {
+    const response = await axios.patch(`${API_URL}users/change-password`, payload, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -77,7 +76,7 @@ export async function updateUser(payload, token) {
     Object.keys(payload).forEach(key => {
       formData.append(key, payload[key]);
     });
-    const response = await axios.patch(`${BASE_URL}/users`, formData, {
+    const response = await axios.patch(`${API_URL}users`, formData, {
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'multipart/form-data'
@@ -92,7 +91,7 @@ export async function updateUser(payload, token) {
 
 export async function oauthHandler() {
   try {
-    window.location = `${BASE_URL}/auth/google`;
+    window.location = `${API_URL}auth/google`;
   } catch (error) {
     console.error(
       "Error in changePassword:",
@@ -104,7 +103,7 @@ export async function oauthHandler() {
 
 export async function callbackHandler(code) {
   return await axios
-    .get(`${BASE_URL}/auth/google/callback?code=${code}`)
+    .get(`${API_URL}auth/google/callback?code=${code}`)
     .catch((error) => {
       return error;
     });
@@ -116,7 +115,7 @@ export async function getUsers() {
 
   // Add the Authorization header with the token
   return await axios
-    .get(`${BASE_URL}/users`, {
+    .get(`${API_URL}users`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -128,41 +127,41 @@ export async function getUsers() {
 
 export async function getWasteLists(pageNumber) {
   return await axios
-    .get(`${BASE_URL}/waste?page=${pageNumber}`)
+    .get(`${API_URL}waste?page=${pageNumber}`)
     .catch((error) => {
       return error;
     });
 }
 
 export async function getWasteType() {
-  return await axios.get(`${BASE_URL}/waste/types`).catch((error) => {
+  return await axios.get(`${API_URL}waste/types`).catch((error) => {
     return error;
   });
 }
 
 export async function searchWaste(search) {
   return await axios
-    .get(`${BASE_URL}/waste/search?name=${search}`)
+    .get(`${API_URL}waste/search?name=${search}`)
     .catch((error) => {
       return error;
     });
 }
 
 export async function getDropbox() {
-  return await axios.get(`${BASE_URL}/dropbox`).catch((error) => {
+  return await axios.get(`${API_URL}dropbox`).catch((error) => {
     return error;
   });
 }
 
 export async function getAllPickup() {
-  return await axios.get(`${BASE_URL}/pickup?limit=10000`).catch((error) => {
+  return await axios.get(`${API_URL}pickup?limit=10000`).catch((error) => {
     return error;
   });
 }
 
 export async function getTotalCourier(id) {
   return await axios
-    .get(`${BASE_URL}/pickup/courier/${id}/totals`)
+    .get(`${API_URL}pickup/courier/${id}/totals`)
     .catch((error) => {
       return error;
     });
@@ -170,21 +169,21 @@ export async function getTotalCourier(id) {
 
 export async function getHistoryCourier() {
   return await axios
-    .get(`${BASE_URL}/pickup/courier/history`)
+    .get(`${API_URL}pickup/courier/history`)
     .catch((error) => {
       return error;
     });
 }
 
 export async function getWasteById(id) {
-  return await axios.get(`${BASE_URL}/waste/${id}`).catch((error) => {
+  return await axios.get(`${API_URL}waste/${id}`).catch((error) => {
     return error;
   });
 }
 
 export async function patchAcceptPickup(pickupId, courierId) {
   return await axios
-    .patch(`${BASE_URL}/pickup/${pickupId}/accept?courierId=${courierId}`)
+    .patch(`${API_URL}pickup/${pickupId}/accept?courierId=${courierId}`)
     .catch((error) => {
       return error;
     });
@@ -192,7 +191,7 @@ export async function patchAcceptPickup(pickupId, courierId) {
 
 export async function patchCancelPickup(pickupId, courierId, reason) {
   return await axios
-    .patch(`${BASE_URL}/pickup/${pickupId}/cancel?courierId=${courierId}`, {
+    .patch(`${API_URL}pickup/${pickupId}/cancel?courierId=${courierId}`, {
       reason: reason,
     })
     .catch((error) => {
@@ -202,7 +201,7 @@ export async function patchCancelPickup(pickupId, courierId, reason) {
 
 export async function patchCompletePickup(pickupId) {
   return await axios
-    .patch(`${BASE_URL}/pickup/${pickupId}/complete`)
+    .patch(`${API_URL}pickup/${pickupId}/complete`)
     .catch((error) => {
       return error;
     });

@@ -35,7 +35,7 @@ export const useCourier = create((set) => ({
     try {
       set(() => ({ loading: true })); // Aktifkan loading
       const token = Cookies.get("PHPSESSID");
-      const response = await axios.get(`${API_URL}/users`, {
+      const response = await axios.get(`${API_URL}users`, {
         headers: {
           Authorization: `Bearer ${token}`, // Sertakan token dalam header
         },
