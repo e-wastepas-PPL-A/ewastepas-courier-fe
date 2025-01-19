@@ -8,6 +8,7 @@ import {
   X,
   ChevronDown,
   ChevronUp,
+  FileText,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import Logo from "../../assets/logo.png";
@@ -162,6 +163,16 @@ const Sidebar = () => {
                 )}
               </div>
             ))}
+            <hr className="my-4 border-r-revamp-neutral-4 opacity-40" />
+            {/* Petunjuk Penggunaan */}
+            <Link
+              to="https://docs.google.com/document/d/1h6NIGa_gF633KS4lrqWkRSG49d2O8KqrkT4KtjXv338/edit?tab=t.0"
+              target="_blank">
+              <div className="flex items-center gap-3 p-3 mb-2 rounded-lg cursor-pointer transition-all duration-200 hover:bg-white/10">
+                <FileText size={20} />
+                <span className="text-sm font-medium">Petunjuk Penggunaan</span>
+              </div>
+            </Link>
           </nav>
         </div>
       </div>
