@@ -44,7 +44,7 @@ export default function OnBoarding() {
   const [modalItem, setModalItem] = useState({});
 
   useEffect(() => {
-    setToken(Cookies.get("PHPSESSID"));
+    setToken(Cookies.get("SSID"));
   }, []);
 
   const stepHandler = () => {

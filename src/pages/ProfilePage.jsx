@@ -55,7 +55,7 @@ export default function ProfileChangePassword() {
 
 
     useEffect(() => {
-        setToken(Cookies.get('PHPSESSID'));
+        setToken(Cookies.get('SSID'));
     }, []);
 
     const saveHandler = async () => {

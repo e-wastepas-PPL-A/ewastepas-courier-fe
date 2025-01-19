@@ -17,7 +17,7 @@ export default function OauthPage() {
 
           if (result?.data && result?.data?.token) {
             // Save the token to cookies
-            Cookies.set("PHPSESSID", result?.data?.token, { expires: 7 });
+            Cookies.set("SSID", result?.data?.token, { expires: 7 });
           }
         }
       } catch (error) {

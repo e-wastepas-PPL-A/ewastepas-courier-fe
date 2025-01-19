@@ -2,8 +2,8 @@ import Cookies from "js-cookie";
 
 const handleLogout = () => {
 
-    // Destroy the PHPSESSID cookie
-    Cookies.remove("PHPSESSID");
+    // Destroy the SSID cookie
+    Cookies.remove("SSID");
 
     // Redirect to login page
     window.location.href = "/login";
