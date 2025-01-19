@@ -166,7 +166,7 @@ const Sidebar = () => {
             <hr className="my-4 border-r-revamp-neutral-4 opacity-40" />
             {/* Petunjuk Penggunaan */}
             <Link
-              to="https://docs.google.com/document/d/1h6NIGa_gF633KS4lrqWkRSG49d2O8KqrkT4KtjXv338/edit?tab=t.0"
+              to="https://drive.google.com/file/d/1ESvh4JIkteJ1RGA13v1VZRX40ImlBzaD/view?usp=sharing"
               target="_blank">
               <div className="flex items-center gap-3 p-3 mb-2 rounded-lg cursor-pointer transition-all duration-200 hover:bg-white/10">
                 <FileText size={20} />
