@@ -31,11 +31,10 @@ export default function PageName() {
       setIsLoading(true);
       const response = await login(payload);
       if (response.status === 200) {
-        // Set the cookie with the token received in the response
         Cookies.set("SSID", response.data.token, {
-          expires: 0.25,
+          expires: 7, // Masa kedaluwarsa diatur menjadi 7 hari
           secure: true,
-        }); // Cookie expires in 7 days
+        });
       } else {
         setError(response.response.data.error);
         setSuccess(null); // Clear any previous success message
