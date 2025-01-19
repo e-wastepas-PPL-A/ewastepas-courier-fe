@@ -32,9 +32,11 @@ export default function PageName() {
       const response = await login(payload);
       if (response.status === 200) {
         Cookies.set("SSID", response.data.token, {
-          expires: 7, // Masa kedaluwarsa diatur menjadi 7 hari
-          secure: true,
+          expires: 7, 
+          secure: false,
         });
+
+        window.location.href = "/"
       } else {
         setError(response.response.data.error);
         setSuccess(null); // Clear any previous success message
