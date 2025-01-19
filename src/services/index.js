@@ -6,14 +6,8 @@ import { API_URL } from "../constant";
 // const API_URL = "https://ewastepas-courier-be-221967358257.asia-southeast2.run.app/api";
 
 export async function login(payload) {
-  return await axios.post(`${API_URL}auth/login`, payload).then((response) => {
-    Cookies.set("SSID", response.data.token, {
-      expires: 0.25,
-      secure: true,
-    }); 
-    window.location = "/";
-  }).catch((error) => {
-    return error.response ? error.response.data : error;
+  return await axios.post(`${API_URL}auth/login`, payload).catch((error) => {
+    return error;
   });
 }
 

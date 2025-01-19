@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
 import Logo from "../assets/logo.png";
 import Slide1 from "../assets/vertical-slide-1.png";
 import InputEmail from "../components/Input/InputEmail";
@@ -29,16 +30,20 @@ export default function PageName() {
     try {
       setIsLoading(true);
       const response = await login(payload);
-      if (response.error) {
-        setError(response.error);
+      if (response.status === 200) {
+        // Set the cookie with the token received in the response
+        Cookies.set("SSID", response.data.token, {
+          expires: 0.25,
+          secure: true,
+        }); // Cookie expires in 7 days
       } else {
-        setError(null);
-        setSuccess(null);
+        setError(response.response.data.error);
+        setSuccess(null); // Clear any previous success message
       }
       setIsLoading(false);
     } catch (error) {
       setError("An error occurred during login. Please try again.");
-      setSuccess(null);
+      setSuccess(null); // Clear any previous success message
       setIsLoading(false);
     }
   };
