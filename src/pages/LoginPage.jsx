@@ -36,7 +36,7 @@ export default function PageName() {
           secure: false,
         });
 
-        window.location.href = "/"
+        window.location = "/"
       } else {
         setError(response.response.data.error);
         setSuccess(null); // Clear any previous success message
